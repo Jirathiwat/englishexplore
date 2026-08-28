@@ -1,0 +1,2000 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English Explorer 🌈 สมุดผจญภัยภาษาอังกฤษ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Prompt:wght@400;500;600;700&family=Mali:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --pink:#FF8FC7; --pink-soft:#FFE0F0; --lav:#B7A6FF; --lav-soft:#EDE6FF;
+  --mint:#63D9B7; --mint-soft:#DEFCF1; --sky:#63C4FF; --sky-soft:#E0F4FF;
+  --sun:#FFC94A; --sun-soft:#FFF3D1; --coral:#FF7A7A; --coral-soft:#FFE3E3;
+  --ink:#4A3B63; --ink-soft:#8A7A9E; --paper:#FFF9F4; --card:#FFFFFF;
+  --shadow: 0 6px 0 rgba(74,59,99,0.15);
+  --radius: 22px;
+  --font-display:'Baloo 2', 'Mali', sans-serif;
+  --font-body:'Prompt','Mali', sans-serif;
+}
+body.theme-dark{
+  --pink:#FF8FC7; --pink-soft:#3A2540; --lav:#B7A6FF; --lav-soft:#2C2650;
+  --mint:#63D9B7; --mint-soft:#1B3A34; --sky:#63C4FF; --sky-soft:#1B2E42;
+  --sun:#FFC94A; --sun-soft:#3A3018; --coral:#FF7A7A; --coral-soft:#3A2222;
+  --ink:#F1E9FA; --ink-soft:#B8ACC9; --paper:#181425; --card:#241D36;
+  --shadow: 0 6px 0 rgba(0,0,0,0.35);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background: linear-gradient(160deg, var(--sky-soft) 0%, var(--pink-soft) 45%, var(--sun-soft) 100%);
+  background-attachment: fixed;
+  color: var(--ink); font-family: var(--font-body); min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+  transition: background .3s ease, color .3s ease;
+}
+body.theme-dark{ background: linear-gradient(160deg, #181425 0%, #201a30 50%, #1c1730 100%); }
+body.theme-dark .index-card, body.theme-dark .form-card, body.theme-dark .sub-card,
+body.theme-dark .question-block, body.theme-dark .manage-row, body.theme-dark .vocab-card,
+body.theme-dark .stat-card, body.theme-dark .route-card, body.theme-dark .gate-card,
+body.theme-dark .result-card, body.theme-dark .game-setup, body.theme-dark .fill-input,
+body.theme-dark .search-row, body.theme-dark input, body.theme-dark select, body.theme-dark textarea,
+body.theme-dark .choice-btn, body.theme-dark .match-item, body.theme-dark .memory-card.flipped,
+body.theme-dark .flip-front{ color: var(--ink); }
+body.theme-dark input, body.theme-dark select, body.theme-dark textarea{ background: #2A2340; }
+body.theme-dark .choice-btn, body.theme-dark .match-item{ background:#2A2340; }
+body.theme-dark #topbar{ background: rgba(24,20,37,0.8); }
+body.theme-dark .tab-btn{ background:#2A2340; }
+body.theme-dark .key-btn{ background:#2A2340; color:var(--ink); }
+#app{max-width:900px;margin:0 auto;min-height:100vh;position:relative;}
+.blob{position:fixed;border-radius:50%;filter:blur(2px);opacity:0.35;z-index:0;pointer-events:none;}
+h1,h2,h3{font-family:var(--font-display);}
+::selection{background:var(--pink);color:white;}
+
+/* topbar */
+#topbar{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
+  padding:14px 20px;background:rgba(255,255,255,0.75);backdrop-filter:blur(8px);
+  position:sticky;top:0;z-index:20;border-bottom:3px dashed var(--pink);
+}
+.brand{display:flex;align-items:center;gap:10px;cursor:pointer;font-family:var(--font-display);font-weight:800;font-size:19px;color:var(--ink);}
+.brand-mark{
+  width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--pink),var(--lav));
+  display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:var(--shadow);
+  animation:wiggle 4s ease-in-out infinite;
+}
+@keyframes wiggle{0%,100%{transform:rotate(-6deg);}50%{transform:rotate(6deg);}}
+.tabbar{display:flex;gap:6px;flex-wrap:wrap;}
+.tab-btn{
+  display:flex;align-items:center;gap:6px;padding:9px 14px;border-radius:999px;
+  background:white;color:var(--ink-soft);border:2px solid transparent;
+  font-family:var(--font-body);font-weight:600;font-size:13px;cursor:pointer;
+  box-shadow:0 3px 0 rgba(74,59,99,0.1);transition:transform .12s ease;
+}
+.tab-btn:hover{transform:translateY(-2px);}
+.tab-btn.active{background:linear-gradient(135deg,var(--pink),var(--coral));color:white;box-shadow:0 4px 0 rgba(255,122,122,0.4);}
+
+#main{padding:10px 6px 60px;position:relative;z-index:1;}
+.page{max-width:800px;margin:0 auto;padding:22px 16px;}
+
+.back-link{display:inline-flex;align-items:center;gap:6px;background:none;border:none;color:var(--ink-soft);font-family:var(--font-body);font-weight:600;font-size:13px;cursor:pointer;padding:6px 0;margin-bottom:10px;}
+.back-link:hover{color:var(--pink);}
+
+/* buttons */
+.btn{
+  display:inline-flex;align-items:center;gap:8px;padding:12px 20px;border-radius:999px;
+  font-family:var(--font-body);font-weight:700;font-size:14px;cursor:pointer;border:none;
+  position:relative;overflow:hidden;transition:transform .12s ease, box-shadow .12s ease;
+}
+.btn:active{transform:translateY(2px) scale(0.97);}
+.btn-primary{background:linear-gradient(135deg,var(--pink),var(--coral));color:white;box-shadow:0 4px 0 #d65a7a;}
+.btn-primary:hover{filter:brightness(1.06);}
+.btn-primary:disabled{opacity:0.4;cursor:not-allowed;box-shadow:none;}
+.btn-mint{background:linear-gradient(135deg,var(--mint),#3fc79e);color:white;box-shadow:0 4px 0 #2ea885;}
+.btn-lav{background:linear-gradient(135deg,var(--lav),#9179ff);color:white;box-shadow:0 4px 0 #6f56e0;}
+.btn-ghost{background:white;color:var(--ink);box-shadow:0 3px 0 rgba(74,59,99,0.15);}
+.btn-ghost:hover{background:var(--pink-soft);}
+.btn-danger{background:linear-gradient(135deg,var(--coral),#e14b4b);color:white;box-shadow:0 4px 0 #b83838;}
+.btn-sm{padding:7px 13px;font-size:12px;border-radius:999px;}
+.btn-block{width:100%;justify-content:center;}
+
+/* hero */
+.hero{text-align:center;padding:24px 10px 10px;}
+.hero-mascot{font-size:56px;display:inline-block;animation:float 3s ease-in-out infinite;}
+@keyframes float{0%,100%{transform:translateY(0) rotate(-4deg);}50%{transform:translateY(-10px) rotate(4deg);}}
+.eyebrow{font-family:var(--font-body);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--lav);margin:8px 0 4px;}
+.hero-title{font-size:44px;font-weight:800;margin:0 0 12px;background:linear-gradient(135deg,var(--pink),var(--lav),var(--sky));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.hero-sub{max-width:520px;margin:0 auto 20px;color:var(--ink-soft);font-size:15px;line-height:1.7;}
+.hero-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+
+.stat-row{display:flex;gap:12px;margin:16px 0 30px;flex-wrap:wrap;justify-content:center;}
+.stat-card{background:var(--card);border-radius:18px;padding:16px 22px;text-align:center;min-width:110px;box-shadow:var(--shadow);border:2px solid var(--pink-soft);}
+.stat-num{display:block;font-family:var(--font-display);font-size:26px;font-weight:800;color:var(--pink);}
+.stat-label{display:block;font-size:11.5px;color:var(--ink-soft);margin-top:2px;font-weight:600;}
+
+.section-block{margin-top:26px;}
+.section-kicker{font-family:var(--font-body);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--lav);margin-bottom:12px;}
+.route-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.route-card{background:var(--card);border-radius:18px;padding:18px;box-shadow:var(--shadow);border:2px dashed var(--sky);}
+.route-card h3{margin:8px 0 4px;font-size:18px;}
+.route-card p{margin:0;color:var(--ink-soft);font-size:13px;}
+.grade-strip{display:flex;gap:8px;flex-wrap:wrap;}
+.grade-chip{display:flex;flex-direction:column;align-items:center;gap:2px;background:var(--card);border:2px solid var(--sun);border-radius:16px;padding:10px 14px;cursor:pointer;font-weight:600;font-size:12.5px;box-shadow:0 3px 0 rgba(255,201,74,.3);}
+.grade-chip-num{font-family:var(--font-display);font-weight:800;font-size:16px;color:var(--sun);}
+
+.page-title{font-size:28px;margin:0 0 14px;font-weight:800;}
+.filter-tabs{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;}
+.filter-chip{padding:8px 15px;border-radius:999px;border:2px solid var(--pink-soft);background:white;color:var(--ink-soft);font-size:13px;font-weight:600;cursor:pointer;}
+.filter-chip.active{background:linear-gradient(135deg,var(--lav),#9179ff);color:white;border-color:transparent;}
+
+.card-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+@media (max-width:560px){.card-grid{grid-template-columns:1fr;}.route-grid{grid-template-columns:1fr;}.form-row{grid-template-columns:1fr!important;}.match-wrap{flex-direction:column;}}
+
+.index-card{
+  text-align:left;background:var(--card);border-radius:20px;padding:18px;cursor:pointer;position:relative;
+  box-shadow:var(--shadow);border:3px solid var(--pink-soft);transform:rotate(var(--tilt,0deg));
+  transition:transform .15s ease, box-shadow .15s ease;
+}
+.index-card:hover{transform:rotate(0deg) translateY(-4px);box-shadow:0 10px 0 rgba(74,59,99,0.12);}
+.index-card h3{font-size:17px;margin:0 0 6px;}
+.index-card p{font-size:13px;color:var(--ink-soft);margin:0 0 10px;line-height:1.5;}
+.card-cta{display:inline-flex;align-items:center;gap:3px;font-size:12.5px;font-weight:800;color:var(--pink);}
+.index-card-top{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;}
+.game-card-active{border-color:var(--pink);}
+
+.stamp{font-family:var(--font-body);font-size:11px;font-weight:700;padding:4px 11px;border-radius:999px;color:white;}
+.stamp-navy{background:var(--lav);}
+.stamp-sage{background:var(--mint);}
+.stamp-red{background:var(--coral);}
+.stamp-mustard{background:var(--sun);color:var(--ink);}
+
+.lesson-head{margin-bottom:10px;}
+.lesson-summary{color:var(--ink-soft);font-size:14px;}
+.notebook-block{background:var(--card);border-left:6px solid var(--mint);border-radius:14px;padding:14px 18px;margin-bottom:12px;box-shadow:var(--shadow);}
+.notebook-block h4{margin:0 0 8px;font-size:15px;}
+.notebook-block p{margin:0;font-size:14px;line-height:1.7;color:var(--ink);}
+.example-block{margin-top:20px;}
+.example-block h4{font-size:16px;margin-bottom:10px;}
+.example-row{background:var(--sky-soft);border-radius:14px;padding:10px 14px;margin-bottom:8px;}
+.example-en{margin:0 0 3px;font-style:italic;font-weight:700;}
+.example-th{margin:0;font-size:13px;color:var(--ink-soft);}
+.related-quiz-block{margin-top:26px;padding-top:16px;border-top:3px dashed var(--pink-soft);}
+.related-quiz-block h4{font-size:15px;margin-bottom:10px;}
+.related-quiz-list{display:flex;gap:10px;flex-wrap:wrap;}
+.empty-note{color:var(--ink-soft);font-size:14px;grid-column:1/-1;}
+
+.question-block{background:var(--card);border-radius:18px;padding:16px;margin-bottom:14px;box-shadow:var(--shadow);border:2px solid var(--lav-soft);}
+.question-num{font-size:11px;font-weight:700;color:var(--pink);margin:0 0 6px;text-transform:uppercase;}
+.question-text{font-size:15px;font-weight:700;margin:0 0 12px;}
+.choice-list{display:flex;flex-direction:column;gap:8px;}
+.choice-btn{text-align:left;padding:11px 15px;border-radius:14px;border:2px solid var(--pink-soft);background:white;cursor:pointer;font-family:var(--font-body);font-size:14px;font-weight:600;}
+.choice-btn.active{border-color:var(--pink);background:var(--pink-soft);}
+.choice-btn.wrong-choice{border-color:var(--coral);background:var(--coral-soft);}
+.fill-input,.name-field input,.search-input,.form-card input,.form-card select,.form-card textarea{
+  width:100%;padding:11px 15px;border-radius:14px;border:2px solid var(--lav-soft);font-family:var(--font-body);font-size:14px;background:white;
+}
+.fill-input:focus,.form-card input:focus,.form-card select:focus,.form-card textarea:focus{outline:none;border-color:var(--pink);}
+.name-field{margin-bottom:20px;}
+.name-field label{display:block;font-size:12px;color:var(--ink-soft);margin-bottom:6px;font-weight:600;}
+
+.match-wrap{display:flex;gap:14px;}
+.match-col{flex:1;display:flex;flex-direction:column;gap:8px;}
+.match-item{padding:10px 12px;border-radius:14px;border:2px solid var(--lav-soft);background:white;font-size:13.5px;font-weight:600;cursor:pointer;text-align:center;}
+.match-item.sel{border-color:var(--sun);background:var(--sun-soft);}
+.match-item.done{border-color:var(--mint);background:var(--mint-soft);color:#1c8a68;cursor:default;}
+.match-item.corr{border-color:var(--mint);background:var(--mint-soft);}
+.match-item.wrong{border-color:var(--coral);background:var(--coral-soft);color:#c23a3a;}
+
+.result-card{text-align:center;background:var(--card);border-radius:24px;padding:40px 24px;border:4px dashed var(--pink);box-shadow:var(--shadow);}
+.result-card h2{margin:12px 0 6px;}
+.result-score{font-size:44px;font-weight:800;margin:6px 0 0;color:var(--pink);font-family:var(--font-display);}
+.result-pct{color:var(--ink-soft);margin:0;font-weight:600;}
+
+.answerkey-block{margin-top:22px;}
+.answerkey-row{border-radius:16px;padding:14px 16px;margin-bottom:12px;border:3px solid;}
+.ak-correct{border-color:var(--mint);background:var(--mint-soft);}
+.ak-wrong{border-color:var(--coral);background:var(--coral-soft);}
+.ak-head{display:flex;align-items:flex-start;gap:8px;font-weight:700;margin-bottom:8px;}
+.ak-head p{margin:0;}
+.ak-choices{margin:0 0 6px;padding-left:20px;font-size:13.5px;}
+.ak-choice-correct{color:#1c8a68;font-weight:800;}
+.ak-choice-wrong{color:#c23a3a;}
+.ak-fill-line{font-size:13.5px;margin:3px 0;}
+.ak-explain{font-size:13px;color:var(--ink-soft);margin:8px 0 0;padding-top:8px;border-top:2px dashed rgba(74,59,99,0.15);}
+
+.gate-card{max-width:360px;margin:40px auto;text-align:center;background:var(--card);border:4px dashed var(--lav);border-radius:24px;padding:30px 24px;box-shadow:var(--shadow);}
+.gate-card h2{margin:10px 0 4px;}
+.gate-card p{color:var(--ink-soft);font-size:13px;margin:0 0 16px;}
+.gate-card input{width:100%;margin-bottom:12px;}
+.gate-error{color:var(--coral);font-size:12.5px;margin-top:10px;font-weight:700;}
+.gate-hint{font-size:11px;color:var(--ink-soft);margin-top:16px;line-height:1.5;}
+
+.form-card{background:var(--card);border-radius:20px;padding:20px;margin:14px 0;box-shadow:var(--shadow);border:2px solid var(--lav-soft);}
+.form-card h3{margin:0 0 14px;}
+.form-card label{display:block;font-size:12px;color:var(--ink-soft);margin:12px 0 5px;font-weight:700;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.sub-card{background:var(--pink-soft);border-radius:16px;padding:12px;margin:10px 0;display:flex;flex-direction:column;gap:8px;}
+.mc-row{display:flex;align-items:center;gap:8px;}
+.mini-hint{font-size:11.5px;color:var(--ink-soft);margin:2px 0 0;}
+
+.btn-mini{display:inline-flex;align-items:center;gap:5px;padding:7px 12px;border-radius:999px;border:none;background:var(--lav-soft);color:var(--ink);font-size:12px;font-weight:700;cursor:pointer;margin-right:8px;margin-top:6px;}
+.btn-mini-danger{background:var(--coral-soft);color:#c23a3a;}
+
+.manage-list{margin-top:16px;display:flex;flex-direction:column;gap:10px;}
+.manage-row{display:flex;justify-content:space-between;align-items:center;background:var(--card);border-radius:14px;padding:12px 14px;gap:10px;flex-wrap:wrap;box-shadow:0 3px 0 rgba(74,59,99,0.08);}
+.manage-title{margin:0;font-weight:700;font-size:14px;}
+.manage-sub{margin:2px 0 0;font-size:12px;color:var(--ink-soft);}
+.manage-actions{display:flex;gap:6px;}
+
+.result-table{width:100%;border-collapse:collapse;margin-top:8px;font-size:13px;}
+.result-table th{text-align:left;color:var(--ink-soft);font-weight:700;font-size:11.5px;text-transform:uppercase;padding:4px 6px;}
+.result-table td{padding:6px;border-top:1px solid rgba(74,59,99,0.1);}
+
+.search-row{display:flex;align-items:center;gap:8px;background:white;border-radius:14px;padding:4px 12px;border:2px solid var(--lav-soft);}
+.search-row .search-input{border:none;padding:9px 0;}
+.search-row .search-input:focus{outline:none;}
+
+.vocab-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+@media (max-width:560px){.vocab-grid{grid-template-columns:1fr;}}
+.vocab-card{background:var(--card);border-radius:16px;padding:14px 16px;box-shadow:var(--shadow);border:2px solid var(--sun-soft);}
+.vocab-word{font-family:var(--font-display);font-weight:800;font-size:17px;margin:0 0 2px;color:var(--ink);}
+.vocab-read{font-size:12px;color:var(--pink);font-weight:700;margin:0 0 4px;}
+.vocab-pos{font-size:10px;color:var(--mint-soft);background:var(--mint);padding:2px 8px;border-radius:999px;font-weight:700;}
+.vocab-meaning{margin:6px 0 0;font-size:13.5px;color:var(--ink-soft);}
+
+.game-setup{margin-top:24px;background:var(--card);border:3px dashed var(--sky);border-radius:20px;padding:18px;}
+.game-play{max-width:640px;margin:0 auto;}
+.game-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;font-size:13.5px;font-weight:600;flex-wrap:wrap;gap:8px;}
+
+.memory-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+@media (max-width:480px){.memory-grid{grid-template-columns:repeat(3,1fr);}}
+.memory-card{aspect-ratio:1;border-radius:14px;border:none;background:linear-gradient(135deg,var(--lav),#9179ff);color:white;font-size:11px;font-weight:700;padding:6px;display:flex;align-items:center;justify-content:center;text-align:center;cursor:pointer;word-break:break-word;box-shadow:0 3px 0 #6f56e0;}
+.memory-card.matched{background:var(--mint);opacity:.65;cursor:default;box-shadow:none;}
+.memory-card.flipped{background:white;color:var(--ink);border:2px solid var(--sun);}
+
+.scramble-box{background:var(--card);border-radius:20px;padding:24px;text-align:center;box-shadow:var(--shadow);}
+.scramble-letters{font-family:var(--font-display);font-size:36px;letter-spacing:.15em;margin:0 0 10px;font-weight:800;color:var(--lav);}
+.feedback-box{margin-top:14px;padding:12px;border-radius:14px;font-weight:800;}
+.fb-correct{background:var(--mint-soft);color:#1c8a68;}
+.fb-wrong{background:var(--coral-soft);color:#c23a3a;}
+
+.timer-bar{height:10px;background:var(--pink-soft);border-radius:999px;overflow:hidden;}
+.timer-fill{height:100%;background:linear-gradient(90deg,var(--sun),var(--coral));transition:width 1s linear;}
+
+.hangman-word{font-family:var(--font-display);font-size:32px;text-align:center;letter-spacing:.2em;margin:16px 0;font-weight:800;}
+.hangman-keyboard{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;}
+@media (max-width:480px){.hangman-keyboard{grid-template-columns:repeat(6,1fr);}}
+.key-btn{padding:9px 0;border-radius:10px;border:none;background:white;box-shadow:0 3px 0 rgba(74,59,99,0.15);text-transform:uppercase;cursor:pointer;font-weight:700;}
+.key-btn.correct{background:var(--mint-soft);box-shadow:0 3px 0 #2ea885;}
+.key-btn.wrong{background:var(--coral-soft);box-shadow:0 3px 0 #b83838;}
+.key-btn:disabled{opacity:.5;cursor:default;}
+
+.flip-card{perspective:1000px;height:180px;cursor:pointer;}
+.flip-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
+.flip-inner.flipped{transform:rotateY(180deg);}
+.flip-front,.flip-back{position:absolute;inset:0;backface-visibility:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:20px;font-family:var(--font-display);font-size:22px;font-weight:800;text-align:center;padding:12px;box-shadow:var(--shadow);}
+.flip-front{background:white;color:var(--ink);border:3px solid var(--pink);}
+.flip-back{background:linear-gradient(135deg,var(--lav),#9179ff);color:white;transform:rotateY(180deg);font-size:16px;}
+
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink);color:white;padding:12px 20px;border-radius:999px;font-size:13px;font-weight:600;z-index:100;box-shadow:0 6px 20px rgba(0,0,0,0.2);animation:toast-in .3s ease;}
+@keyframes toast-in{from{opacity:0;transform:translate(-50%,10px);}to{opacity:1;transform:translate(-50%,0);}}
+.confetti-piece{position:fixed;top:-30px;font-size:22px;z-index:200;animation:confetti-fall 2.2s ease-in forwards;pointer-events:none;}
+@keyframes confetti-fall{to{transform:translateY(110vh) rotate(600deg);opacity:0.2;}}
+.loading-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:320px;gap:14px;}
+.spin{font-size:34px;animation:spin 1.2s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+.theme-toggle{background:white;border:none;border-radius:999px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;box-shadow:0 3px 0 rgba(74,59,99,0.15);}
+.streak-badge{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,var(--sun),#ff9f4a);color:#5a3a00;font-weight:800;padding:8px 16px;border-radius:999px;font-size:14px;box-shadow:0 3px 0 rgba(255,159,74,.4);}
+.quote-card{background:var(--card);border-radius:20px;padding:20px 22px;box-shadow:var(--shadow);border:2px dashed var(--lav);margin:18px 0;text-align:center;}
+.quote-en{font-family:var(--font-display);font-size:17px;font-weight:700;margin:0 0 8px;color:var(--ink);}
+.quote-th{font-size:13.5px;color:var(--ink-soft);margin:0;}
+.quote-icon{font-size:24px;margin-bottom:6px;}
+
+.auth-card{max-width:380px;margin:20px auto;background:var(--card);border-radius:24px;padding:26px 24px;box-shadow:var(--shadow);border:3px solid var(--lav-soft);}
+.auth-card h2{margin:6px 0 4px;text-align:center;}
+.auth-card p.sub{text-align:center;color:var(--ink-soft);font-size:13px;margin:0 0 16px;}
+.auth-tabs{display:flex;gap:6px;margin-bottom:16px;background:var(--pink-soft);border-radius:999px;padding:4px;}
+.auth-tab{flex:1;text-align:center;padding:8px;border-radius:999px;border:none;background:transparent;font-weight:700;font-size:13px;cursor:pointer;color:var(--ink-soft);}
+.auth-tab.active{background:var(--card);color:var(--ink);box-shadow:0 2px 0 rgba(74,59,99,.1);}
+.auth-error{color:var(--coral);font-size:12.5px;font-weight:700;margin-top:8px;text-align:center;}
+
+.account-header{display:flex;align-items:center;gap:14px;background:var(--card);border-radius:20px;padding:18px 20px;box-shadow:var(--shadow);margin-bottom:20px;flex-wrap:wrap;}
+.account-avatar{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--pink),var(--lav));display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;}
+.account-name{font-weight:800;font-size:18px;margin:0;}
+.account-sub{color:var(--ink-soft);font-size:12.5px;margin:2px 0 0;}
+
+.pie-wrap{display:flex;gap:22px;align-items:center;flex-wrap:wrap;justify-content:center;margin:16px 0;}
+.pie-chart{width:180px;height:180px;border-radius:50%;flex-shrink:0;box-shadow:var(--shadow);}
+.pie-legend{display:flex;flex-direction:column;gap:8px;min-width:180px;}
+.pie-legend-row{display:flex;align-items:center;gap:8px;font-size:13px;}
+.pie-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;}
+.pie-legend-label{flex:1;font-weight:600;}
+.pie-legend-pct{font-weight:800;font-family:var(--font-display);}
+.strength-bar-track{background:var(--pink-soft);border-radius:999px;height:10px;overflow:hidden;margin-top:4px;}
+.strength-bar-fill{height:100%;border-radius:999px;}
+</style>
+</head>
+<body>
+<div id="app">
+  <header id="topbar"></header>
+  <main id="main"></main>
+</div>
+<script>
+/* ============================================================
+   English Explorer — สมุดผจญภัยภาษาอังกฤษ (Static single-file build)
+   ทำงานได้ทันทีบน GitHub Pages หรือเปิดไฟล์ตรง ๆ ในเบราว์เซอร์
+   ข้อมูลเก็บใน localStorage ของเบราว์เซอร์แต่ละเครื่อง (ไม่มีเซิร์ฟเวอร์กลาง)
+   ใช้ปุ่ม "ส่งออกข้อมูล" / "นำเข้าข้อมูล" ในหลังบ้านครู เพื่อย้าย/แชร์ข้อมูลระหว่างเครื่อง
+============================================================ */
+
+const TEACHER_PASSCODE = "ratsada2569";
+const LEVELS = ["ม.ต้น","ม.ปลาย"];
+const CATEGORIES = ["Grammar","Vocabulary"];
+const GRADES = ["ม.1","ม.2","ม.3","ม.4","ม.5","ม.6"];
+const POS_LABEL = {n:"คำนาม",v:"คำกริยา",adj:"คำคุณศัพท์",adv:"คำวิเศษณ์",phr:"คำเชื่อม/วลี"};
+
+function genId(p){ return p+"_"+Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
+function shuffle(arr){ const a=arr.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function sample(arr,n){ return shuffle(arr).slice(0, Math.min(n, arr.length)); }
+function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+function $(sel){ return document.querySelector(sel); }
+function $all(sel){ return Array.from(document.querySelectorAll(sel)); }
+
+function toast(msg){
+  const t = document.createElement("div");
+  t.className = "toast"; t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(()=>{ t.remove(); }, 2200);
+}
+function confettiBurst(count){
+  count = count || 24;
+  const emojis = ["🎉","✨","🌸","⭐","🎊","💖","🌟"];
+  for(let i=0;i<count;i++){
+    const el = document.createElement("div");
+    el.className = "confetti-piece";
+    el.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+    el.style.left = Math.random()*100+"vw";
+    el.style.animationDelay = (Math.random()*0.4)+"s";
+    el.style.fontSize = (16+Math.random()*16)+"px";
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(), 2600);
+  }
+}
+/* ---------------------------- Theme (light/dark) ---------------------------- */
+function initTheme(){
+  let theme = localStorage.getItem("ee_theme");
+  if (!theme) theme = (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : "light";
+  document.body.classList.toggle("theme-dark", theme === "dark");
+  return theme;
+}
+let currentTheme = "light";
+
+/* ---------------------------- Motivational quotes (quote of the day) ---------------------------- */
+
+const QUOTES = [
+{en:"Practice makes perfect.", th:"ยิ่งฝึกฝน ยิ่งเก่งขึ้น"},
+{en:"Every expert was once a beginner.", th:"ผู้เชี่ยวชาญทุกคนก็เคยเป็นมือใหม่มาก่อน"},
+{en:"Small steps every day lead to big results.", th:"ก้าวเล็ก ๆ ทุกวัน นำไปสู่ผลลัพธ์ที่ยิ่งใหญ่"},
+{en:"Mistakes are proof that you are trying.", th:"ความผิดพลาดคือหลักฐานว่าคุณกำลังพยายาม"},
+{en:"Rome wasn't built in a day.", th:"กรุงโรมไม่ได้สร้างเสร็จในวันเดียว"},
+{en:"Where there's a will, there's a way.", th:"ที่ใดมีความตั้งใจ ที่นั่นมีหนทาง"},
+{en:"Slow and steady wins the race.", th:"ช้าแต่มั่นคง ย่อมชนะในที่สุด"},
+{en:"Never give up on your dreams.", th:"อย่ายอมแพ้ต่อความฝันของคุณ"},
+{en:"Today's effort is tomorrow's success.", th:"ความพยายามวันนี้ คือความสำเร็จวันพรุ่งนี้"},
+{en:"Learning a language opens a new world.", th:"การเรียนภาษาใหม่ เปิดโลกใบใหม่ให้คุณ"},
+{en:"You are braver than you believe.", th:"คุณกล้าหาญกว่าที่คุณคิดไว้เสมอ"},
+{en:"A little progress each day adds up.", th:"ความก้าวหน้าเล็ก ๆ ในแต่ละวัน สะสมกันเป็นเรื่องใหญ่"},
+{en:"Believe in yourself and keep going.", th:"เชื่อมั่นในตัวเอง แล้วก้าวต่อไป"},
+{en:"Every word you learn is a new key.", th:"ทุกคำศัพท์ที่คุณเรียนรู้ คือกุญแจดอกใหม่"},
+{en:"Consistency beats intensity.", th:"ความสม่ำเสมอ สำคัญกว่าความหักโหม"},
+{en:"Don't watch the clock; do what it does. Keep going.", th:"อย่ามัวมองนาฬิกา จงทำเหมือนมัน คือเดินหน้าต่อไป"},
+{en:"Your only limit is your mind.", th:"ขีดจำกัดเดียวของคุณ คือความคิดของคุณเอง"},
+{en:"The best time to start was yesterday. The next best time is now.", th:"เวลาที่ดีที่สุดในการเริ่มต้นคือเมื่อวาน รองลงมาคือตอนนี้"},
+{en:"Fall seven times, stand up eight.", th:"ล้มเจ็ดครั้ง ลุกขึ้นแปดครั้ง"},
+{en:"Difficult roads often lead to beautiful destinations.", th:"เส้นทางที่ยากลำบาก มักนำไปสู่จุดหมายที่งดงาม"},
+{en:"You don't have to be perfect, just keep trying.", th:"คุณไม่จำเป็นต้องสมบูรณ์แบบ แค่พยายามต่อไปก็พอ"},
+{en:"Learning never exhausts the mind.", th:"การเรียนรู้ไม่เคยทำให้จิตใจอ่อนล้า"},
+{en:"Keep your eyes on the goal, not the obstacle.", th:"จับตาไปที่เป้าหมาย ไม่ใช่อุปสรรค"},
+{en:"Success is the sum of small efforts repeated daily.", th:"ความสำเร็จคือผลรวมของความพยายามเล็ก ๆ ที่ทำซ้ำทุกวัน"},
+{en:"Actions speak louder than words.", th:"การกระทำ ดังกว่าคำพูด"},
+{en:"Knowledge is power.", th:"ความรู้ คือพลัง"},
+{en:"The early bird catches the worm.", th:"นกที่ตื่นเช้า ย่อมจับหนอนได้ก่อน"},
+{en:"Every cloud has a silver lining.", th:"ทุกเมฆหมอก ย่อมมีแสงสว่างซ่อนอยู่"},
+{en:"Great things take time.", th:"สิ่งที่ยิ่งใหญ่ ต้องใช้เวลา"},
+{en:"Push yourself, because no one else will do it for you.", th:"ผลักดันตัวเอง เพราะไม่มีใครทำแทนคุณได้"},
+{en:"One page a day keeps failure away.", th:"อ่านวันละหน้า ห่างไกลความล้มเหลว"},
+{en:"A journey of a thousand miles begins with a single step.", th:"การเดินทางพันลี้ เริ่มต้นจากก้าวแรก"},
+{en:"The more you learn, the more you earn.", th:"ยิ่งเรียนรู้มาก ยิ่งได้รับมาก"},
+{en:"Stay positive, work hard, make it happen.", th:"คิดบวก ตั้งใจทำ แล้วมันจะเป็นจริง"},
+{en:"You are capable of amazing things.", th:"คุณมีความสามารถทำสิ่งที่น่าทึ่งได้"},
+{en:"Progress, not perfection.", th:"ความก้าวหน้า สำคัญกว่าความสมบูรณ์แบบ"},
+{en:"Don't be afraid to make mistakes in English.", th:"อย่ากลัวที่จะพูดหรือเขียนภาษาอังกฤษผิด"},
+{en:"Every sentence you speak makes you stronger.", th:"ทุกประโยคที่คุณพูด ทำให้คุณแข็งแกร่งขึ้น"},
+{en:"You are one lesson closer to fluency.", th:"คุณใกล้เก่งภาษาอังกฤษขึ้นอีกหนึ่งบทเรียนแล้ว"},
+{en:"Turn your can'ts into cans.", th:"เปลี่ยนคำว่า 'ทำไม่ได้' ให้เป็น 'ทำได้'"},
+{en:"Dream big, study hard, stay humble.", th:"ฝันให้ไกล เรียนให้หนัก และถ่อมตัวเสมอ"},
+{en:"Your future is created by what you do today.", th:"อนาคตของคุณ ถูกสร้างขึ้นจากสิ่งที่คุณทำวันนี้"},
+{en:"Learning is a treasure that follows its owner everywhere.", th:"ความรู้เป็นสมบัติที่ติดตัวเจ้าของไปทุกที่"},
+{en:"Practice a little every day, not a lot once in a while.", th:"ฝึกทีละนิดทุกวัน ดีกว่าฝึกหนักนาน ๆ ครั้ง"},
+{en:"You are stronger than you think.", th:"คุณเข้มแข็งกว่าที่คุณคิด"},
+{en:"每一天都是新的开始 — every day is a new beginning.", th:"ทุกวันคือจุดเริ่มต้นใหม่"},
+{en:"Focus on progress, celebrate every win.", th:"มุ่งเน้นความก้าวหน้า และฉลองทุกชัยชนะเล็ก ๆ"},
+{en:"A good vocabulary is a passport to the world.", th:"คลังคำศัพท์ที่ดี คือหนังสือเดินทางสู่โลกกว้าง"},
+{en:"Effort never betrays you.", th:"ความพยายามไม่เคยทรยศใคร"},
+{en:"Reading is to the mind what exercise is to the body.", th:"การอ่านมีผลต่อสมอง เหมือนการออกกำลังกายมีผลต่อร่างกาย"},
+{en:"Keep calm and study English.", th:"ใจเย็น ๆ แล้วตั้งใจเรียนภาษาอังกฤษต่อไป"},
+{en:"You get better by doing, not by waiting.", th:"คุณจะเก่งขึ้นจากการลงมือทำ ไม่ใช่การรอคอย"},
+{en:"Today is a good day to learn something new.", th:"วันนี้เป็นวันที่ดีในการเรียนรู้สิ่งใหม่"},
+{en:"The pain of studying is nothing compared to the pain of not knowing.", th:"ความเหนื่อยจากการเรียน ไม่เท่าความลำบากจากการไม่รู้"},
+{en:"Speak the language before you master it.", th:"กล้าพูดก่อน แล้วค่อยเก่งทีหลัง"},
+{en:"You didn't come this far to only come this far.", th:"คุณมาไกลขนาดนี้แล้ว อย่าหยุดแค่นี้"},
+{en:"A river cuts through rock, not because of its power, but its persistence.", th:"แม่น้ำเซาะหินได้ ไม่ใช่เพราะพลัง แต่เพราะความไม่ย่อท้อ"},
+{en:"Little by little, a little becomes a lot.", th:"ทีละนิด ทีละนิด ในที่สุดก็กลายเป็นเรื่องใหญ่"},
+{en:"Your attitude determines your direction.", th:"ทัศนคติของคุณ กำหนดทิศทางของคุณ"},
+{en:"Great learners are made, not born.", th:"นักเรียนที่เก่ง เกิดจากการฝึกฝน ไม่ใช่พรสวรรค์อย่างเดียว"},
+{en:"The comeback is always stronger than the setback.", th:"การกลับมา มักแข็งแกร่งกว่าความล้มเหลว"},
+{en:"Learn as if you will live forever.", th:"จงเรียนรู้ ราวกับว่าคุณจะมีชีวิตอยู่ตลอดไป"},
+{en:"Discipline is choosing what you want most over what you want now.", th:"วินัย คือการเลือกสิ่งที่ต้องการที่สุด แทนสิ่งที่อยากได้ตอนนี้"},
+{en:"You are exactly where you need to be to grow.", th:"คุณอยู่ในจุดที่เหมาะสมสำหรับการเติบโตพอดี"},
+{en:"Confidence comes from preparation.", th:"ความมั่นใจ เกิดจากการเตรียมตัวมาดี"},
+{en:"Study today, shine tomorrow.", th:"ตั้งใจเรียนวันนี้ เพื่อความสำเร็จวันพรุ่งนี้"},
+{en:"Words are the building blocks of thought.", th:"คำศัพท์คือรากฐานของความคิด"},
+{en:"There is no elevator to success, you have to take the stairs.", th:"ไม่มีลิฟต์ไปสู่ความสำเร็จ ต้องเดินขึ้นบันไดทีละขั้น"},
+{en:"The expert in anything was once a beginner.", th:"ผู้เชี่ยวชาญในทุกเรื่อง ก็เคยเป็นมือใหม่มาก่อนทั้งนั้น"},
+{en:"You can't improve what you don't practice.", th:"คุณจะพัฒนาสิ่งที่ไม่เคยฝึกฝนไม่ได้"},
+{en:"Learning English is a marathon, not a sprint.", th:"การเรียนภาษาอังกฤษเหมือนวิ่งมาราธอน ไม่ใช่วิ่งเร็ว 100 เมตร"},
+{en:"Every day is another chance to get better.", th:"ทุกวันคือโอกาสใหม่ในการพัฒนาตัวเอง"},
+{en:"Doubt kills more dreams than failure ever will.", th:"ความลังเลใจ ฆ่าความฝันมากกว่าความล้มเหลวเสียอีก"},
+{en:"You are your only limit.", th:"ตัวคุณเองคือขีดจำกัดเดียวของคุณ"},
+{en:"Aim for progress, not comparison.", th:"มุ่งพัฒนาตัวเอง อย่าเปรียบเทียบกับคนอื่น"},
+{en:"The secret of getting ahead is getting started.", th:"เคล็ดลับของการก้าวไปข้างหน้า คือการเริ่มลงมือทำ"},
+{en:"Learning is never a waste of time.", th:"การเรียนรู้ไม่เคยเสียเวลาเปล่า"},
+{en:"Good habits are worth being fanatical about.", th:"นิสัยที่ดี คุ้มค่าที่จะยึดมั่นอย่างจริงจัง"},
+{en:"You are capable of more than you know.", th:"คุณทำได้มากกว่าที่คุณรู้ตัว"},
+{en:"Turn your wounds into wisdom.", th:"เปลี่ยนบาดแผลของคุณ ให้เป็นปัญญา"},
+{en:"Champions keep playing until they get it right.", th:"แชมป์เปี้ยนเล่นต่อไปเรื่อย ๆ จนกว่าจะทำได้สำเร็จ"},
+{en:"Study hard what interests you the most.", th:"ตั้งใจศึกษาในสิ่งที่คุณสนใจที่สุด"},
+{en:"Don't stop until you're proud.", th:"อย่าหยุด จนกว่าคุณจะภูมิใจในตัวเอง"},
+{en:"Every accomplishment starts with the decision to try.", th:"ทุกความสำเร็จ เริ่มต้นจากการตัดสินใจลงมือทำ"},
+{en:"Be stubborn about your goals, flexible about your methods.", th:"ยึดมั่นในเป้าหมาย แต่ยืดหยุ่นในวิธีการ"},
+{en:"You grow the most when it feels hardest.", th:"คุณจะเติบโตมากที่สุด ตอนที่รู้สึกว่ายากที่สุด"},
+{en:"A good vocabulary today builds a great future tomorrow.", th:"คำศัพท์ที่ดีวันนี้ สร้างอนาคตที่ดีในวันหน้า"},
+{en:"Winners are not people who never fail, but people who never quit.", th:"ผู้ชนะไม่ใช่คนที่ไม่เคยล้มเหลว แต่เป็นคนที่ไม่เคยยอมแพ้"},
+{en:"Learning is a gift, even when pain is your teacher.", th:"การเรียนรู้คือของขวัญ แม้บางครั้งความเจ็บปวดจะเป็นครู"},
+{en:"Show up for yourself today.", th:"วันนี้ ลงมือทำเพื่อตัวเองสักหน่อยนะ"},
+{en:"Great work comes from great consistency.", th:"ผลงานที่ยอดเยี่ยม เกิดจากความสม่ำเสมอที่ยอดเยี่ยม"},
+{en:"You're closer to your goal than you were yesterday.", th:"วันนี้คุณใกล้เป้าหมายมากกว่าเมื่อวานแล้ว"},
+{en:"Curiosity is the engine of learning.", th:"ความอยากรู้อยากเห็น คือเครื่องยนต์ของการเรียนรู้"},
+{en:"Repeat until it becomes a habit, not a task.", th:"ทำซ้ำจนมันกลายเป็นนิสัย ไม่ใช่แค่ภาระ"},
+{en:"Even the impossible spells 'I'm possible.'", th:"แม้แต่คำว่า impossible ก็ยังมีคำว่า I'm possible ซ่อนอยู่"},
+{en:"The pain you feel today builds the strength you need tomorrow.", th:"ความเหนื่อยวันนี้ สร้างความแข็งแกร่งให้วันพรุ่งนี้"},
+{en:"You are one quiz away from knowing more than yesterday.", th:"อีกแค่หนึ่งแบบทดสอบ คุณก็จะรู้มากกว่าเมื่อวานแล้ว"},
+{en:"Learning English opens doors you never knew existed.", th:"การเรียนภาษาอังกฤษเปิดประตูที่คุณไม่เคยรู้ว่ามีอยู่"},
+{en:"It always seems impossible until it is done.", th:"ทุกอย่างดูเป็นไปไม่ได้ จนกว่ามันจะสำเร็จ"},
+{en:"Set your goals high, and don't stop till you get there.", th:"ตั้งเป้าหมายให้สูง และอย่าหยุดจนกว่าจะไปถึง"},
+{en:"You are not behind, you are on your own timeline.", th:"คุณไม่ได้ล้าหลังใคร คุณแค่มีจังหวะเวลาของตัวเอง"},
+{en:"做一点比不做要好 — doing a little is better than doing nothing.", th:"ทำนิดหน่อย ดีกว่าไม่ทำเลย"},
+{en:"Learning is like rowing upstream; not to advance is to drop back.", th:"การเรียนเหมือนพายเรือทวนน้ำ ถ้าไม่ก้าวไปข้างหน้า ก็จะถูกน้ำพัดถอยหลัง"},
+{en:"You will never regret time spent learning.", th:"คุณจะไม่มีวันเสียใจกับเวลาที่ใช้ไปกับการเรียนรู้"},
+{en:"Little wins today lead to big victories tomorrow.", th:"ชัยชนะเล็ก ๆ วันนี้ นำไปสู่ชัยชนะที่ยิ่งใหญ่ในวันหน้า"},
+{en:"Speak with confidence, even if you make mistakes.", th:"พูดอย่างมั่นใจ ถึงแม้จะพูดผิดบ้างก็ตาม"},
+{en:"A single word learned today is a tool for life.", th:"คำศัพท์หนึ่งคำที่เรียนวันนี้ คือเครื่องมือติดตัวไปตลอดชีวิต"},
+{en:"Your brain grows stronger every time you challenge it.", th:"สมองของคุณจะแข็งแกร่งขึ้นทุกครั้งที่คุณท้าทายมัน"},
+{en:"Nothing worth having comes easy.", th:"ไม่มีสิ่งใดที่มีค่า ได้มาโดยง่าย"},
+{en:"You've survived 100% of your worst days so far.", th:"คุณผ่านวันที่แย่ที่สุดมาแล้ว 100% ของทุกครั้ง"},
+{en:"Feed your mind with good words every day.", th:"หล่อเลี้ยงสมองด้วยคำศัพท์ดี ๆ ทุกวัน"},
+{en:"Trust the process, enjoy the journey.", th:"เชื่อในกระบวนการ และสนุกกับการเดินทาง"},
+{en:"You are building your future one lesson at a time.", th:"คุณกำลังสร้างอนาคตทีละบทเรียน"},
+{en:"Hard work beats talent when talent doesn't work hard.", th:"ความขยัน ชนะพรสวรรค์ ถ้าพรสวรรค์นั้นไม่ขยัน"},
+{en:"Keep learning, keep growing, keep shining.", th:"เรียนรู้ต่อไป เติบโตต่อไป และเปล่งประกายต่อไป"},
+{en:"There's always something new to discover in a language.", th:"ในภาษาหนึ่งภาษา มีสิ่งใหม่ให้ค้นพบอยู่เสมอ"},
+{en:"The best investment you can make is in yourself.", th:"การลงทุนที่ดีที่สุด คือการลงทุนกับตัวเอง"},
+{en:"You don't need to see the whole staircase, just take the first step.", th:"คุณไม่จำเป็นต้องเห็นบันไดทั้งหมด แค่ก้าวขั้นแรกก็พอ"},
+{en:"Success is built one small habit at a time.", th:"ความสำเร็จถูกสร้างขึ้นทีละนิสัยเล็ก ๆ"},
+{en:"You're doing better than you think you are.", th:"คุณทำได้ดีกว่าที่คุณคิดไว้มากทีเดียว"},
+{en:"Choose progress over perfect.", th:"เลือกความก้าวหน้า มากกว่าความสมบูรณ์แบบ"},
+{en:"Learning is a superpower anyone can have.", th:"การเรียนรู้คือพลังวิเศษที่ใครก็มีได้"},
+{en:"The only bad study session is the one that didn't happen.", th:"การเรียนที่แย่ที่สุด คือการเรียนที่ไม่เคยเกิดขึ้นเลย"},
+];
+function dayOfYear(){
+  const now = new Date();
+  const start = new Date(now.getFullYear(),0,0);
+  const diff = now - start;
+  return Math.floor(diff / (1000*60*60*24));
+}
+function quoteOfTheDay(){ return QUOTES[dayOfYear() % QUOTES.length]; }
+
+/* ---------------------------- Local accounts, login, streaks ---------------------------- */
+
+function loadUsers(){ return loadJSONsafe("ee_users", []); }
+function saveUsers(u){ try{ localStorage.setItem("ee_users", JSON.stringify(u)); }catch(e){ console.error(e); } }
+function loadJSONsafe(key, fallback){ try{ const raw = localStorage.getItem(key); if(raw) return JSON.parse(raw); }catch(e){} return fallback; }
+function getCurrentUsername(){ return localStorage.getItem("ee_current_user") || null; }
+function setCurrentUsername(u){ if(u) localStorage.setItem("ee_current_user", u); else localStorage.removeItem("ee_current_user"); }
+function todayStr(){ const d=new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+function updateStreak(user){
+  const today = todayStr();
+  if (!user.streak) user.streak = { count: 0, last: null };
+  if (user.streak.last === today) return;
+  const yest = new Date(); yest.setDate(yest.getDate()-1);
+  const yestStr = yest.getFullYear()+"-"+String(yest.getMonth()+1).padStart(2,"0")+"-"+String(yest.getDate()).padStart(2,"0");
+  if (user.streak.last === yestStr) user.streak.count += 1;
+  else user.streak.count = 1;
+  user.streak.last = today;
+}
+
+/* ---------------------------- Lesson content ---------------------------- */
+
+const DEFAULT_LESSONS = [
+  { id:"l1", title:"Present Simple Tense", level:"ม.ต้น", category:"Grammar",
+    summary:"พูดถึงความจริง กิจวัตรประจำวัน และสิ่งที่เกิดขึ้นเป็นประจำ",
+    sections:[
+      {heading:"โครงสร้าง", body:"Subject + Verb (เติม s/es กับประธานเอกพจน์บุรุษที่ 3) เช่น she/he/it\nประโยคปฏิเสธใช้ do not / does not + Verb1\nประโยคคำถามขึ้นต้นด้วย Do / Does"},
+      {heading:"ใช้เมื่อไหร่", body:"1) บอกความจริงทั่วไป เช่น The sun rises in the east.\n2) บอกกิจวัตรประจำวัน มักมีคำว่า always, usually, often, every day\n3) บอกตารางเวลา เช่น The train leaves at 8 a.m."},
+    ],
+    examples:[
+      {en:"She walks to school every day.", th:"เธอเดินไปโรงเรียนทุกวัน"},
+      {en:"The sun rises in the east.", th:"ดวงอาทิตย์ขึ้นทางทิศตะวันออก"},
+      {en:"My father does not drink coffee.", th:"พ่อของฉันไม่ดื่มกาแฟ"},
+    ]},
+  { id:"l2", title:"Comparative & Superlative Adjectives", level:"ม.ต้น", category:"Grammar",
+    summary:"การเปรียบเทียบขั้นกว่าและขั้นสุด",
+    sections:[
+      {heading:"ขั้นกว่า (Comparative)", body:"คำสั้น: adj + er + than เช่น taller than\nคำยาว: more + adj + than เช่น more interesting than"},
+      {heading:"ขั้นสุด (Superlative)", body:"คำสั้น: the + adj + est เช่น the tallest\nคำยาว: the most + adj เช่น the most interesting"},
+    ],
+    examples:[
+      {en:"This book is more interesting than that one.", th:"หนังสือเล่มนี้น่าสนใจกว่าเล่มนั้น"},
+      {en:"Bangkok is one of the biggest cities in Thailand.", th:"กรุงเทพฯ เป็นหนึ่งในเมืองที่ใหญ่ที่สุดของไทย"},
+    ]},
+  { id:"l3", title:"Present Perfect Tense", level:"ม.ปลาย", category:"Grammar",
+    summary:"เหตุการณ์ในอดีตที่เชื่อมโยงกับปัจจุบัน",
+    sections:[
+      {heading:"โครงสร้าง", body:"Subject + have/has + Verb3 (Past Participle)\nhas ใช้กับ he/she/it, have ใช้กับ I/you/we/they"},
+      {heading:"ใช้เมื่อไหร่", body:"1) ประสบการณ์ที่เคย/ไม่เคยทำ เช่น I have never been to Japan.\n2) เหตุการณ์เริ่มในอดีตและดำเนินถึงปัจจุบัน มักใช้กับ since/for\n3) เหตุการณ์เพิ่งเสร็จสิ้น มักใช้กับ just, already, yet"},
+    ],
+    examples:[
+      {en:"I have seen that movie three times.", th:"ฉันดูหนังเรื่องนั้นมาสามครั้งแล้ว"},
+      {en:"They have lived here since 2015.", th:"พวกเขาอาศัยอยู่ที่นี่ตั้งแต่ปี 2015"},
+      {en:"She has just finished her homework.", th:"เธอเพิ่งทำการบ้านเสร็จ"},
+    ]},
+  { id:"l4", title:"Conditional Sentences (Type 1 & 2)", level:"ม.ปลาย", category:"Grammar",
+    summary:"ประโยคเงื่อนไขที่เป็นไปได้จริงและสมมติ",
+    sections:[
+      {heading:"Type 1 — เป็นไปได้จริง", body:"If + present simple, ... will + verb1\nเช่น If it rains, we will stay at home."},
+      {heading:"Type 2 — สมมติ ไม่จริงในปัจจุบัน", body:"If + past simple, ... would + verb1\nนิยมใช้ were กับทุกประธานในประโยคสมมติ เช่น If I were rich, I would travel the world."},
+    ],
+    examples:[
+      {en:"If it rains, we will stay at home.", th:"ถ้าฝนตก เราจะอยู่บ้าน"},
+      {en:"If I were you, I would apologize.", th:"ถ้าฉันเป็นเธอ ฉันจะขอโทษ"},
+    ]},
+  { id:"l5", title:"Vocabulary: Travel & Directions", level:"ม.ต้น", category:"Vocabulary",
+    summary:"คำศัพท์เกี่ยวกับการเดินทางและการบอกทาง",
+    sections:[
+      {heading:"คำศัพท์สำคัญ", body:"airport (สนามบิน), passport (หนังสือเดินทาง), ticket (ตั๋ว), luggage (สัมภาระ), map (แผนที่)"},
+      {heading:"บอกทาง", body:"turn left/right (เลี้ยวซ้าย/ขวา), go straight (ตรงไป), across from (ตรงข้ามกับ), next to (ข้าง ๆ)"},
+    ],
+    examples:[
+      {en:"You need a passport to travel abroad.", th:"คุณต้องใช้หนังสือเดินทางเพื่อเดินทางไปต่างประเทศ"},
+      {en:"Go straight and turn left at the bank.", th:"ตรงไปแล้วเลี้ยวซ้ายตรงธนาคาร"},
+    ]},
+  { id:"l6", title:"Vocabulary: Environment & Nature", level:"ม.ปลาย", category:"Vocabulary",
+    summary:"คำศัพท์เกี่ยวกับสิ่งแวดล้อมและธรรมชาติ",
+    sections:[
+      {heading:"คำศัพท์สำคัญ", body:"pollution (มลพิษ), recycle (รีไซเคิล), drought (ภัยแล้ง), greenhouse effect (ปรากฏการณ์เรือนกระจก), endangered species (สัตว์ใกล้สูญพันธุ์)"},
+      {heading:"ประโยคที่ใช้บ่อย", body:"ใช้พูดถึงปัญหาสิ่งแวดล้อมและวิธีแก้ไข เช่น การลดขยะ การอนุรักษ์พลังงาน"},
+    ],
+    examples:[
+      {en:"Recycling helps reduce pollution.", th:"การรีไซเคิลช่วยลดมลพิษ"},
+      {en:"Many animals are endangered species today.", th:"ปัจจุบันสัตว์หลายชนิดใกล้สูญพันธุ์"},
+    ]},
+];
+
+/* ---------------------------- Quiz question pools (randomized each attempt) ---------------------------- */
+/* mc questions use "correct" (the answer TEXT) so choices can be shuffled safely each attempt */
+
+const DEFAULT_QUIZZES = [
+  { id:"q1", title:"แบบทดสอบ Present Simple Tense", level:"ม.ต้น", lessonId:"l1", pickCount:5,
+    pool:[
+      {id:genId("qq"), type:"mc", question:"She ___ to school every day.", choices:["go","goes","going","gone"], correct:"goes", explanation:"ประธาน she เป็นเอกพจน์บุรุษที่ 3 กริยาต้องเติม s/es จึงใช้ goes"},
+      {id:genId("qq"), type:"mc", question:"Which sentence is correct?", choices:["He play football.","He plays football.","He playing football.","He played football tomorrow."], correct:"He plays football.", explanation:"he เป็นเอกพจน์บุรุษที่ 3 ต้องเติม s ที่กริยา"},
+      {id:genId("qq"), type:"fill", question:"The sun ___ (rise) in the east.", answers:["rises"], explanation:"ความจริงทั่วไปใช้ Present Simple และเติม s เพราะประธานเอกพจน์"},
+      {id:genId("qq"), type:"match", question:"จับคู่คำกริยากับรูป he/she/it", pairs:[{left:"play",right:"plays"},{left:"go",right:"goes"},{left:"watch",right:"watches"},{left:"study",right:"studies"}], explanation:"กริยาที่ลงท้ายด้วย o, ch, sh, s, x เติม es ส่วนที่ลงท้าย consonant+y เปลี่ยน y เป็น ies"},
+      {id:genId("qq"), type:"mc", question:"They ___ breakfast at 7 a.m.", choices:["has","have","having","to have"], correct:"have", explanation:"ประธาน they ใช้ have"},
+      {id:genId("qq"), type:"mc", question:"___ your brother like pizza?", choices:["Do","Does","Is","Are"], correct:"Does", explanation:"brother เอกพจน์บุรุษที่ 3 ใช้ Does ขึ้นต้นประโยคคำถาม"},
+      {id:genId("qq"), type:"fill", question:"My mother ___ (not/like) spicy food.", answers:["does not like","doesn't like"], explanation:"ประโยคปฏิเสธ Present Simple ประธานเอกพจน์ใช้ does not + Verb1"},
+      {id:genId("qq"), type:"mc", question:"Water ___ at 100 degrees Celsius.", choices:["boil","boils","boiling","boiled"], correct:"boils", explanation:"ความจริงทางวิทยาศาสตร์ใช้ Present Simple"},
+    ]},
+  { id:"q2", title:"แบบทดสอบ Comparative & Superlative", level:"ม.ต้น", lessonId:"l2", pickCount:5,
+    pool:[
+      {id:genId("qq"), type:"mc", question:"This book is ___ than that one.", choices:["interesting","more interesting","most interesting","interestinger"], correct:"more interesting", explanation:"interesting เป็นคำคุณศัพท์พยางค์ยาว ขั้นกว่าใช้ more + adj"},
+      {id:genId("qq"), type:"mc", question:"Bangkok is one of the ___ cities in Thailand.", choices:["big","bigger","biggest","more big"], correct:"biggest", explanation:"โครงสร้าง one of the + ขั้นสุด + พหูพจน์นาม"},
+      {id:genId("qq"), type:"fill", question:"My sister is ___ (tall) than me.", answers:["taller"], explanation:"tall เป็นคำคุณศัพท์พยางค์เดียว ขั้นกว่าเติม er"},
+      {id:genId("qq"), type:"mc", question:"Which is the ___ animal in the world?", choices:["fast","faster","fastest","most fast"], correct:"fastest", explanation:"ขั้นสุดของคำสั้นเติม est"},
+      {id:genId("qq"), type:"mc", question:"This exercise is ___ than the last one.", choices:["easy","easier","easiest","more easy"], correct:"easier", explanation:"easy ลงท้าย y เปลี่ยนเป็น i แล้วเติม er"},
+      {id:genId("qq"), type:"fill", question:"This is the ___ (good) restaurant in town.", answers:["best"], explanation:"good เป็นคำคุณศัพท์ผิดปกติ ขั้นสุดคือ best"},
+      {id:genId("qq"), type:"mc", question:"My new phone is ___ than my old one.", choices:["expensive","more expensive","most expensive","expensiver"], correct:"more expensive", explanation:"expensive เป็นคำยาว ใช้ more"},
+    ]},
+  { id:"q3", title:"แบบทดสอบ Present Perfect Tense", level:"ม.ปลาย", lessonId:"l3", pickCount:5,
+    pool:[
+      {id:genId("qq"), type:"mc", question:"I ___ that movie three times.", choices:["have seen","has seen","have see","did see"], correct:"have seen", explanation:"ประธาน I ใช้ have + Verb3 (seen)"},
+      {id:genId("qq"), type:"mc", question:"She ___ just finished her homework.", choices:["have","has","had","having"], correct:"has", explanation:"ประธาน she เอกพจน์บุรุษที่ 3 ใช้ has"},
+      {id:genId("qq"), type:"fill", question:"They ___ (live) here since 2015.", answers:["have lived"], explanation:"เหตุการณ์เริ่มในอดีตต่อเนื่องถึงปัจจุบัน ใช้ have/has + Verb3 กับ since"},
+      {id:genId("qq"), type:"mc", question:"___ you ever ___ sushi?", choices:["Have / eaten","Has / eaten","Did / eat","Do / eat"], correct:"Have / eaten", explanation:"ประธาน you ใช้ Have กับประสบการณ์ที่เคยทำ"},
+      {id:genId("qq"), type:"fill", question:"We ___ (not/finish) the project yet.", answers:["have not finished","haven't finished"], explanation:"ปฏิเสธ Present Perfect ใช้ have/has not + Verb3 กับ yet"},
+      {id:genId("qq"), type:"mc", question:"He ___ already ___ his room.", choices:["has / cleaned","have / cleaned","did / clean","has / clean"], correct:"has / cleaned", explanation:"ประธาน he ใช้ has + Verb3 กับ already"},
+    ]},
+  { id:"q4", title:"แบบทดสอบ Conditional Sentences", level:"ม.ปลาย", lessonId:"l4", pickCount:5,
+    pool:[
+      {id:genId("qq"), type:"mc", question:"If it rains, we ___ (stay) at home.", choices:["stay","stays","will stay","would stay"], correct:"will stay", explanation:"Conditional Type 1: If + present simple, ... will + verb1"},
+      {id:genId("qq"), type:"mc", question:"If I ___ rich, I would travel the world.", choices:["am","was","were","be"], correct:"were", explanation:"Conditional Type 2 นิยมใช้ were กับทุกประธาน"},
+      {id:genId("qq"), type:"fill", question:"If you study hard, you ___ (pass) the exam.", answers:["will pass"], explanation:"Conditional Type 1 ใช้ will + verb1 ในประโยคผลลัพธ์"},
+      {id:genId("qq"), type:"mc", question:"If she ___ harder, she would get better grades.", choices:["study","studies","studied","will study"], correct:"studied", explanation:"Conditional Type 2 ประโยคเงื่อนไขใช้ past simple"},
+      {id:genId("qq"), type:"fill", question:"If we don't leave now, we ___ (miss) the bus.", answers:["will miss"], explanation:"Conditional Type 1 ใช้ will ในประโยคผลลัพธ์"},
+      {id:genId("qq"), type:"mc", question:"Unless you hurry, you ___ (be) late.", choices:["are","were","will be","would be"], correct:"will be", explanation:"unless เทียบเท่า if...not ตามด้วยผลลัพธ์แบบ Type 1"},
+    ]},
+  { id:"q5", title:"แบบทดสอบคำศัพท์: การเดินทาง", level:"ม.ต้น", lessonId:"l5", pickCount:4,
+    pool:[
+      {id:genId("qq"), type:"match", question:"จับคู่คำศัพท์กับความหมาย", pairs:[{left:"airport",right:"สนามบิน"},{left:"passport",right:"หนังสือเดินทาง"},{left:"ticket",right:"ตั๋ว"},{left:"luggage",right:"สัมภาระ"},{left:"map",right:"แผนที่"}]},
+      {id:genId("qq"), type:"fill", question:"You need a ___ to travel to another country.", answers:["passport"], explanation:"passport คือหนังสือเดินทางที่ต้องใช้ข้ามประเทศ"},
+      {id:genId("qq"), type:"mc", question:"Which word means 'a document needed to enter another country'?", choices:["ticket","passport","map","luggage"], correct:"passport", explanation:"passport แปลว่าหนังสือเดินทาง"},
+      {id:genId("qq"), type:"mc", question:"You keep your clothes in your ___ when traveling.", choices:["luggage","map","ticket","airport"], correct:"luggage", explanation:"luggage คือสัมภาระที่ใส่ของใช้ระหว่างเดินทาง"},
+      {id:genId("qq"), type:"fill", question:"You can exchange money at the ___.", answers:["bank"], explanation:"bank คือธนาคาร สถานที่แลกเปลี่ยนเงินตรา"},
+    ]},
+  { id:"q6", title:"แบบทดสอบคำศัพท์: สิ่งแวดล้อม", level:"ม.ปลาย", lessonId:"l6", pickCount:4,
+    pool:[
+      {id:genId("qq"), type:"match", question:"จับคู่คำศัพท์กับความหมาย", pairs:[{left:"pollution",right:"มลพิษ"},{left:"recycle",right:"รีไซเคิล"},{left:"drought",right:"ภัยแล้ง"},{left:"greenhouse effect",right:"ปรากฏการณ์เรือนกระจก"},{left:"endangered species",right:"สัตว์ใกล้สูญพันธุ์"}]},
+      {id:genId("qq"), type:"mc", question:"Which action helps reduce pollution?", choices:["Recycling","Littering","Deforestation","Overfishing"], correct:"Recycling", explanation:"การรีไซเคิลช่วยลดขยะและมลพิษจากการผลิตใหม่"},
+      {id:genId("qq"), type:"mc", question:"What do we call gases that trap heat in the atmosphere?", choices:["greenhouse gases","fossil fuel","recycling","drought"], correct:"greenhouse gases", explanation:"ก๊าซเรือนกระจกกักเก็บความร้อนในชั้นบรรยากาศ"},
+      {id:genId("qq"), type:"fill", question:"We should ___ (reduce) the amount of plastic we use.", answers:["reduce"], explanation:"reduce แปลว่าลดปริมาณการใช้"},
+      {id:genId("qq"), type:"mc", question:"Which of these is a renewable energy source?", choices:["coal","solar power","oil","natural gas"], correct:"solar power", explanation:"พลังงานแสงอาทิตย์เป็นพลังงานหมุนเวียน ต่างจากเชื้อเพลิงฟอสซิล"},
+    ]},
+];
+
+/* ---------------------------- Vocabulary bank with pronunciation ---------------------------- */
+
+const RAW_VOCAB = {
+  "ม.1": [
+    ["family","ครอบครัว","n","แฟม-มิ-ลี่"],["friend","เพื่อน","n","เฟรนด์"],["teacher","ครู","n","ที-เชอร์"],["student","นักเรียน","n","สตู-เดินท์"],
+    ["school","โรงเรียน","n","สกูล"],["classroom","ห้องเรียน","n","คลาส-รูม"],["book","หนังสือ","n","บุ๊ค"],["pencil","ดินสอ","n","เพน-ซิล"],
+    ["eraser","ยางลบ","n","อี-เรเซอร์"],["ruler","ไม้บรรทัด","n","รู-เลอร์"],["bag","กระเป๋า","n","แบ็ก"],["uniform","ชุดนักเรียน","n","ยู-นิ-ฟอร์ม"],
+    ["breakfast","อาหารเช้า","n","เบรก-เฟิสท์"],["lunch","อาหารกลางวัน","n","ลันช์"],["dinner","อาหารเย็น","n","ดิน-เนอร์"],["hungry","หิว","adj","ฮัง-กรี"],
+    ["thirsty","กระหายน้ำ","adj","เธอร์-สตี้"],["happy","มีความสุข","adj","แฮป-ปี้"],["sad","เศร้า","adj","แซด"],["angry","โกรธ","adj","แอง-กรี"],
+    ["tired","เหนื่อย","adj","ไทเอิร์ด"],["sick","ป่วย","adj","ซิก"],["weather","อากาศ","n","เวธ-เธอร์"],["rain","ฝน","n","เรน"],
+    ["sunny","แดดออก","adj","ซัน-นี่"],["cold","หนาว","adj","โคลด์"],["hot","ร้อน","adj","ฮอต"],["morning","ตอนเช้า","n","มอร์-นิ่ง"],
+    ["afternoon","ตอนบ่าย","n","แอฟ-เทอร์-นูน"],["evening","ตอนเย็น","n","อีฟ-นิ่ง"],["night","กลางคืน","n","ไนท์"],["today","วันนี้","adv","ทู-เดย์"],
+    ["tomorrow","พรุ่งนี้","adv","ทู-มอร์-โรว์"],["yesterday","เมื่อวาน","adv","เยส-เทอร์-เดย์"],["week","สัปดาห์","n","วีค"],["month","เดือน","n","มันธ์"],
+    ["year","ปี","n","เยียร์"],["birthday","วันเกิด","n","เบิร์ธ-เดย์"],["holiday","วันหยุด","n","ฮอล-ลิ-เดย์"],["market","ตลาด","n","มาร์-เก็ต"],
+    ["shop","ร้านค้า","n","ชอป"],["money","เงิน","n","มัน-นี่"],["cheap","ราคาถูก","adj","ชีพ"],["expensive","ราคาแพง","adj","เอ็กซ์-เพน-ซีฟ"],
+    ["big","ใหญ่","adj","บิ๊ก"],["small","เล็ก","adj","สมอล"],["tall","สูง","adj","ทอล"],["short","เตี้ย/สั้น","adj","ชอร์ท"],
+    ["fast","เร็ว","adj","ฟาสท์"],["slow","ช้า","adj","สโลว์"],["doctor","หมอ/แพทย์","n","ดอก-เตอร์"],["nurse","พยาบาล","n","เนิร์ส"],
+    ["engineer","วิศวกร","n","เอน-จิ-เนียร์"],["farmer","ชาวนา/เกษตรกร","n","ฟาร์-เมอร์"],["driver","คนขับรถ","n","ไดร-เวอร์"],["cook","พ่อครัว/แม่ครัว","n","คุก"],
+    ["singer","นักร้อง","n","ซิง-เกอร์"],["dancer","นักเต้น","n","แดน-เซอร์"],["writer","นักเขียน","n","ไร-เตอร์"],["artist","ศิลปิน","n","อาร์-ทิสท์"],
+    ["hospital","โรงพยาบาล","n","ฮอส-พิ-เทิล"],["bank","ธนาคาร","n","แบงก์"],["police station","สถานีตำรวจ","n","โพ-ลิส สเต-ชั่น"],["post office","ที่ทำการไปรษณีย์","n","โพสต์ ออฟ-ฟิส"],
+    ["library","ห้องสมุด","n","ไล-เบร-รี่"],["museum","พิพิธภัณฑ์","n","มิว-เซี่ยม"],["park","สวนสาธารณะ","n","พาร์ก"],["zoo","สวนสัตว์","n","ซู"],
+    ["stadium","สนามกีฬา","n","สเต-เดี้ยม"],["temple","วัด","n","เทม-เพิล"],["wake up","ตื่นนอน","v","เวค อัพ"],["get up","ลุกจากเตียง","v","เก็ต อัพ"],
+    ["brush teeth","แปรงฟัน","v","บรัช ทีธ"],["take a shower","อาบน้ำ","v","เทค อะ ชาว-เวอร์"],["get dressed","แต่งตัว","v","เก็ต เดรสท์"],["have breakfast","รับประทานอาหารเช้า","v","แฮฟ เบรก-เฟิสท์"],
+    ["go to work","ไปทำงาน","v","โก ทู เวิร์ก"],["come home","กลับบ้าน","v","คัม โฮม"],["do homework","ทำการบ้าน","v","ดู โฮม-เวิร์ก"],["go to bed","เข้านอน","v","โก ทู เบด"],
+    ["in front of","ข้างหน้า","phr","อิน ฟรันท์ อัฟ"],["between","ระหว่าง","phr","บิ-ทวีน"],["near","ใกล้","phr","เนียร์"],["above","เหนือ","phr","อะ-บัฟ"],
+    ["below","ใต้/ต่ำกว่า","phr","บิ-โลว์"],["behind","ข้างหลัง","phr","บิ-ไฮนด์"],["under","ใต้","phr","อัน-เดอร์"],["Mathematics","คณิตศาสตร์","n","แมธ-แธ-แมท-ทิคส์"],
+    ["Science","วิทยาศาสตร์","n","ไซ-เอินซ์"],["Social Studies","สังคมศึกษา","n","โซ-เชิล สตัด-ดีส์"],["Art","ศิลปะ","n","อาร์ท"],["Music","ดนตรี","n","มิว-สิค"],
+    ["Physical Education","พลศึกษา","n","ฟิส-ซิ-เคิล เอ็ด-ยู-เค-ชั่น"],["History","ประวัติศาสตร์","n","ฮิส-เทอ-รี่"],["Computer","คอมพิวเตอร์","n","คอม-พิว-เตอร์"],["easy","ง่าย","adj","อี-ซี่"],
+    ["difficult","ยาก","adj","ดิฟ-ฟิ-คัลท์"],["boring","น่าเบื่อ","adj","บอ-ริ่ง"],
+  ],
+  "ม.2": [
+    ["hobby","งานอดิเรก","n","ฮอบ-บี้"],["swim","ว่ายน้ำ","v","สวิม"],["dance","เต้นรำ","v","แดนซ์"],["sing","ร้องเพลง","v","ซิง"],
+    ["paint","วาดภาพระบายสี","v","เพนท์"],["collect","สะสม","v","คอล-เล็คท์"],["travel","เดินทาง","v","แทรฟ-เวิล"],["camera","กล้องถ่ายรูป","n","แคม-เมอ-ร่า"],
+    ["photograph","ภาพถ่าย","n","โฟ-โท-กราฟ"],["exercise","ออกกำลังกาย","v","เอ็ก-เซอร์-ไซส์"],["gym","ฟิตเนส","n","จิม"],["healthy","สุขภาพดี","adj","เฮล-ธี่"],
+    ["unhealthy","สุขภาพไม่ดี","adj","อัน-เฮล-ธี่"],["diet","อาหารการกิน","n","ได-เอ็ท"],["vegetable","ผัก","n","เวจ-จิ-เทเบิล"],["fruit","ผลไม้","n","ฟรุต"],
+    ["meat","เนื้อสัตว์","n","มีท"],["seafood","อาหารทะเล","n","ซี-ฟู้ด"],["dessert","ของหวาน","n","ดิ-เซิร์ท"],["delicious","อร่อยมาก","adj","ดิ-ลิ-เชิส"],
+    ["tasty","อร่อย","adj","เทส-ตี้"],["spicy","เผ็ด","adj","สไป-ซี่"],["sour","เปรี้ยว","adj","เซาร์"],["sweet","หวาน","adj","สวีท"],
+    ["bitter","ขม","adj","บิท-เทอร์"],["restaurant","ร้านอาหาร","n","เรส-เทอ-รอง"],["menu","เมนูอาหาร","n","เมน-นิว"],["order","สั่ง","v","ออร์-เดอร์"],
+    ["bill","ใบเรียกเก็บเงิน","n","บิล"],["receipt","ใบเสร็จ","n","ริ-ซีท"],["discount","ส่วนลด","n","ดิส-เคานท์"],["sale","การลดราคา","n","เซล"],
+    ["borrow","ยืม","v","บอร์-โรว์"],["lend","ให้ยืม","v","เลนด์"],["return","คืน","v","ริ-เทิร์น"],["promise","สัญญา","v","พรอม-มิส"],
+    ["apologize","ขอโทษ","v","อะ-พอล-โล-ไจส์"],["forgive","ให้อภัย","v","ฟอร์-กีฟ"],["argue","โต้เถียง","v","อาร์-กิว"],["agree","เห็นด้วย","v","อะ-กรี"],
+    ["disagree","ไม่เห็นด้วย","v","ดิส-อะ-กรี"],["invite","เชิญ","v","อิน-ไวท์"],["celebrate","เฉลิมฉลอง","v","เซล-เล-เบรท"],["congratulate","แสดงความยินดี","v","คอน-แกรช-ชู-เลท"],
+    ["surprise","ความประหลาดใจ","n","เซอร์-ไพรส์"],["embarrassed","อับอาย","adj","เอ็ม-แบ-แรสท์"],["nervous","ประหม่า","adj","เนอร์-เวิส"],["confident","มั่นใจ","adj","คอน-ฟิ-เดินท์"],
+    ["proud","ภูมิใจ","adj","เพราด์"],["disappointed","ผิดหวัง","adj","ดิส-อะ-พอยน์-ทิด"],["website","เว็บไซต์","n","เว็บ-ไซท์"],["email","อีเมล","n","อี-เมล"],
+    ["password","รหัสผ่าน","n","พาส-เวิร์ด"],["keyboard","แป้นพิมพ์","n","คีย์-บอร์ด"],["screen","หน้าจอ","n","สกรีน"],["application","แอปพลิเคชัน","n","แอพ-พลิ-เค-ชั่น"],
+    ["download","ดาวน์โหลด","v","ดาวน์-โหลด"],["upload","อัปโหลด","v","อัพ-โหลด"],["internet","อินเทอร์เน็ต","n","อิน-เทอร์-เน็ต"],["headache","ปวดหัว","n","เฮด-เอค"],
+    ["stomachache","ปวดท้อง","n","สทัม-มัค-เอค"],["fever","ไข้","n","ฟี-เวอร์"],["cough","ไอ","v","คอฟ"],["toothache","ปวดฟัน","n","ทูธ-เอค"],
+    ["medicine","ยา","n","เมด-ดิ-ซิน"],["injection","การฉีดยา","n","อิน-เจ็ค-ชั่น"],["dentist","ทันตแพทย์","n","เดน-ทิสท์"],["pharmacy","ร้านขายยา","n","ฟาร์-มะ-ซี่"],
+    ["grandfather","ปู่/ตา","n","แกรนด์-ฟา-เธอร์"],["grandmother","ย่า/ยาย","n","แกรนด์-มา-เธอร์"],["uncle","ลุง/อา/น้า","n","อัง-เคิล"],["aunt","ป้า/อา/น้า","n","อานท์"],
+    ["cousin","ลูกพี่ลูกน้อง","n","คัส-ซิ่น"],["nephew","หลานชาย","n","เนฟ-ฟิว"],["niece","หลานสาว","n","นีซ"],["relative","ญาติ","n","เรล-ลา-ทิฟ"],
+    ["kind","ใจดี","adj","ไคนด์"],["friendly","เป็นมิตร","adj","เฟรนด์-ลี่"],["funny","ตลก","adj","ฟัน-นี่"],["serious","จริงจัง","adj","เซีย-เรียส"],
+    ["brave","กล้าหาญ","adj","เบรฟ"],["shy","ขี้อาย","adj","ชาย"],["lazy","ขี้เกียจ","adj","เล-ซี่"],["hardworking","ขยัน","adj","ฮาร์ด-เวิร์ค-กิ้ง"],
+    ["talkative","ช่างพูด","adj","ทอล์ค-คา-ทิฟ"],["hotel","โรงแรม","n","โฮ-เทล"],["reservation","การจอง","n","เรส-เซอร์-เว-ชั่น"],["itinerary","กำหนดการเดินทาง","n","ไอ-ทิน-เนอ-รา-รี่"],
+    ["destination","จุดหมายปลายทาง","n","เดส-ทิ-เน-ชั่น"],["souvenir","ของที่ระลึก","n","ซู-เวอ-เนียร์"],["tourist","นักท่องเที่ยว","n","ทัว-ริสท์"],["guide","ไกด์/มัคคุเทศก์","n","ไกด์"],
+    ["currency","สกุลเงิน","n","เคอ-เรน-ซี่"],["visa","วีซ่า","n","วี-ซ่า"],["embassy","สถานทูต","n","เอ็ม-บา-ซี่"],
+  ],
+  "ม.3": [
+    ["achieve","บรรลุผลสำเร็จ","v","อะ-ชีฟ"],["ability","ความสามารถ","n","อะ-บิล-ลิ-ตี้"],["opportunity","โอกาส","n","ออพ-พอร์-ทู-นิ-ตี้"],["challenge","ความท้าทาย","n","แชล-เลนจ์"],
+    ["solution","ทางแก้ปัญหา","n","โซ-ลู-ชั่น"],["environment","สิ่งแวดล้อม","n","เอ็น-ไว-รอน-เมินท์"],["pollution","มลพิษ","n","พอล-ลู-ชั่น"],["protect","ปกป้อง","v","โพร-เทค"],
+    ["natural","ตามธรรมชาติ","adj","แนช-เชอ-เริล"],["resource","ทรัพยากร","n","รี-ซอร์ส"],["energy","พลังงาน","n","เอ็น-เนอร์-จี้"],["save","ประหยัด/ช่วยชีวิต","v","เซฟ"],
+    ["waste","ของเสีย","n","เวสท์"],["recycle","นำกลับมาใช้ใหม่","v","รี-ไซ-เคิล"],["reduce","ลด","v","ริ-ดิวซ์"],["reuse","นำมาใช้ซ้ำ","v","รี-ยูส"],
+    ["community","ชุมชน","n","คอม-มิว-นิ-ตี้"],["volunteer","อาสาสมัคร","n","วอล-เลิน-เทียร์"],["responsibility","ความรับผิดชอบ","n","ริ-สปอน-สิ-บิล-ลิ-ตี้"],["honest","ซื่อสัตย์","adj","ออน-เนิสท์"],
+    ["polite","สุภาพ","adj","โพ-ไลท์"],["respectful","ให้ความเคารพ","adj","ริ-สเปค-ฟุล"],["patient","อดทน","adj","เพ-เชินท์"],["generous","ใจกว้าง","adj","เจน-เนอ-เริส"],
+    ["selfish","เห็นแก่ตัว","adj","เซล-ฟิช"],["jealous","อิจฉา","adj","เจล-เลิส"],["curious","อยากรู้อยากเห็น","adj","คิว-เรียส"],["creative","สร้างสรรค์","adj","ครี-เอ-ทิฟ"],
+    ["independent","พึ่งพาตนเอง","adj","อิน-ดิ-เพน-เดินท์"],["reliable","น่าเชื่อถือ","adj","ริ-ไล-อะ-เบิล"],["communicate","สื่อสาร","v","คอม-มิว-นิ-เคท"],["cooperate","ร่วมมือ","v","โค-ออพ-เพอ-เรท"],
+    ["negotiate","เจรจาต่อรอง","v","นิ-โก-ชิ-เอท"],["compromise","ประนีประนอม","v","คอม-โพร-ไมส์"],["decision","การตัดสินใจ","n","ดิ-ซิ-ชั่น"],["opinion","ความคิดเห็น","n","โอ-พิน-เนียน"],
+    ["suggest","แนะนำ","v","ซัก-เจสท์"],["recommend","แนะนำ","v","เรค-คอม-เมนด์"],["advice","คำแนะนำ","n","แอด-ไวส์"],["improve","พัฒนาให้ดีขึ้น","v","อิม-พรูฟ"],
+    ["develop","พัฒนา","v","ดิ-เวล-เลิพ"],["succeed","ประสบความสำเร็จ","v","ซัค-ซีด"],["fail","ล้มเหลว","v","เฟล"],["effort","ความพยายาม","n","เอฟ-เฟิร์ท"],
+    ["determined","มุ่งมั่น","adj","ดิ-เทอร์-มินด์"],["focus","มุ่งเน้น/ตั้งใจ","v","โฟ-คัส"],["ignore","เพิกเฉย","v","อิก-นอร์"],["avoid","หลีกเลี่ยง","v","อะ-วอยด์"],
+    ["prevent","ป้องกัน","v","พริ-เวนท์"],["benefit","ประโยชน์","n","เบน-นิ-ฟิท"],["ecosystem","ระบบนิเวศ","n","อี-โค-ซิส-เทิม"],["biodiversity","ความหลากหลายทางชีวภาพ","n","ไบ-โอ-ได-เวอร์-ซิ-ตี้"],
+    ["deforestation","การตัดไม้ทำลายป่า","n","ดี-ฟอ-เรส-เท-ชั่น"],["conservation","การอนุรักษ์","n","คอน-เซอร์-เว-ชั่น"],["renewable","หมุนเวียนได้/นำกลับมาใช้ใหม่ได้","adj","ริ-นิว-อะ-เบิล"],["fossil fuel","เชื้อเพลิงฟอสซิล","n","ฟอส-เซิล ฟิว-เอิล"],
+    ["climate change","การเปลี่ยนแปลงสภาพภูมิอากาศ","n","ไคล-เมท เชนจ์"],["wildlife","สัตว์ป่า","n","ไวลด์-ไลฟ์"],["habitat","ถิ่นที่อยู่อาศัย","n","แฮบ-บิ-แทท"],["poverty","ความยากจน","n","พอฟ-เวอร์-ตี้"],
+    ["inequality","ความไม่เท่าเทียม","n","อิน-อิ-ควอล-ลิ-ตี้"],["crime","อาชญากรรม","n","ไครม์"],["bullying","การกลั่นแกล้ง","n","บูล-ลี่-อิ้ง"],["discrimination","การเลือกปฏิบัติ","n","ดิส-คริม-มิ-เน-ชั่น"],
+    ["homeless","ไร้บ้าน","adj","โฮม-เลส"],["unemployment","การว่างงาน","n","อัน-เอ็ม-พลอย-เมินท์"],["charity","การกุศล","n","แช-ริ-ตี้"],["refugee","ผู้ลี้ภัย","n","เรฟ-ฟิว-จี"],
+    ["human rights","สิทธิมนุษยชน","n","ฮิว-เมิน ไรท์ส"],["career","อาชีพ/เส้นทางอาชีพ","n","คา-เรียร์"],["salary","เงินเดือน","n","แซล-ลา-รี่"],["promotion","การเลื่อนตำแหน่ง","n","โพร-โม-ชั่น"],
+    ["employer","นายจ้าง","n","เอ็ม-พลอย-เยอร์"],["employee","ลูกจ้าง","n","เอ็ม-พลอย-อี"],["interview","การสัมภาษณ์","n","อิน-เทอร์-วิว"],["resume","ประวัติส่วนตัว/เรซูเม่","n","เรซ-ซู-เม"],
+    ["skill","ทักษะ","n","สกิล"],["workplace","สถานที่ทำงาน","n","เวิร์ค-เพลส"],["curriculum","หลักสูตร","n","คะ-ริค-คิว-ลัม"],["scholarship","ทุนการศึกษา","n","สคอล-เลอร์-ชิพ"],
+    ["university","มหาวิทยาลัย","n","ยู-นิ-เวอร์-ซิ-ตี้"],["degree","ปริญญา","n","ดิ-กรี"],["lecture","การบรรยาย","n","เล็ค-เชอร์"],["campus","วิทยาเขต","n","แคม-เพิส"],
+    ["tuition","ค่าเล่าเรียน","n","ทิว-อิ-ชั่น"],["admission","การรับเข้าศึกษา","n","แอด-มิช-ชั่น"],["dormitory","หอพัก","n","ดอร์-มิ-ทอ-รี่"],["semester","ภาคการศึกษา","n","ซิ-เมส-เทอร์"],
+    ["instead","แทนที่จะ","adv","อิน-สเทด"],["besides","นอกจากนี้","adv","บิ-ไซดส์"],["otherwise","มิฉะนั้น","adv","อัธ-เธอร์-ไวส์"],["unless","เว้นแต่","phr","อัน-เลส"],
+    ["until","จนกระทั่ง","phr","อัน-ทิล"],["while","ในขณะที่","phr","ไวล์"],["as soon as","ทันทีที่","phr","แอส ซูน แอส"],["in fact","ความจริงแล้ว","phr","อิน แฟคท์"],
+    ["for example","ตัวอย่างเช่น","phr","ฟอร์ อิก-แซม-เพิล"],["besides that","นอกเหนือจากนั้น","phr","บิ-ไซดส์ แธท"],
+  ],
+  "ม.4": [
+    ["analyze","วิเคราะห์","v","แอน-นะ-ไลส์"],["evaluate","ประเมิน","v","อี-แวล-ลิว-เอท"],["compare","เปรียบเทียบ","v","คอม-แพร์"],["contrast","ความแตกต่าง","n","คอน-ทราสท์"],
+    ["illustrate","แสดงให้เห็น/ยกตัวอย่าง","v","อิล-ลัส-เทรท"],["demonstrate","สาธิต/แสดงให้เห็น","v","เดม-มอน-สเทรท"],["indicate","บ่งชี้","v","อิน-ดิ-เคท"],["emphasize","เน้นย้ำ","v","เอ็ม-ฟา-ไซส์"],
+    ["conclude","สรุป","v","คอน-คลูด"],["summarize","สรุปความ","v","ซัม-มะ-ไรส์"],["evidence","หลักฐาน","n","เอฟ-วิ-เดินซ์"],["argument","ข้อโต้แย้ง","n","อาร์-กิว-เมินท์"],
+    ["perspective","มุมมอง","n","เพอร์-สเปค-ทิฟ"],["assumption","ข้อสันนิษฐาน","n","อะ-ซัมพ์-ชั่น"],["factor","ปัจจัย","n","แฟค-เทอร์"],["impact","ผลกระทบ","n","อิม-แพคท์"],
+    ["significant","สำคัญมาก","adj","ซิก-นิฟ-ฟิ-เคินท์"],["essential","จำเป็นอย่างยิ่ง","adj","เอส-เซน-เชิล"],["relevant","เกี่ยวข้อง","adj","เรล-ลิ-เวินท์"],["sufficient","เพียงพอ","adj","ซัฟ-ฟิ-เชินท์"],
+    ["accurate","แม่นยำ","adj","แอค-คิว-เรท"],["consistent","สม่ำเสมอ","adj","คอน-ซิส-เทินท์"],["particular","เฉพาะเจาะจง","adj","พาร์-ทิค-คิว-ลาร์"],["various","หลากหลาย","adj","แว-เรียส"],
+    ["numerous","จำนวนมาก","adj","นิว-เมอ-เริส"],["approximately","โดยประมาณ","adv","อะ-พรอก-ซิ-เมท-ลี่"],["eventually","ในที่สุด","adv","อิ-เวน-ชู-อะ-ลี่"],["consequently","ดังนั้น/เป็นผลให้","adv","คอน-ซิ-เควนท์-ลี่"],
+    ["therefore","ดังนั้น","adv","แธร์-ฟอร์"],["however","อย่างไรก็ตาม","adv","ฮาว-เอฟ-เวอร์"],["although","แม้ว่า","phr","ออล-โธ"],["despite","แม้จะ","phr","ดิส-ไพท์"],
+    ["furthermore","นอกจากนี้","adv","เฟอร์-เธอร์-มอร์"],["moreover","ยิ่งไปกว่านั้น","adv","มอร์-โอ-เวอร์"],["in addition","นอกเหนือจากนี้","phr","อิน อะ-ดิ-ชั่น"],["similarly","ในทำนองเดียวกัน","adv","ซิม-มิ-ลาร์-ลี่"],
+    ["whereas","ในขณะที่","phr","แวร์-แอส"],["nevertheless","กระนั้นก็ตาม","adv","เนฟ-เวอร์-เธอ-เลส"],["phenomenon","ปรากฏการณ์","n","ฟี-นอม-มิ-นอน"],["hypothesis","สมมติฐาน","n","ไฮ-พอธ-ธิ-ซิส"],
+    ["theory","ทฤษฎี","n","ธี-โอ-รี่"],["experiment","การทดลอง","n","เอ็ก-สแพ-ริ-เมินท์"],["research","การวิจัย","n","รี-เซิร์ช"],["data","ข้อมูล","n","เด-ทะ"],
+    ["survey","แบบสำรวจ","n","เซอร์-เวย์"],["statistics","สถิติ","n","สตะ-ทิส-ทิคส์"],["majority","ส่วนใหญ่","n","มะ-จอ-ริ-ตี้"],["minority","ส่วนน้อย","n","มิ-นอ-ริ-ตี้"],
+    ["tendency","แนวโน้ม","n","เทน-เดิน-ซี่"],["trend","แนวโน้ม/กระแสนิยม","n","เทรนด์"],["supply","อุปทาน","n","ซัพ-พลาย"],["demand","อุปสงค์","n","ดิ-มานด์"],
+    ["inflation","ภาวะเงินเฟ้อ","n","อิน-เฟล-ชั่น"],["economy","เศรษฐกิจ","n","อี-คอน-โน-มี่"],["budget","งบประมาณ","n","บัด-เจ็ท"],["investment","การลงทุน","n","อิน-เวสท์-เมินท์"],
+    ["trade","การค้า","n","เทรด"],["export","การส่งออก","v","เอ็กซ์-พอร์ต"],["import","การนำเข้า","v","อิม-พอร์ต"],["revenue","รายได้","n","เรฟ-เวอ-นิว"],
+    ["protagonist","ตัวเอกของเรื่อง","n","โพร-แทก-โก-นิสท์"],["antagonist","ตัวร้าย/ปรปักษ์","n","แอน-แทก-โก-นิสท์"],["plot","โครงเรื่อง","n","พลอท"],["setting","ฉาก/สถานที่เกิดเหตุ","n","เซ็ท-ติ้ง"],
+    ["theme","แก่นเรื่อง","n","ธีม"],["metaphor","อุปลักษณ์","n","เมท-ทะ-ฟอร์"],["symbolism","สัญลักษณ์นิยม","n","ซิม-โบ-ลิสซึ่ม"],["narrator","ผู้เล่าเรื่อง","n","นะ-เร-เทอร์"],
+    ["genre","ประเภทของงานเขียน","n","ชอง-ระ"],["climax","จุดไคลแมกซ์","n","ไคล-แมกซ์"],["biology","ชีววิทยา","n","ไบ-ออล-โล-จี้"],["chemistry","เคมี","n","เคม-มิส-ทรี่"],
+    ["physics","ฟิสิกส์","n","ฟิส-ซิคส์"],["geography","ภูมิศาสตร์","n","จี-ออก-กระ-ฟี่"],["philosophy","ปรัชญา","n","ฟิ-ลอส-โซ-ฟี่"],["sociology","สังคมวิทยา","n","โซ-ชี-ออล-โล-จี้"],
+    ["anthropology","มานุษยวิทยา","n","แอน-โธร-พอล-โล-จี้"],["linguistics","ภาษาศาสตร์","n","ลิง-กวิส-ทิคส์"],["astronomy","ดาราศาสตร์","n","แอส-ทรอน-โน-มี่"],["geology","ธรณีวิทยา","n","จี-ออล-โล-จี้"],
+    ["increase","เพิ่มขึ้น","v","อิน-ครีส"],["decrease","ลดลง","v","ดี-ครีส"],["rise","สูงขึ้น","v","ไรส์"],["remain stable","คงที่","phr","ริ-เมน สเต-เบิล"],
+    ["double","เพิ่มขึ้นเป็นสองเท่า","v","ดับ-เบิล"],["halve","ลดลงครึ่งหนึ่ง","v","ฮาฟ"],["peak","จุดสูงสุด","n","พีค"],["plummet","ดิ่งลงอย่างรวดเร็ว","v","พลัม-เมท"],
+    ["soar","พุ่งสูงขึ้นอย่างรวดเร็ว","v","ซอร์"],["in contrast","ในทางตรงกันข้าม","phr","อิน คอน-ทราสท์"],["on the other hand","ในอีกแง่หนึ่ง","phr","ออน ดิ อัธ-เธอร์ แฮนด์"],["as a result","เป็นผลให้","phr","แอส อะ ริ-ซัลท์"],
+    ["in conclusion","สรุปได้ว่า","phr","อิน คอน-คลู-ชั่น"],["to sum up","โดยสรุป","phr","ทู ซัม อัพ"],["in terms of","ในแง่ของ","phr","อิน เทอร์มส์ อัฟ"],["with regard to","เกี่ยวกับ","phr","วิธ ริ-การ์ด ทู"],
+    ["on the whole","โดยรวมแล้ว","phr","ออน เดอะ โฮล"],["in general","โดยทั่วไป","phr","อิน เจน-เนอ-เริล"],["above all","เหนือสิ่งอื่นใด","phr","อะ-บัฟ ออล"],
+  ],
+  "ม.5": [
+    ["controversial","เป็นที่ถกเถียง","adj","คอน-โทร-เวอร์-เชิล"],["beneficial","เป็นประโยชน์","adj","เบน-นิ-ฟิช-เชิล"],["detrimental","ก่อผลเสีย","adj","เดท-ทริ-เมน-เทิล"],["inevitable","หลีกเลี่ยงไม่ได้","adj","อิน-เอฟ-วิ-ทะ-เบิล"],
+    ["sustainable","ยั่งยืน","adj","ซัส-เทน-นะ-เบิล"],["feasible","เป็นไปได้ในทางปฏิบัติ","adj","ฟี-ซะ-เบิล"],["plausible","ดูสมเหตุสมผล","adj","พลอ-ซะ-เบิล"],["ambiguous","คลุมเครือ","adj","แอม-บิก-กิว-เอิส"],
+    ["arbitrary","ตามอำเภอใจ","adj","อาร์-บิ-เทร-รี่"],["comprehensive","ครอบคลุมรอบด้าน","adj","คอม-พริ-เฮน-ซิฟ"],["substantial","มากพอสมควร","adj","ซับ-สแตน-เชิล"],["marginal","เล็กน้อย","adj","มาร์-จิ-เนิล"],
+    ["gradual","ค่อยเป็นค่อยไป","adj","แกรด-จู-เอิล"],["drastic","รุนแรง/ฉับพลัน","adj","แดรส-ทิค"],["prevalent","แพร่หลาย","adj","เพรฟ-วะ-เลินท์"],["widespread","แพร่หลายไปทั่ว","adj","ไวด์-สเปรด"],
+    ["unprecedented","ไม่เคยเกิดขึ้นมาก่อน","adj","อัน-เพรส-ซิ-เดน-ทิด"],["contemporary","ร่วมสมัย","adj","คอน-เทม-โพ-รา-รี่"],["conventional","ตามขนบธรรมเนียม","adj","คอน-เวน-ชั่น-เนิล"],["innovative","สร้างสรรค์สิ่งใหม่","adj","อิน-โน-เว-ทิฟ"],
+    ["versatile","ปรับใช้ได้หลากหลาย","adj","เวอร์-ซะ-ไทล์"],["adaptable","ปรับตัวได้","adj","อะ-แดพ-ทะ-เบิล"],["resilient","ฟื้นตัวได้ไว","adj","ริ-ซิล-เลี่ยนท์"],["vulnerable","เปราะบาง","adj","วัล-เนอ-ระ-เบิล"],
+    ["susceptible","อ่อนไหวต่อ","adj","ซัส-เซพ-ทิ-เบิล"],["dominant","ครอบงำ/มีอิทธิพลเหนือ","adj","ดอม-มิ-เนินท์"],["prominent","โดดเด่น","adj","พรอม-มิ-เนินท์"],["notable","น่าสังเกต","adj","โน-ทะ-เบิล"],
+    ["remarkable","น่าทึ่ง","adj","ริ-มาร์-คะ-เบิล"],["exceptional","เป็นเลิศ","adj","เอ็ก-เซพ-ชั่น-เนิล"],["adequate","เพียงพอ","adj","แอด-ดิ-ควิท"],["excessive","มากเกินไป","adj","เอ็ก-เซส-ซิฟ"],
+    ["moderate","ปานกลาง","adj","มอด-เดอ-เรท"],["extensive","กว้างขวาง","adj","เอ็กซ์-เทน-ซิฟ"],["intensive","เข้มข้น","adj","อิน-เทน-ซิฟ"],["profound","ลึกซึ้ง","adj","โพร-เฟานด์"],
+    ["superficial","ผิวเผิน","adj","ซู-เพอร์-ฟิช-เชิล"],["subjective","เป็นอัตวิสัย","adj","ซับ-เจค-ทิฟ"],["objective","เป็นภาวะวิสัย","adj","อ็อบ-เจค-ทิฟ"],["rational","มีเหตุผล","adj","แรช-ชั่น-เนิล"],
+    ["irrational","ไร้เหตุผล","adj","อิ-แรช-ชั่น-เนิล"],["credible","น่าเชื่อถือ","adj","เครด-ดิ-เบิล"],["skeptical","กังขา/ไม่เชื่อง่าย","adj","สเค็พ-ทิ-เคิล"],["legitimate","ชอบธรรม","adj","ลิ-จิท-ทิ-มิท"],
+    ["mandatory","ภาคบังคับ","adj","แมน-ดะ-โท-รี่"],["voluntary","สมัครใจ","adj","วอล-เลิน-แท-รี่"],["explicit","ชัดเจนตรงไปตรงมา","adj","เอ็กซ์-พลิส-ซิท"],["implicit","โดยนัย","adj","อิม-พลิส-ซิท"],
+    ["ethical","มีจริยธรรม","adj","เอธ-ธิ-เคิล"],["unbiased","ไม่มีอคติ","adj","อัน-ไบ-แอสท์"],["meticulous","พิถีพิถัน","adj","มิ-ทิค-คิว-เลิส"],["tenacious","ยึดมั่น/ไม่ย่อท้อ","adj","ทิ-เน-เชิส"],
+    ["pragmatic","เน้นการปฏิบัติจริง","adj","แพรก-แมท-ทิค"],["altruistic","เห็นแก่ผู้อื่น","adj","แอล-ทรู-อิส-ทิค"],["egocentric","เห็นแก่ตัวเองเป็นศูนย์กลาง","adj","อี-โก-เซน-ทริค"],["empathetic","เข้าอกเข้าใจผู้อื่น","adj","เอ็ม-พะ-เธท-ทิค"],
+    ["judgmental","ชอบตัดสินผู้อื่น","adj","จัดจ์-เมน-เทิล"],["ambivalent","สองจิตสองใจ","adj","แอม-บิฟ-วะ-เลินท์"],["indifferent","เฉยเมย","adj","อิน-ดิฟ-เฟอ-เรินท์"],["apathetic","ไม่สนใจใยดี","adj","แอพ-พะ-เธท-ทิค"],
+    ["scrutinize","ตรวจสอบอย่างละเอียด","v","สครู-ทิ-ไนส์"],["elucidate","อธิบายให้กระจ่าง","v","อิ-ลู-ซิ-เดท"],["substantiate","พิสูจน์ยืนยัน","v","ซับ-สแตน-ชิ-เอท"],["underscore","เน้นย้ำ","v","อัน-เดอร์-สกอร์"],
+    ["delineate","อธิบาย/ร่างโครงร่าง","v","ดิ-ลิน-นิ-เอท"],["encompass","ครอบคลุม","v","เอ็น-คัม-เพิส"],["incorporate","รวมเข้าไว้ด้วยกัน","v","อิน-คอร์-พะ-เรท"],["presuppose","สันนิษฐานไว้ล่วงหน้า","v","พรี-ซัพ-โพส"],
+    ["postulate","ตั้งสมมติฐาน","v","พอส-ทิว-เลท"],["circumvent","หลีกเลี่ยง/หาทางอ้อม","v","เซอร์-คัม-เวนท์"],["rebuttal","การโต้แย้งกลับ","n","ริ-บัท-เทิล"],["counterargument","ข้อโต้แย้งค้าน","n","เคาน์-เทอร์-อาร์-กิว-เมินท์"],
+    ["fallacy","การใช้เหตุผลผิดพลาด","n","แฟล-ละ-ซี่"],["premise","ข้อสมมติฐานตั้งต้น","n","เพรม-มิส"],["inference","การอนุมาน","n","อิน-เฟอ-เรินซ์"],["deduction","การอนุมานเชิงตรรกะ","n","ดิ-ดัค-ชั่น"],
+    ["correlation","ความสัมพันธ์กัน","n","คอ-ริ-เล-ชั่น"],["causation","ความเป็นเหตุเป็นผล","n","คอ-เซ-ชั่น"],["bias","อคติ","n","ไบ-เอิส"],["paradox","ข้อขัดแย้งในตัวเอง","n","แพ-ระ-ด็อกซ์"],
+    ["in the long run","ในระยะยาว","phr","อิน เดอะ ลอง รัน"],["on the contrary","ในทางตรงกันข้าม","phr","ออน เดอะ คอน-ทระ-รี่"],["for the sake of","เพื่อประโยชน์ของ","phr","ฟอร์ เดอะ เซค อัฟ"],["at the expense of","โดยแลกกับ","phr","แอท ดิ เอ็กซ์-เพนส์ อัฟ"],
+    ["in light of","เมื่อพิจารณาจาก","phr","อิน ไลท์ อัฟ"],["with respect to","เกี่ยวกับ/ในส่วนของ","phr","วิธ ริ-สเป็คท์ ทู"],["by and large","โดยทั่วไปแล้ว","phr","ไบ แอนด์ ลาร์จ"],["first and foremost","สิ่งแรกและสำคัญที่สุด","phr","เฟิร์สท์ แอนด์ ฟอร์-โมสท์"],
+    ["needless to say","ไม่ต้องพูดถึงเลยว่า","phr","นีด-เลส ทู เซย์"],["all things considered","เมื่อพิจารณาทุกอย่างแล้ว","phr","ออล ธิงส์ คอน-ซิด-เดอร์ด"],["artificial intelligence","ปัญญาประดิษฐ์","n","อาร์-ทิ-ฟิช-เชิล อิน-เทล-ลิ-เจินซ์"],["algorithm","ขั้นตอนวิธีการคำนวณ","n","แอล-กะ-ริ-ธึม"],
+    ["automation","ระบบอัตโนมัติ","n","ออ-โท-เม-ชั่น"],["encryption","การเข้ารหัส","n","เอ็น-คริพ-ชั่น"],["bandwidth","แบนด์วิดท์","n","แบนด์-วิดธ์"],["database","ฐานข้อมูล","n","เด-ทะ-เบส"],
+    ["interface","ส่วนติดต่อผู้ใช้","n","อิน-เทอร์-เฟส"],["cybersecurity","ความมั่นคงปลอดภัยไซเบอร์","n","ไซ-เบอร์-ซิ-คิว-ริ-ตี้"],["biotechnology","เทคโนโลยีชีวภาพ","n","ไบ-โอ-เทค-นอล-โล-จี้"],["nanotechnology","นาโนเทคโนโลยี","n","นา-โน-เทค-นอล-โล-จี้"],
+  ],
+  "ม.6": [
+    ["underestimate","ประเมินต่ำเกินไป","v","อัน-เดอร์-เอส-ทิ-เมท"],["overestimate","ประเมินสูงเกินไป","v","โอ-เวอร์-เอส-ทิ-เมท"],["undermine","บั่นทอน","v","อัน-เดอร์-ไมน์"],["reinforce","เสริมกำลัง/ตอกย้ำ","v","รี-อิน-ฟอร์ส"],
+    ["facilitate","ทำให้สะดวกขึ้น","v","ฟะ-ซิล-ลิ-เทท"],["hinder","ขัดขวาง","v","ฮิน-เดอร์"],["alleviate","บรรเทา","v","อะ-ลี-วิ-เอท"],["exacerbate","ทำให้แย่ลง","v","เอ็ก-แซส-เซอร์-เบท"],
+    ["mitigate","บรรเทา/ลดความรุนแรง","v","มิท-ทิ-เกท"],["comprehend","เข้าใจอย่างถ่องแท้","v","คอม-พริ-เฮนด์"],["perceive","รับรู้/มองว่า","v","เพอร์-ซีฟ"],["interpret","ตีความ","v","อิน-เทอร์-พริท"],
+    ["formulate","กำหนด/คิดค้นขึ้น","v","ฟอร์-มิว-เลท"],["articulate","แสดงออกอย่างชัดเจน","v","อาร์-ทิค-คิว-เลท"],["advocate","สนับสนุน/รณรงค์","v","แอด-โว-เคท"],["endorse","รับรอง","v","เอ็น-ดอร์ส"],
+    ["condemn","ประณาม","v","คอน-เดม"],["denounce","ประณามอย่างเปิดเผย","v","ดิ-เนาน์ซ์"],["refute","หักล้าง","v","ริ-ฟิวท์"],["validate","ยืนยันความถูกต้อง","v","แวล-ลิ-เดท"],
+    ["corroborate","ยืนยัน/สนับสนุน","v","คอ-รอบ-โบ-เรท"],["contradict","ขัดแย้งกับ","v","คอน-ทระ-ดิคท์"],["reconcile","ทำให้ปรองดอง","v","เรค-เคิน-ไซล์"],["differentiate","แยกแยะความแตกต่าง","v","ดิฟ-เฟอ-เรน-ชิ-เอท"],
+    ["prioritize","จัดลำดับความสำคัญ","v","ไพร-ออ-ริ-ไทส์"],["allocate","จัดสรร","v","แอล-โล-เคท"],["distribute","แจกจ่าย","v","ดิส-ทริบ-บิวท์"],["implement","นำไปปฏิบัติ","v","อิม-พลิ-เมนท์"],
+    ["execute","ดำเนินการ","v","เอ็ก-ซิ-คิวท์"],["initiate","ริเริ่ม","v","อิ-นิช-ชิ-เอท"],["terminate","ยุติ","v","เทอร์-มิ-เนท"],["sustain","ค้ำจุน/รักษาไว้","v","ซัส-เทน"],
+    ["deteriorate","เสื่อมลง","v","ดิ-เทีย-เรีย-เรท"],["flourish","เจริญรุ่งเรือง","v","เฟลอ-ริช"],["thrive","เจริญเติบโตได้ดี","v","ไทรฟ์"],["decline","ลดลง","v","ดิ-ไคลน์"],
+    ["fluctuate","ผันผวน","v","ฟลัค-ชู-เอท"],["stabilize","ทำให้มั่นคง","v","สเต-บิ-ไลส์"],["accumulate","สะสม","v","อะ-คิว-มิว-เลท"],["deplete","ทำให้ลดลง/หมดไป","v","ดิ-พลีท"],
+    ["compensate","ชดเชย","v","คอม-เพน-เซท"],["reimburse","จ่ายเงินคืน","v","รี-อิม-เบิร์ส"],["subsidize","ให้เงินอุดหนุน","v","ซับ-ซิ-ไดส์"],["exempt","ได้รับการยกเว้น","adj","เอ็ก-เซมพท์"],
+    ["obligate","ทำให้มีข้อผูกมัด","v","ออบ-ลิ-เกท"],["entitlement","สิทธิที่พึงได้","n","เอ็น-ไท-เทิล-เมินท์"],["discretion","ดุลยพินิจ","n","ดิส-เครช-ชั่น"],["integrity","ความซื่อสัตย์สุจริต","n","อิน-เทก-กริ-ตี้"],
+    ["transparency","ความโปร่งใส","n","แทรน-สแพ-เรน-ซี่"],["accountability","ความรับผิดชอบที่ตรวจสอบได้","n","อะ-เคาน์-ทะ-บิล-ลิ-ตี้"],["perpetuate","ทำให้ดำรงอยู่ต่อไป","v","เพอร์-เพช-ชู-เอท"],["instigate","ยุยงส่งเสริม","v","อิน-สติ-เกท"],
+    ["galvanize","กระตุ้นให้ลงมือทำ","v","แกล-วะ-ไนส์"],["catalyze","เร่งให้เกิดขึ้น","v","แคท-ทะ-ไลส์"],["permeate","แทรกซึม","v","เพอร์-มิ-เอท"],["transcend","ก้าวข้าม","v","แทรน-เซนด์"],
+    ["encapsulate","สรุปรวบยอด","v","เอ็น-แคพ-ซิว-เลท"],["epitomize","เป็นตัวอย่างที่ชัดเจนของ","v","อิ-พิท-โท-ไมส์"],["exemplify","เป็นตัวอย่าง","v","เอ็ก-แซม-พลิ-ไฟ"],["personify","เป็นตัวแทนของ","v","เพอร์-ซอน-นิ-ไฟ"],
+    ["ubiquitous","มีอยู่ทุกหนทุกแห่ง","adj","ยู-บิค-กวิ-เทิส"],["esoteric","เข้าใจยาก/เฉพาะกลุ่ม","adj","เอ-โซ-เทอ-ริค"],["paramount","สำคัญที่สุด","adj","แพ-ระ-เมาท์"],["quintessential","เป็นแบบอย่างที่ดีที่สุด","adj","ควิน-เท็ส-เซน-เชิล"],
+    ["innate","มีมาแต่กำเนิด","adj","อิน-เนท"],["inherent","มีอยู่ในตัวเอง","adj","อิน-เฮีย-เรินท์"],["intrinsic","โดยเนื้อแท้","adj","อิน-ทริน-ซิค"],["extrinsic","จากภายนอก","adj","เอ็กซ์-ทริน-ซิค"],
+    ["pervasive","แพร่กระจายไปทั่ว","adj","เพอร์-เว-ซิฟ"],["elusive","จับต้องได้ยาก/เข้าใจยาก","adj","อิ-ลู-ซิฟ"],["discourse","วาทกรรม/การสนทนาเชิงวิชาการ","n","ดิส-คอร์ส"],["paradigm","กรอบความคิด","n","แพ-ระ-ไดม์"],
+    ["dichotomy","การแบ่งแยกเป็นสองขั้ว","n","ได-คอท-โท-มี่"],["nuance","ความแตกต่างเล็กน้อยที่ละเอียดอ่อน","n","นิว-อองซ์"],["connotation","ความหมายแฝง","n","คอน-โน-เท-ชั่น"],["denotation","ความหมายตรงตัว","n","ดี-โน-เท-ชั่น"],
+    ["rhetoric","วาทศิลป์","n","เรท-โท-ริค"],["synthesis","การสังเคราะห์","n","ซิน-ธิ-ซิส"],["notwithstanding","แม้จะ","phr","น็อท-วิธ-สแตน-ดิ้ง"],["insofar as","เท่าที่","phr","อิน-โซ-ฟาร์ แอส"],
+    ["albeit","ถึงแม้ว่า","phr","ออล-บี-อิท"],["per se","โดยตัวมันเอง","phr","เพอร์ เซ"],["vis-à-vis","เมื่อเทียบกับ","phr","วีส-อะ-วี"],["ad hoc","เฉพาะกิจ","phr","แอด ฮอค"],
+    ["de facto","โดยพฤตินัย","phr","ดี แฟค-โท"],["status quo","สถานภาพเดิม","phr","สเต-ทัส โคว"],["modus operandi","วิธีการดำเนินการ","phr","โม-ดัส ออพ-เพอ-แรน-ได"],["in lieu of","แทนที่จะ","phr","อิน ลิว อัฟ"],
+    ["geopolitics","ภูมิรัฐศาสตร์","n","จี-โอ-พอล-ลิ-ทิคส์"],["diplomacy","การทูต","n","ดิ-โพล-มะ-ซี่"],["sanction","มาตรการคว่ำบาตร","n","แซงค์-ชั่น"],["insurgency","การก่อความไม่สงบ","n","อิน-เซอร์-เจิน-ซี่"],
+    ["autonomy","อำนาจปกครองตนเอง","n","ออ-ทอน-โน-มี่"],["hegemony","การครอบงำ/ความเป็นเจ้า","n","ฮิ-เจม-โม-นี่"],["bilateral","ทวิภาคี","adj","ไบ-แลท-เทอ-เริล"],["multilateral","พหุภาคี","adj","มัล-ติ-แลท-เทอ-เริล"],
+    ["annexation","การผนวกดินแดน","n","แอน-เน็ก-เซ-ชั่น"],["coup","การรัฐประหาร","n","คู"],
+  ],
+};
+const DEFAULT_VOCAB = Object.entries(RAW_VOCAB).flatMap(([level, list]) =>
+  list.map(([word, meaning, pos, read]) => ({ id: genId("v"), word, meaning, pos, read, level }))
+);
+
+/* ---------------------------- Persistence (localStorage) ---------------------------- */
+
+function loadJSON(key, fallback){
+  try{ const raw = localStorage.getItem(key); if(raw) return JSON.parse(raw); }catch(e){}
+  return fallback;
+}
+function saveJSON(key, val){
+  try{ localStorage.setItem(key, JSON.stringify(val)); return true; }catch(e){ console.error("save failed", key, e); return false; }
+}
+function loadContent(){ return loadJSON("ee_content", { lessons: DEFAULT_LESSONS, quizzes: DEFAULT_QUIZZES }); }
+function loadVocab(){ return loadJSON("ee_vocab", DEFAULT_VOCAB); }
+function loadResults(){ return loadJSON("ee_results", {}); }
+function saveContent(c){ return saveJSON("ee_content", c); }
+function saveVocab(v){ return saveJSON("ee_vocab", v); }
+function saveResults(r){ return saveJSON("ee_results", r); }
+
+/* ---------------------------- Global state ---------------------------- */
+
+const State = {
+  view: "home",
+  params: {},
+  content: loadContent(),
+  vocab: loadVocab(),
+  results: loadResults(),
+  quizSession: null,
+  gamesUI: { selectedGame: null, grade: "ทั้งหมด", playing: false },
+  gameSession: null,
+  vocabUI: { grade: GRADES[0], search: "" },
+  teacherUI: {
+    unlocked: false, passInput: "", passError: "",
+    tab: "lessons",
+    editingLessonId: null, addingLesson: false, lessonDraft: null,
+    editingQuizId: null, addingQuiz: false, quizDraft: null,
+    vocabGradeFilter: GRADES[0], vocabSearch: "",
+    vocabNew: { word: "", meaning: "", pos: "n", level: GRADES[0], read: "" },
+    bulkText: "", bulkLevel: GRADES[0], bulkMsg: "",
+  },
+};
+
+const App = {};
+window.App = App;
+window.State = State;
+
+App.go = function(view, params){
+  State.view = view; State.params = params || {};
+  if (State.gameSession && State.gameSession.timerId) clearInterval(State.gameSession.timerId);
+  if (view !== "games") { State.gameSession = null; State.gamesUI.playing = false; }
+  if (view !== "quizTake") State.quizSession = null;
+  render();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+};
+
+App.setField = function(objPath, field, value){
+  // objPath: dot path within State, e.g. "teacherUI.vocabNew"
+  const parts = objPath.split(".");
+  let obj = State;
+  for (const p of parts) obj = obj[p];
+  obj[field] = value;
+};
+
+function persistContent(){ saveContent(State.content); }
+function persistVocab(){ saveVocab(State.vocab); }
+function persistResults(){ saveResults(State.results); }
+
+/* ---------------------------- Render engine ---------------------------- */
+
+function render(){
+  renderTopbar();
+  const main = $("#main");
+  main.innerHTML = viewHTML();
+}
+function renderTopbar(){
+  const tabs = [
+    { id: "home", label: "หน้าแรก", icon: "🏠", match: ["home"] },
+    { id: "lessons", label: "บทเรียน", icon: "📚", match: ["lessons","lessonDetail"] },
+    { id: "quizzes", label: "แบบทดสอบ", icon: "📝", match: ["quizzes","quizTake"] },
+    { id: "vocab", label: "คำศัพท์", icon: "🔤", match: ["vocab"] },
+    { id: "games", label: "เกม", icon: "🎮", match: ["games"] },
+    { id: "account", label: "บัญชี", icon: "👤", match: ["account"] },
+    { id: "teacher", label: "สำหรับครู", icon: "🔒", match: ["teacher"] },
+  ];
+  $("#topbar").innerHTML = `
+    <div class="brand" onclick="App.go('home')"><div class="brand-mark">🌈</div><span>English Explorer</span></div>
+    <nav class="tabbar">
+      ${tabs.map(t => `<button class="tab-btn ${t.match.includes(State.view)?"active":""}" onclick="App.go('${t.id}')">${t.icon} ${t.label}</button>`).join("")}
+      <button class="theme-toggle" onclick="App.toggleTheme()" title="สลับธีมมืด/สว่าง">${currentTheme==="dark"?"☀️":"🌙"}</button>
+    </nav>`;
+}
+App.toggleTheme = function(){
+  currentTheme = currentTheme === "dark" ? "light" : "dark";
+  document.body.classList.toggle("theme-dark", currentTheme === "dark");
+  localStorage.setItem("ee_theme", currentTheme);
+  renderTopbar();
+};
+
+function viewHTML(){
+  switch(State.view){
+    case "home": return renderHome();
+    case "lessons": return renderLessonsList();
+    case "lessonDetail": return renderLessonDetail();
+    case "quizzes": return renderQuizList();
+    case "quizTake": return renderQuizTake();
+    case "vocab": return renderVocabBank();
+    case "games": return renderGamesHub();
+    case "account": return renderAccount();
+    case "teacher": return renderTeacher();
+    default: return renderHome();
+  }
+}
+
+/* ---------------------------- Home ---------------------------- */
+
+function renderHome(){
+  const { lessons, quizzes } = State.content;
+  const vocab = State.vocab;
+  const q = quoteOfTheDay();
+  const user = getLoggedInUser();
+  return `
+  <div class="page">
+    <section class="hero">
+      <div class="hero-mascot">🦄</div>
+      <p class="eyebrow">สมุดผจญภัยภาษาอังกฤษ</p>
+      <h1 class="hero-title">English<br>Explorer</h1>
+      <p class="hero-sub">บทเรียนไวยากรณ์และคำศัพท์ ม.ต้น–ม.ปลาย พร้อมแบบทดสอบสุ่มคำถามไม่ซ้ำ เฉลยละเอียด
+      คลังคำศัพท์พร้อมคำอ่านแยกตามชั้น ม.1–ม.6 และเกมฝึกคำศัพท์สนุก ๆ 5 แบบ</p>
+      ${user ? `<div style="margin:10px 0"><span class="streak-badge">🔥 ${user.streak?user.streak.count:0} วันติดต่อกัน</span></div>` : ""}
+      <div class="hero-actions">
+        <button class="btn btn-primary" onclick="App.go('lessons')">📚 เริ่มเรียนบทเรียน</button>
+        <button class="btn btn-lav" onclick="App.go('games')">🎮 เล่นเกมคำศัพท์</button>
+      </div>
+    </section>
+    <div class="quote-card">
+      <div class="quote-icon">💌</div>
+      <p class="quote-en">"${esc(q.en)}"</p>
+      <p class="quote-th">${esc(q.th)}</p>
+    </div>
+    <section class="stat-row">
+      <div class="stat-card"><span class="stat-num">${lessons.length}</span><span class="stat-label">บทเรียน</span></div>
+      <div class="stat-card"><span class="stat-num">${quizzes.length}</span><span class="stat-label">ชุดแบบทดสอบ</span></div>
+      <div class="stat-card"><span class="stat-num">${vocab.length}</span><span class="stat-label">คำศัพท์ในคลัง</span></div>
+      <div class="stat-card"><span class="stat-num">5</span><span class="stat-label">เกมฝึกคำศัพท์</span></div>
+    </section>
+    <section class="section-block">
+      <p class="section-kicker">🗺️ แผนที่การเดินทาง</p>
+      <div class="route-grid">
+        <div class="route-card"><span style="font-size:22px">🌱</span><h3>ม.ต้น</h3><p>${lessons.filter(l=>l.level==="ม.ต้น").length} บทเรียน · ${quizzes.filter(q=>q.level==="ม.ต้น").length} แบบทดสอบ</p></div>
+        <div class="route-card"><span style="font-size:22px">🎓</span><h3>ม.ปลาย</h3><p>${lessons.filter(l=>l.level==="ม.ปลาย").length} บทเรียน · ${quizzes.filter(q=>q.level==="ม.ปลาย").length} แบบทดสอบ</p></div>
+      </div>
+    </section>
+    <section class="section-block">
+      <p class="section-kicker">🔤 คลังคำศัพท์แยกตามชั้น</p>
+      <div class="grade-strip">
+        ${GRADES.map(g => `<button class="grade-chip" onclick="App.openVocabGrade('${g}')"><span class="grade-chip-num">${vocab.filter(v=>v.level===g).length}</span><span>${g}</span></button>`).join("")}
+      </div>
+    </section>
+  </div>`;
+}
+App.openVocabGrade = function(g){ State.vocabUI.grade = g; App.go("vocab"); };
+
+/* ---------------------------- Lessons ---------------------------- */
+
+function renderLessonsList(){
+  const filter = State.params._lvFilter || "ทั้งหมด";
+  const lessons = State.content.lessons.filter(l => filter === "ทั้งหมด" || l.level === filter);
+  return `
+  <div class="page">
+    <button class="back-link" onclick="App.go('home')">← หน้าแรก</button>
+    <h2 class="page-title">📚 บทเรียน</h2>
+    <div class="filter-tabs">
+      ${["ทั้งหมด", ...LEVELS].map(lv => `<button class="filter-chip ${filter===lv?"active":""}" onclick="App.filterLessons('${lv}')">${lv}</button>`).join("")}
+    </div>
+    <div class="card-grid">
+      ${lessons.map((l,i) => `
+        <button class="index-card" style="--tilt:${(i%2===0?-1:1)*1.2}deg" onclick="App.go('lessonDetail',{lessonId:'${l.id}'})">
+          <div class="index-card-top"><span class="stamp ${l.category==="Grammar"?"stamp-navy":"stamp-sage"}">${l.category==="Grammar"?"📖 Grammar":"🔤 Vocab"}</span><span class="stamp stamp-red">${l.level}</span></div>
+          <h3>${esc(l.title)}</h3><p>${esc(l.summary)}</p>
+          <span class="card-cta">อ่านบทเรียน →</span>
+        </button>`).join("")}
+      ${lessons.length===0 ? '<p class="empty-note">ยังไม่มีบทเรียนในระดับนี้</p>' : ""}
+    </div>
+  </div>`;
+}
+App.filterLessons = function(lv){ State.params._lvFilter = lv; render(); };
+
+function renderLessonDetail(){
+  const lesson = State.content.lessons.find(l => l.id === State.params.lessonId);
+  if (!lesson) return `<div class="page"><p class="empty-note">ไม่พบบทเรียนนี้</p></div>`;
+  const relatedQuizzes = State.content.quizzes.filter(q => q.lessonId === lesson.id);
+  return `
+  <div class="page">
+    <button class="back-link" onclick="App.go('lessons')">← บทเรียนทั้งหมด</button>
+    <div class="lesson-head">
+      <div class="index-card-top"><span class="stamp ${lesson.category==="Grammar"?"stamp-navy":"stamp-sage"}">${esc(lesson.category)}</span><span class="stamp stamp-red">${lesson.level}</span></div>
+      <h2 class="page-title">${esc(lesson.title)}</h2>
+      <p class="lesson-summary">${esc(lesson.summary)}</p>
+    </div>
+    ${lesson.sections.map(s => `<div class="notebook-block"><h4>${esc(s.heading)}</h4><p>${esc(s.body)}</p></div>`).join("")}
+    <div class="example-block"><h4>✏️ ตัวอย่างประโยค</h4>
+      ${lesson.examples.map(ex => `<div class="example-row"><p class="example-en">"${esc(ex.en)}"</p><p class="example-th">${esc(ex.th)}</p></div>`).join("")}
+    </div>
+    ${relatedQuizzes.length>0 ? `
+      <div class="related-quiz-block"><h4>🎯 ลองทำแบบทดสอบของบทนี้</h4>
+        <div class="related-quiz-list">${relatedQuizzes.map(q => `<button class="btn btn-primary" onclick="App.startQuiz('${q.id}')">📝 ${esc(q.title)}</button>`).join("")}</div>
+      </div>` : ""}
+  </div>`;
+}
+
+/* ---------------------------- Quizzes ---------------------------- */
+
+function renderQuizList(){
+  const filter = State.params._lvFilter || "ทั้งหมด";
+  const quizzes = State.content.quizzes.filter(q => filter === "ทั้งหมด" || q.level === filter);
+  const typeLabel = (q) => {
+    const types = new Set(q.pool.map(x => x.type));
+    const map = { mc: "ปรนัย", fill: "เติมคำ", match: "จับคู่" };
+    return [...types].map(t => map[t]).join(" + ");
+  };
+  return `
+  <div class="page">
+    <button class="back-link" onclick="App.go('home')">← หน้าแรก</button>
+    <h2 class="page-title">📝 แบบทดสอบ</h2>
+    <p class="mini-hint" style="margin-bottom:14px">🔀 ทุกครั้งที่ทำ ระบบจะสุ่มคำถามและสลับตัวเลือกใหม่ ไม่ซ้ำชุดเดิม!</p>
+    <div class="filter-tabs">
+      ${["ทั้งหมด", ...LEVELS].map(lv => `<button class="filter-chip ${filter===lv?"active":""}" onclick="App.filterQuizzes('${lv}')">${lv}</button>`).join("")}
+    </div>
+    <div class="card-grid">
+      ${quizzes.map((q,i) => `
+        <button class="index-card" style="--tilt:${(i%2===0?1:-1)*1.2}deg" onclick="App.startQuiz('${q.id}')">
+          <div class="index-card-top"><span class="stamp stamp-mustard">${typeLabel(q)}</span><span class="stamp stamp-red">${q.level}</span></div>
+          <h3>${esc(q.title)}</h3><p>สุ่ม ${q.pickCount||q.pool.length} ข้อ จากคลัง ${q.pool.length} ข้อ</p>
+          <span class="card-cta">เริ่มทำ →</span>
+        </button>`).join("")}
+      ${quizzes.length===0 ? '<p class="empty-note">ยังไม่มีแบบทดสอบในระดับนี้</p>' : ""}
+    </div>
+  </div>`;
+}
+App.filterQuizzes = function(lv){ State.params._lvFilter = lv; render(); };
+
+App.startQuiz = function(quizId){
+  const quiz = State.content.quizzes.find(q => q.id === quizId);
+  if (!quiz) return;
+  const picked = sample(quiz.pool, quiz.pickCount || quiz.pool.length);
+  const questions = picked.map(q => {
+    if (q.type === "mc") return Object.assign({}, q, { choices: shuffle(q.choices) });
+    if (q.type === "match") return Object.assign({}, q, { order: shuffle(q.pairs.map((_,i)=>i)) });
+    return Object.assign({}, q);
+  });
+  const answers = {};
+  questions.forEach(q => {
+    if (q.type === "mc") answers[q.id] = null;
+    else if (q.type === "fill") answers[q.id] = "";
+    else if (q.type === "match") answers[q.id] = {};
+  });
+  const loggedUser = getLoggedInUser();
+  State.quizSession = { quizId, studentName: loggedUser ? loggedUser.displayName : "", submitted: false, showKey: false, questions, answers, result: null };
+  App.go("quizTake", { quizId });
+};
+
+App.pickChoice = function(qid, choiceB64){
+  const choice = decodeURIComponent(escape(atob(choiceB64)));
+  State.quizSession.answers[qid] = choice;
+  render();
+};
+App.matchClick = function(qid, side, idx){
+  const session = State.quizSession;
+  const q = session.questions.find(x => x.id === qid);
+  const pairing = session.answers[qid];
+  if (side === "left") {
+    if (pairing[idx] !== undefined) { delete pairing[idx]; session._selLeft = null; }
+    else { session._selLeft = idx; }
+  } else {
+    const usedRight = Object.values(pairing);
+    if (usedRight.includes(idx)) return;
+    if (session._selLeft === undefined || session._selLeft === null) return;
+    pairing[session._selLeft] = idx;
+    session._selLeft = null;
+  }
+  render();
+};
+App.setQuizName = function(v){ State.quizSession.studentName = v; };
+App.setFillAnswer = function(qid, v){ State.quizSession.answers[qid] = v; };
+
+function scoreQuiz(session){
+  let earned = 0, total = 0;
+  session.questions.forEach(q => {
+    if (q.type === "mc") { total += 1; if (session.answers[q.id] === q.correct) earned += 1; }
+    else if (q.type === "fill") {
+      total += 1;
+      const val = (session.answers[q.id] || "").trim().toLowerCase();
+      if (q.answers.some(a => a.toLowerCase() === val)) earned += 1;
+    } else if (q.type === "match") {
+      total += q.pairs.length;
+      Object.entries(session.answers[q.id]).forEach(([li, ri]) => { if (Number(li) === Number(ri)) earned += 1; });
+    }
+  });
+  return { earned, total };
+}
+
+App.submitQuiz = function(){
+  const session = State.quizSession;
+  const result = scoreQuiz(session);
+  session.result = result; session.submitted = true;
+  const quiz = State.content.quizzes.find(q => q.id === session.quizId);
+  const lesson = State.content.lessons.find(l => l.id === quiz.lessonId);
+  const category = lesson ? lesson.category : "อื่นๆ";
+  if (session.studentName.trim()) {
+    const list = State.results[quiz.id] || [];
+    list.push({ name: session.studentName.trim(), score: result.earned, total: result.total, date: new Date().toISOString() });
+    State.results[quiz.id] = list;
+    persistResults();
+  }
+  const user = getLoggedInUser();
+  if (user) {
+    if (!user.quizHistory) user.quizHistory = [];
+    user.quizHistory.push({ quizId: quiz.id, quizTitle: quiz.title, category, level: quiz.level, earned: result.earned, total: result.total, date: new Date().toISOString() });
+    saveUser(user);
+  }
+  render();
+  if (result.total > 0 && result.earned / result.total >= 0.6) confettiBurst(28);
+};
+App.toggleAnswerKey = function(){ State.quizSession.showKey = !State.quizSession.showKey; render(); };
+
+function b64(s){ return btoa(unescape(encodeURIComponent(s))); }
+
+function renderQuizTake(){
+  const session = State.quizSession;
+  if (!session) return `<div class="page"><p class="empty-note">ไม่พบเซสชันแบบทดสอบ</p></div>`;
+  const quiz = State.content.quizzes.find(q => q.id === session.quizId);
+
+  if (session.submitted && session.result) {
+    const pct = Math.round((session.result.earned / session.result.total) * 100);
+    return `
+    <div class="page">
+      <div class="result-card">
+        <div style="font-size:40px">${pct>=80?"🏆":pct>=60?"🎉":"💪"}</div>
+        <h2>ทำแบบทดสอบเสร็จแล้ว!</h2>
+        <p class="result-score">${session.result.earned} / ${session.result.total}</p>
+        <p class="result-pct">${pct}%</p>
+        <div class="hero-actions" style="margin-top:20px">
+          <button class="btn btn-lav" onclick="App.toggleAnswerKey()">📋 ${session.showKey?"ซ่อนเฉลย":"ดูเฉลยละเอียด"}</button>
+          <button class="btn btn-primary" onclick="App.startQuiz('${quiz.id}')">🔀 ทำใหม่ (สุ่มใหม่)</button>
+          <button class="btn btn-ghost" onclick="App.go('quizzes')">แบบทดสอบอื่น ๆ</button>
+        </div>
+      </div>
+      ${session.showKey ? renderAnswerKey(session) : ""}
+    </div>`;
+  }
+
+  return `
+  <div class="page">
+    <button class="back-link" onclick="App.go('quizzes')">← แบบทดสอบทั้งหมด</button>
+    <h2 class="page-title">${esc(quiz.title)}</h2>
+    <div class="name-field">
+      <label>ชื่อผู้ทำแบบทดสอบ (ไม่บังคับ)</label>
+      <input value="${esc(session.studentName)}" oninput="App.setQuizName(this.value)" placeholder="กรอกชื่อ-นามสกุล">
+    </div>
+    ${session.questions.map((q, idx) => renderQuestionBlock(q, idx, session)).join("")}
+    <button class="btn btn-primary btn-block" onclick="App.submitQuiz()" style="margin-top:6px">✅ ส่งคำตอบ</button>
+  </div>`;
+}
+
+function renderQuestionBlock(q, idx, session){
+  let body = "";
+  if (q.type === "mc") {
+    body = `<div class="choice-list">${q.choices.map(c => `<button class="choice-btn ${session.answers[q.id]===c?"active":""}" onclick="App.pickChoice('${q.id}','${b64(c)}')">${esc(c)}</button>`).join("")}</div>`;
+  } else if (q.type === "fill") {
+    body = `<input class="fill-input" value="${esc(session.answers[q.id])}" oninput="App.setFillAnswer('${q.id}', this.value)" placeholder="พิมพ์คำตอบ">`;
+  } else if (q.type === "match") {
+    const pairing = session.answers[q.id];
+    const usedRight = new Set(Object.values(pairing));
+    body = `<div class="match-wrap">
+      <div class="match-col">${q.pairs.map((p,li) => `<button class="match-item ${pairing[li]!==undefined?"done":""} ${session._selLeft===li?"sel":""}" onclick="App.matchClick('${q.id}','left',${li})">${esc(p.left)}</button>`).join("")}</div>
+      <div class="match-col">${q.order.map(ri => `<button class="match-item ${usedRight.has(ri)?"done":""}" ${usedRight.has(ri)?"disabled":""} onclick="App.matchClick('${q.id}','right',${ri})">${esc(q.pairs[ri].right)}</button>`).join("")}</div>
+    </div>`;
+  }
+  return `<div class="question-block"><p class="question-num">ข้อ ${idx+1}</p><p class="question-text">${esc(q.question)}</p>${body}</div>`;
+}
+
+function renderAnswerKey(session){
+  let html = `<div class="answerkey-block"><h3 class="page-title" style="font-size:22px">📋 เฉลยละเอียด</h3>`;
+  session.questions.forEach((q, idx) => {
+    if (q.type === "mc") {
+      const chosen = session.answers[q.id];
+      const correct = chosen === q.correct;
+      html += `<div class="answerkey-row ${correct?"ak-correct":"ak-wrong"}"><div class="ak-head"><span>${correct?"✅":"❌"}</span><p>ข้อ ${idx+1}: ${esc(q.question)}</p></div>
+        <ul class="ak-choices">${q.choices.map(c => `<li class="${c===q.correct?"ak-choice-correct":(c===chosen?"ak-choice-wrong":"")}">${esc(c)}${c===q.correct?" ✓ คำตอบที่ถูกต้อง":(c===chosen?" ✗ คำตอบของคุณ":"")}</li>`).join("")}</ul>
+        ${q.explanation?`<p class="ak-explain">${esc(q.explanation)}</p>`:""}</div>`;
+    } else if (q.type === "fill") {
+      const val = (session.answers[q.id]||"").trim().toLowerCase();
+      const correct = q.answers.some(a=>a.toLowerCase()===val);
+      html += `<div class="answerkey-row ${correct?"ak-correct":"ak-wrong"}"><div class="ak-head"><span>${correct?"✅":"❌"}</span><p>ข้อ ${idx+1}: ${esc(q.question)}</p></div>
+        <p class="ak-fill-line">คำตอบที่ถูกต้อง: <b>${esc(q.answers.join(" / "))}</b></p>
+        <p class="ak-fill-line">คำตอบของคุณ: <b>${esc(session.answers[q.id]||"(ไม่ได้ตอบ)")}</b></p>
+        ${q.explanation?`<p class="ak-explain">${esc(q.explanation)}</p>`:""}</div>`;
+    } else {
+      const pairing = session.answers[q.id];
+      const correctCount = q.pairs.filter((_,li)=>pairing[li]===li).length;
+      html += `<div class="answerkey-row ${correctCount===q.pairs.length?"ak-correct":"ak-wrong"}"><div class="ak-head"><span>${correctCount===q.pairs.length?"✅":"❌"}</span><p>ข้อ ${idx+1}: ${esc(q.question)} (${correctCount}/${q.pairs.length} คู่)</p></div>
+        <ul class="ak-choices">${q.pairs.map(p=>`<li class="ak-choice-correct">${esc(p.left)} = ${esc(p.right)}</li>`).join("")}</ul>
+        ${q.explanation?`<p class="ak-explain">${esc(q.explanation)}</p>`:""}</div>`;
+    }
+  });
+  html += `</div>`;
+  return html;
+}
+
+/* ---------------------------- Vocabulary bank (public) ---------------------------- */
+
+function renderVocabBank(){
+  const ui = State.vocabUI;
+  const list = State.vocab.filter(v => v.level === ui.grade && (ui.search.trim()==="" || v.word.toLowerCase().includes(ui.search.toLowerCase()) || v.meaning.includes(ui.search)));
+  return `
+  <div class="page">
+    <button class="back-link" onclick="App.go('home')">← หน้าแรก</button>
+    <h2 class="page-title">🔤 คลังคำศัพท์</h2>
+    <div class="filter-tabs">${GRADES.map(g => `<button class="filter-chip ${ui.grade===g?"active":""}" onclick="App.setVocabGrade('${g}')">${g}</button>`).join("")}</div>
+    <div class="search-row">🔍 <input class="search-input" value="${esc(ui.search)}" oninput="App.setVocabSearch(this.value)" placeholder="ค้นหาคำศัพท์หรือความหมาย..."></div>
+    <p class="mini-hint" style="margin:8px 0 14px">แสดง ${list.length} คำ จากทั้งหมด ${State.vocab.filter(v=>v.level===ui.grade).length} คำในระดับ ${ui.grade}</p>
+    <div class="vocab-grid">
+      ${list.map(v => `<div class="vocab-card"><p class="vocab-word">${esc(v.word)}</p><p class="vocab-read">🔊 ${esc(v.read||"")}</p><span class="vocab-pos">${POS_LABEL[v.pos]||v.pos}</span><p class="vocab-meaning">${esc(v.meaning)}</p></div>`).join("")}
+      ${list.length===0 ? '<p class="empty-note">ไม่พบคำศัพท์ที่ค้นหา</p>' : ""}
+    </div>
+  </div>`;
+}
+App.setVocabGrade = function(g){ State.vocabUI.grade = g; render(); };
+App.setVocabSearch = function(v){ State.vocabUI.search = v; render(); };
+
+/* ---------------------------- Games ---------------------------- */
+
+const GAME_TYPES = [
+  { id:"memory", name:"จับคู่ความจำ", desc:"พลิกการ์ดหาคำศัพท์กับความหมายที่ตรงกัน", icon:"🧠", min:4 },
+  { id:"scramble", name:"เรียงตัวอักษร", desc:"เรียงตัวอักษรที่สลับกันให้เป็นคำศัพท์ที่ถูกต้อง", icon:"🔡", min:2 },
+  { id:"speed", name:"ทายคำเร็ว", desc:"เลือกความหมายที่ถูกต้องให้ทันเวลาก่อนหมดเวลา", icon:"⏱️", min:4 },
+  { id:"hangman", name:"ทายตัวอักษร", desc:"ทายตัวอักษรทีละตัวก่อนโอกาสจะหมด", icon:"🎯", min:1 },
+  { id:"flashcard", name:"แฟลชการ์ดทบทวน", desc:"พลิกการ์ดทบทวนคำศัพท์จนกว่าจะจำได้ครบ", icon:"🃏", min:2 },
+];
+
+function renderGamesHub(){
+  const ui = State.gamesUI;
+  if (ui.playing && State.gameSession) return `<div class="page">${renderGamePlay()}</div>`;
+  const pool = State.vocab.filter(v => ui.grade==="ทั้งหมด" || v.level===ui.grade);
+  const gameInfo = GAME_TYPES.find(g => g.id === ui.selectedGame);
+  const enough = gameInfo ? pool.length >= gameInfo.min : false;
+  return `
+  <div class="page">
+    <button class="back-link" onclick="App.go('home')">← หน้าแรก</button>
+    <h2 class="page-title">🎮 เกมฝึกคำศัพท์</h2>
+    <div class="card-grid">
+      ${GAME_TYPES.map(g => `<button class="index-card ${ui.selectedGame===g.id?"game-card-active":""}" onclick="App.selectGame('${g.id}')">
+        <div class="index-card-top"><span class="stamp stamp-mustard">${g.icon} เกม</span></div>
+        <h3>${g.name}</h3><p>${g.desc}</p></button>`).join("")}
+    </div>
+    ${ui.selectedGame ? `
+    <div class="game-setup">
+      <p class="section-kicker">เลือกระดับชั้นคำศัพท์</p>
+      <div class="filter-tabs">${["ทั้งหมด",...GRADES].map(g => `<button class="filter-chip ${ui.grade===g?"active":""}" onclick="App.setGameGrade('${g}')">${g}</button>`).join("")}</div>
+      <p class="mini-hint">มีคำศัพท์ในคลังสำหรับตัวเลือกนี้ ${pool.length} คำ</p>
+      ${!enough ? '<p class="ak-fill-line" style="color:var(--coral);font-weight:700">คำศัพท์ในระดับนี้ยังไม่พอสำหรับเกมนี้ ลองเลือก "ทั้งหมด" หรือให้ครูเพิ่มคำศัพท์ในหลังบ้าน</p>' : ""}
+      <button class="btn btn-primary" ${!enough?"disabled":""} onclick="App.playGame()" style="margin-top:10px">🎮 เริ่มเล่น ${esc(gameInfo.name)}</button>
+    </div>` : ""}
+  </div>`;
+}
+App.selectGame = function(id){ State.gamesUI.selectedGame = id; render(); };
+App.setGameGrade = function(g){ State.gamesUI.grade = g; render(); };
+
+App.playGame = function(){
+  const ui = State.gamesUI;
+  const pool = State.vocab.filter(v => ui.grade==="ทั้งหมด" || v.level===ui.grade);
+  const id = ui.selectedGame;
+  if (id === "memory") State.gameSession = makeMemorySession(pool);
+  else if (id === "scramble") State.gameSession = makeScrambleSession(pool);
+  else if (id === "speed") State.gameSession = makeSpeedSession(pool);
+  else if (id === "hangman") State.gameSession = makeHangmanSession(pool);
+  else if (id === "flashcard") State.gameSession = makeFlashcardSession(pool);
+  State.gameSession.type = id;
+  ui.playing = true;
+  render();
+};
+App.exitGame = function(){
+  if (State.gameSession && State.gameSession.timerId) clearInterval(State.gameSession.timerId);
+  State.gameSession = null; State.gamesUI.playing = false; render();
+};
+
+function renderGamePlay(){
+  const g = State.gameSession;
+  if (g.type === "memory") return renderMemory(g);
+  if (g.type === "scramble") return renderScramble(g);
+  if (g.type === "speed") return renderSpeed(g);
+  if (g.type === "hangman") return renderHangman(g);
+  if (g.type === "flashcard") return renderFlashcard(g);
+  return "";
+}
+
+/* --- Memory match --- */
+function makeMemorySession(words){
+  const pairsCount = Math.min(8, words.length);
+  const picked = sample(words, pairsCount);
+  const items = picked.flatMap(w => [
+    { key: w.id+"-en", wordId: w.id, text: w.word },
+    { key: w.id+"-th", wordId: w.id, text: w.meaning },
+  ]);
+  return { cards: shuffle(items).map(c => Object.assign({matched:false}, c)), flipped: [], moves: 0 };
+}
+function renderMemory(g){
+  const matchedCount = g.cards.filter(c=>c.matched).length;
+  const won = matchedCount === g.cards.length;
+  return `<div class="game-top"><p>ตาที่เดิน: <b>${g.moves}</b> · จับคู่ได้ ${matchedCount/2}/${g.cards.length/2}</p><button class="btn-mini" onclick="App.exitGame()">← ออกจากเกม</button></div>
+  ${won ? `<div class="result-card"><div style="font-size:36px">🏆</div><h2>เก่งมาก! จับคู่ครบแล้ว</h2><p class="result-score">${g.moves} ตา</p><button class="btn btn-primary" onclick="App.exitGame()">เล่นเกมอื่น</button></div>` :
+  `<div class="memory-grid">${g.cards.map((c,idx) => {
+    const shown = g.flipped.includes(idx) || c.matched;
+    return `<button class="memory-card ${c.matched?"matched":""} ${shown?"flipped":""}" onclick="App.memoryFlip(${idx})">${shown?esc(c.text):"❓"}</button>`;
+  }).join("")}</div>`}`;
+}
+App.memoryFlip = function(idx){
+  const g = State.gameSession;
+  if (g.flipped.includes(idx) || g.cards[idx].matched || g.flipped.length===2) return;
+  g.flipped.push(idx);
+  if (g.flipped.length === 2) {
+    g.moves++;
+    const [a,b] = g.flipped;
+    if (g.cards[a].wordId === g.cards[b].wordId) {
+      g.cards[a].matched = true; g.cards[b].matched = true; g.flipped = [];
+      const matchedCount = g.cards.filter(c=>c.matched).length;
+      if (matchedCount === g.cards.length) confettiBurst(20);
+    } else {
+      render();
+      setTimeout(()=>{ g.flipped = []; render(); }, 800);
+      return;
+    }
+  }
+  render();
+};
+
+/* --- Word scramble --- */
+function makeScrambleSession(words){
+  const rounds = sample(words, Math.min(8, words.length));
+  const session = { rounds, idx: 0, score: 0, input: "", feedback: null, scrambled: "" };
+  session.scrambled = scrambleWord(rounds[0].word);
+  return session;
+}
+function scrambleWord(word){
+  if (word.replace(/[^a-zA-Z]/g,"").length < 2) return word;
+  let s = word, tries = 0;
+  while (s.toLowerCase() === word.toLowerCase() && tries < 12) { s = shuffle(word.split("")).join(""); tries++; }
+  return s;
+}
+function renderScramble(g){
+  if (g.idx >= g.rounds.length) return `<div class="result-card"><div style="font-size:36px">🏆</div><h2>จบเกมเรียงตัวอักษร</h2><p class="result-score">${g.score}/${g.rounds.length}</p><button class="btn btn-primary" onclick="App.exitGame()">เล่นเกมอื่น</button></div>`;
+  const cur = g.rounds[g.idx];
+  return `<div class="game-top"><p>ข้อ ${g.idx+1}/${g.rounds.length} · คะแนน ${g.score}</p><button class="btn-mini" onclick="App.exitGame()">← ออกจากเกม</button></div>
+  <div class="scramble-box">
+    <p class="scramble-letters">${esc(g.scrambled.toUpperCase())}</p>
+    <p class="mini-hint">คำใบ้ (ความหมาย): ${esc(cur.meaning)} · คำอ่าน: ${esc(cur.read||"")}</p>
+    <input class="fill-input" value="${esc(g.input)}" oninput="App.scrambleInput(this.value)" placeholder="พิมพ์คำตอบที่ถูกต้อง" ${g.feedback?"disabled":""} onkeydown="if(event.key==='Enter') App.scrambleCheck()">
+    ${!g.feedback ? '<button class="btn btn-primary" style="margin-top:12px" onclick="App.scrambleCheck()">✅ ตรวจคำตอบ</button>' : `
+    <div class="feedback-box ${g.feedback==="correct"?"fb-correct":"fb-wrong"}">${g.feedback==="correct"?"ถูกต้อง! 🎉":"ยังไม่ถูก คำตอบคือ: "+esc(cur.word)}
+    <br><button class="btn btn-primary" style="margin-top:10px" onclick="App.scrambleNext()">ข้อถัดไป →</button></div>`}
+  </div>`;
+}
+App.scrambleInput = function(v){ State.gameSession.input = v; };
+App.scrambleCheck = function(){
+  const g = State.gameSession; const cur = g.rounds[g.idx];
+  const correct = g.input.trim().toLowerCase() === cur.word.toLowerCase();
+  if (correct) { g.score++; confettiBurst(10); }
+  g.feedback = correct ? "correct" : "wrong";
+  render();
+};
+App.scrambleNext = function(){
+  const g = State.gameSession;
+  g.idx++; g.input = ""; g.feedback = null;
+  if (g.idx < g.rounds.length) g.scrambled = scrambleWord(g.rounds[g.idx].word);
+  render();
+};
+
+/* --- Speed match --- */
+function makeSpeedSession(words){
+  const roundCount = Math.min(10, words.length);
+  const rounds = sample(words, roundCount).map(w => {
+    const distractors = sample(words.filter(x=>x.id!==w.id), 3).map(x=>x.meaning);
+    return { word: w, choices: shuffle([w.meaning, ...distractors]) };
+  });
+  const session = { rounds, idx: 0, score: 0, timeLeft: 8, locked: false, chosen: null, timerId: null };
+  startSpeedTimer(session);
+  return session;
+}
+function startSpeedTimer(g){
+  if (g.timerId) clearInterval(g.timerId);
+  g.timeLeft = 8; g.locked = false; g.chosen = null;
+  g.timerId = setInterval(() => {
+    g.timeLeft -= 1;
+    // update only the timer bar/text directly — no full re-render, so nothing else on screen flashes
+    const fill = document.getElementById("speed-timer-fill");
+    const txt = document.getElementById("speed-timer-text");
+    if (fill) fill.style.width = Math.max(0, (g.timeLeft/8)*100) + "%";
+    if (txt) txt.textContent = Math.max(0, g.timeLeft) + "s";
+    if (g.timeLeft <= 0) { clearInterval(g.timerId); g.locked = true; setTimeout(()=>App.speedNext(), 700); }
+  }, 1000);
+}
+function renderSpeed(g){
+  if (g.idx >= g.rounds.length) { if(g.timerId) clearInterval(g.timerId); return `<div class="result-card"><div style="font-size:36px">🏆</div><h2>จบเกมทายคำเร็ว</h2><p class="result-score">${g.score}/${g.rounds.length}</p><button class="btn btn-primary" onclick="App.exitGame()">เล่นเกมอื่น</button></div>`; }
+  const round = g.rounds[g.idx];
+  return `<div class="game-top"><p>ข้อ ${g.idx+1}/${g.rounds.length} · คะแนน ${g.score}</p><button class="btn-mini" onclick="App.exitGame()">← ออกจากเกม</button></div>
+  <div class="timer-bar"><div class="timer-fill" id="speed-timer-fill" style="width:${(g.timeLeft/8)*100}%"></div></div>
+  <p class="mini-hint" style="text-align:right;margin:4px 0 0" id="speed-timer-text">${g.timeLeft}s</p>
+  <p class="question-text" style="font-size:26px;text-align:center;margin:16px 0">${esc(round.word.word)}</p>
+  <p class="mini-hint" style="text-align:center;margin-bottom:10px">🔊 ${esc(round.word.read||"")}</p>
+  <div class="choice-list">${round.choices.map(c => {
+    const isRight = c === round.word.meaning;
+    let cls = "";
+    if (g.locked) { if (isRight) cls="active"; else if (c===g.chosen) cls="wrong-choice"; }
+    return `<button class="choice-btn ${cls}" ${g.locked?"disabled":""} onclick="App.speedPick('${b64(c)}')">${esc(c)}</button>`;
+  }).join("")}</div>`;
+}
+App.speedPick = function(choiceB64){
+  const g = State.gameSession; if (g.locked) return;
+  const choice = decodeURIComponent(escape(atob(choiceB64)));
+  clearInterval(g.timerId);
+  g.chosen = choice; g.locked = true;
+  if (choice === g.rounds[g.idx].word.meaning) { g.score++; confettiBurst(8); }
+  render();
+  setTimeout(()=>App.speedNext(), 700);
+};
+App.speedNext = function(){
+  const g = State.gameSession; g.idx++;
+  if (g.idx < g.rounds.length) startSpeedTimer(g);
+  render();
+};
+
+/* --- Hangman --- */
+const ALPHABET = "abcdefghijklmnopqrstuvwxyz".split("");
+function makeHangmanSession(words){
+  const rounds = sample(words, Math.min(6, words.length));
+  return { rounds, idx: 0, guessed: new Set(), wrongCount: 0, maxWrong: 6 };
+}
+function renderHangman(g){
+  if (g.idx >= g.rounds.length) return `<div class="result-card"><div style="font-size:36px">🏆</div><h2>จบเกมทายตัวอักษร</h2><p class="mini-hint">เล่นครบ ${g.rounds.length} คำแล้ว</p><button class="btn btn-primary" onclick="App.exitGame()">เล่นเกมอื่น</button></div>`;
+  const cur = g.rounds[g.idx];
+  const letters = cur.word.toLowerCase().split("");
+  const won = letters.every(l => !/[a-z]/.test(l) || g.guessed.has(l));
+  const lost = g.wrongCount >= g.maxWrong;
+  const over = won || lost;
+  const faces = ["🙂","😐","😟","😧","😨","😱","💀"];
+  return `<div class="game-top"><p>คำที่ ${g.idx+1}/${g.rounds.length} · ผิด ${g.wrongCount}/${g.maxWrong} ${faces[g.wrongCount]}</p><button class="btn-mini" onclick="App.exitGame()">← ออกจากเกม</button></div>
+  <p class="mini-hint" style="text-align:center">คำใบ้ (ความหมาย): ${esc(cur.meaning)}</p>
+  <p class="hangman-word">${letters.map(l => /[a-z]/.test(l) ? (g.guessed.has(l)||over ? l : "_") : l).join(" ")}</p>
+  ${over ? `<p class="feedback-box ${won?"fb-correct":"fb-wrong"}" style="text-align:center">${won?"ถูกต้อง เก่งมาก! 🎉":"หมดโอกาสแล้ว คำตอบคือ: "+esc(cur.word)}</p>
+  <button class="btn btn-primary" style="margin-top:14px" onclick="App.hangmanNext()">คำถัดไป →</button>` :
+  `<div class="hangman-keyboard">${ALPHABET.map(l => `<button class="key-btn ${g.guessed.has(l)?(cur.word.toLowerCase().includes(l)?"correct":"wrong"):""}" ${g.guessed.has(l)?"disabled":""} onclick="App.hangmanGuess('${l}')">${l}</button>`).join("")}</div>`}`;
+}
+App.hangmanGuess = function(letter){
+  const g = State.gameSession; const cur = g.rounds[g.idx];
+  if (g.guessed.has(letter)) return;
+  g.guessed.add(letter);
+  if (!cur.word.toLowerCase().includes(letter)) g.wrongCount++;
+  else { const letters = cur.word.toLowerCase().split(""); if (letters.every(l => !/[a-z]/.test(l) || g.guessed.has(l))) confettiBurst(14); }
+  render();
+};
+App.hangmanNext = function(){
+  const g = State.gameSession;
+  g.idx++; g.guessed = new Set(); g.wrongCount = 0;
+  render();
+};
+
+/* --- Flashcard review --- */
+function makeFlashcardSession(words){
+  return { queue: shuffle(words).map(w=>w.id), wordMap: Object.fromEntries(words.map(w=>[w.id,w])), flipped: false, known: 0, total: words.length };
+}
+function renderFlashcard(g){
+  if (g.queue.length === 0) return `<div class="result-card"><div style="font-size:36px">🏆</div><h2>ทบทวนครบแล้ว!</h2><p class="result-score">${g.known}/${g.total}</p><p class="mini-hint">คำที่จำได้จากทั้งหมด</p><button class="btn btn-primary" onclick="App.exitGame()">เล่นเกมอื่น</button></div>`;
+  const w = g.wordMap[g.queue[0]];
+  return `<div class="game-top"><p>เหลือในกอง ${g.queue.length} · จำได้แล้ว ${g.known}</p><button class="btn-mini" onclick="App.exitGame()">← ออกจากเกม</button></div>
+  <div class="flip-card" id="flashcard-wrap" onclick="App.flashcardToggle()">
+    <div class="flip-inner ${g.flipped?"flipped":""}" id="flashcard-inner">
+      <div class="flip-front">${esc(w.word)}<br><span class="mini-hint">🔊 ${esc(w.read||"")}</span></div>
+      <div class="flip-back">${esc(w.meaning)}<br><span class="mini-hint" style="color:white;opacity:.8">${POS_LABEL[w.pos]||w.pos}</span></div>
+    </div>
+  </div>
+  <p class="mini-hint" style="text-align:center;margin:10px 0">แตะการ์ดเพื่อพลิกดูความหมาย</p>
+  <div class="hero-actions"><button class="btn btn-ghost" onclick="App.flashcardMark(false)">🔁 ยังไม่คล่อง</button><button class="btn btn-primary" onclick="App.flashcardMark(true)">✅ จำได้แล้ว</button></div>`;
+}
+App.flashcardToggle = function(){
+  const g = State.gameSession; g.flipped = !g.flipped;
+  const el = document.getElementById("flashcard-inner");
+  if (el) el.classList.toggle("flipped", g.flipped);
+};
+App.flashcardMark = function(known){
+  const g = State.gameSession;
+  const id = g.queue.shift();
+  if (known) { g.known++; confettiBurst(6); } else g.queue.push(id);
+  g.flipped = false;
+  render();
+};
+
+/* ---------------------------- Teacher admin ---------------------------- */
+
+function renderTeacher(){
+  const t = State.teacherUI;
+  if (!t.unlocked) return renderPasscodeGate();
+  return renderTeacherDashboard();
+}
+function renderPasscodeGate(){
+  const t = State.teacherUI;
+  return `<div class="page"><div class="gate-card">
+    <div style="font-size:32px">🔒</div><h2>สำหรับครูผู้สอน</h2>
+    <p>กรอกรหัสผ่านเพื่อจัดการบทเรียน แบบทดสอบ และคลังคำศัพท์</p>
+    <input type="password" value="${esc(t.passInput)}" oninput="App.setField('teacherUI','passInput',this.value)" placeholder="รหัสผ่าน" onkeydown="if(event.key==='Enter') App.teacherLogin()">
+    <button class="btn btn-primary btn-block" onclick="App.teacherLogin()">🔓 เข้าสู่ระบบ</button>
+    ${t.passError ? `<p class="gate-error">${esc(t.passError)}</p>` : ""}
+    <p class="gate-hint">หมายเหตุ: รหัสนี้เป็นเพียงการกันไม่ให้แก้ไขโดยไม่ตั้งใจ ไม่ใช่ระบบความปลอดภัยขั้นสูง ข้อมูลถูกเก็บในเบราว์เซอร์เครื่องนี้เท่านั้น ใช้ปุ่มส่งออก/นำเข้าข้อมูลเพื่อย้ายไปเครื่องอื่น</p>
+  </div></div>`;
+}
+App.teacherLogin = function(){
+  const t = State.teacherUI;
+  if (t.passInput === TEACHER_PASSCODE) { t.unlocked = true; t.passError = ""; }
+  else t.passError = "รหัสผ่านไม่ถูกต้อง";
+  render();
+};
+
+function renderTeacherDashboard(){
+  const t = State.teacherUI;
+  const tabs = [["lessons","📚 บทเรียน"],["quizzes","📝 แบบทดสอบ"],["vocab","🔤 คำศัพท์"],["results","🏆 ผลคะแนน"],["data","💾 ข้อมูล"]];
+  let body = "";
+  if (t.tab === "lessons") body = renderLessonsAdmin();
+  else if (t.tab === "quizzes") body = renderQuizzesAdmin();
+  else if (t.tab === "vocab") body = renderVocabAdmin();
+  else if (t.tab === "results") body = renderResultsAdmin();
+  else if (t.tab === "data") body = renderDataAdmin();
+  return `<div class="page"><h2 class="page-title">🔒 หลังบ้านครู</h2>
+  <div class="filter-tabs">${tabs.map(([id,label]) => `<button class="filter-chip ${t.tab===id?"active":""}" onclick="App.teacherTab('${id}')">${label}</button>`).join("")}</div>
+  ${body}</div>`;
+}
+App.teacherTab = function(id){ State.teacherUI.tab = id; State.teacherUI.editingLessonId=null; State.teacherUI.addingLesson=false; State.teacherUI.editingQuizId=null; State.teacherUI.addingQuiz=false; render(); };
+
+/* --- Lessons admin --- */
+function renderLessonsAdmin(){
+  const t = State.teacherUI;
+  if (t.addingLesson || t.editingLessonId) return renderLessonForm();
+  return `<button class="btn btn-primary" onclick="App.newLessonDraft()">➕ เพิ่มบทเรียนใหม่</button>
+  <div class="manage-list">${State.content.lessons.map(l => `
+    <div class="manage-row"><div><p class="manage-title">${esc(l.title)}</p><p class="manage-sub">${l.level} · ${l.category}</p></div>
+    <div class="manage-actions"><button class="btn-mini" onclick="App.editLesson('${l.id}')">✏️ แก้ไข</button><button class="btn-mini btn-mini-danger" onclick="App.deleteLesson('${l.id}')">🗑️ ลบ</button></div></div>`).join("")}
+  </div>`;
+}
+App.newLessonDraft = function(){
+  State.teacherUI.lessonDraft = { id: genId("l"), title:"", level: LEVELS[0], category: CATEGORIES[0], summary:"", sections:[{heading:"",body:""}], examples:[{en:"",th:""}] };
+  State.teacherUI.addingLesson = true; render();
+};
+App.editLesson = function(id){
+  const l = State.content.lessons.find(x=>x.id===id);
+  State.teacherUI.lessonDraft = JSON.parse(JSON.stringify(l));
+  State.teacherUI.editingLessonId = id; render();
+};
+App.cancelLessonForm = function(){ State.teacherUI.addingLesson=false; State.teacherUI.editingLessonId=null; State.teacherUI.lessonDraft=null; render(); };
+App.deleteLesson = function(id){ if(!confirm("ลบบทเรียนนี้?")) return; State.content.lessons = State.content.lessons.filter(l=>l.id!==id); persistContent(); render(); toast("ลบบทเรียนแล้ว"); };
+App.saveLessonForm = function(){
+  const d = State.teacherUI.lessonDraft;
+  const exists = State.content.lessons.some(l=>l.id===d.id);
+  State.content.lessons = exists ? State.content.lessons.map(l=>l.id===d.id?d:l) : [...State.content.lessons, d];
+  persistContent();
+  App.cancelLessonForm();
+  toast("บันทึกบทเรียนแล้ว 🎉");
+};
+App.lessonField = function(field, value){ State.teacherUI.lessonDraft[field] = value; };
+App.lessonSectionField = function(i, field, value){ State.teacherUI.lessonDraft.sections[i][field] = value; };
+App.lessonExampleField = function(i, field, value){ State.teacherUI.lessonDraft.examples[i][field] = value; };
+App.addLessonSection = function(){ State.teacherUI.lessonDraft.sections.push({heading:"",body:""}); render(); };
+App.removeLessonSection = function(i){ State.teacherUI.lessonDraft.sections.splice(i,1); render(); };
+App.addLessonExample = function(){ State.teacherUI.lessonDraft.examples.push({en:"",th:""}); render(); };
+App.removeLessonExample = function(i){ State.teacherUI.lessonDraft.examples.splice(i,1); render(); };
+
+function renderLessonForm(){
+  const d = State.teacherUI.lessonDraft;
+  return `<div class="form-card"><h3>${State.teacherUI.editingLessonId?"แก้ไขบทเรียน":"เพิ่มบทเรียนใหม่"}</h3>
+    <label>ชื่อบทเรียน</label><input value="${esc(d.title)}" oninput="App.lessonField('title',this.value)" placeholder="เช่น Past Simple Tense">
+    <div class="form-row">
+      <div><label>ระดับชั้น</label><select onchange="App.lessonField('level',this.value)">${LEVELS.map(l=>`<option value="${l}" ${d.level===l?"selected":""}>${l}</option>`).join("")}</select></div>
+      <div><label>หมวดหมู่</label><select onchange="App.lessonField('category',this.value)">${CATEGORIES.map(c=>`<option value="${c}" ${d.category===c?"selected":""}>${c}</option>`).join("")}</select></div>
+    </div>
+    <label>คำอธิบายสั้น ๆ</label><input value="${esc(d.summary)}" oninput="App.lessonField('summary',this.value)" placeholder="สรุป 1 บรรทัด">
+    <label>เนื้อหาบทเรียน</label>
+    ${d.sections.map((s,i)=>`<div class="sub-card">
+      <input value="${esc(s.heading)}" oninput="App.lessonSectionField(${i},'heading',this.value)" placeholder="หัวข้อย่อย">
+      <textarea rows="3" oninput="App.lessonSectionField(${i},'body',this.value)" placeholder="เนื้อหาอธิบาย">${esc(s.body)}</textarea>
+      <button class="btn-mini btn-mini-danger" onclick="App.removeLessonSection(${i})">🗑️ ลบหัวข้อนี้</button>
+    </div>`).join("")}
+    <button class="btn-mini" onclick="App.addLessonSection()">➕ เพิ่มหัวข้อ</button>
+    <label>ตัวอย่างประโยค</label>
+    ${d.examples.map((ex,i)=>`<div class="sub-card">
+      <input value="${esc(ex.en)}" oninput="App.lessonExampleField(${i},'en',this.value)" placeholder="ประโยคภาษาอังกฤษ">
+      <input value="${esc(ex.th)}" oninput="App.lessonExampleField(${i},'th',this.value)" placeholder="คำแปลภาษาไทย">
+      <button class="btn-mini btn-mini-danger" onclick="App.removeLessonExample(${i})">🗑️ ลบตัวอย่างนี้</button>
+    </div>`).join("")}
+    <button class="btn-mini" onclick="App.addLessonExample()">➕ เพิ่มตัวอย่าง</button>
+    <div class="hero-actions" style="margin-top:18px">
+      <button class="btn btn-primary" onclick="App.saveLessonForm()" ${!d.title.trim()?"disabled":""}>💾 บันทึก</button>
+      <button class="btn btn-ghost" onclick="App.cancelLessonForm()">✖️ ยกเลิก</button>
+    </div>
+  </div>`;
+}
+
+/* --- Quizzes admin --- */
+function renderQuizzesAdmin(){
+  const t = State.teacherUI;
+  if (t.addingQuiz || t.editingQuizId) return renderQuizForm();
+  return `<button class="btn btn-primary" onclick="App.newQuizDraft()">➕ เพิ่มแบบทดสอบใหม่</button>
+  <div class="manage-list">${State.content.quizzes.map(q => `
+    <div class="manage-row"><div><p class="manage-title">${esc(q.title)}</p><p class="manage-sub">${q.level} · คลัง ${q.pool.length} ข้อ · สุ่ม ${q.pickCount||q.pool.length} ข้อ/ครั้ง</p></div>
+    <div class="manage-actions"><button class="btn-mini" onclick="App.editQuiz('${q.id}')">✏️ แก้ไข</button><button class="btn-mini btn-mini-danger" onclick="App.deleteQuiz('${q.id}')">🗑️ ลบ</button></div></div>`).join("")}
+  </div>`;
+}
+App.newQuizDraft = function(){
+  State.teacherUI.quizDraft = { id: genId("q"), title:"", level: LEVELS[0], lessonId:"", pickCount:5, pool:[] };
+  State.teacherUI.addingQuiz = true; render();
+};
+App.editQuiz = function(id){
+  const q = State.content.quizzes.find(x=>x.id===id);
+  State.teacherUI.quizDraft = JSON.parse(JSON.stringify(q));
+  State.teacherUI.editingQuizId = id; render();
+};
+App.cancelQuizForm = function(){ State.teacherUI.addingQuiz=false; State.teacherUI.editingQuizId=null; State.teacherUI.quizDraft=null; render(); };
+App.deleteQuiz = function(id){ if(!confirm("ลบแบบทดสอบนี้?")) return; State.content.quizzes = State.content.quizzes.filter(q=>q.id!==id); persistContent(); render(); toast("ลบแบบทดสอบแล้ว"); };
+App.saveQuizForm = function(){
+  const d = State.teacherUI.quizDraft;
+  const exists = State.content.quizzes.some(q=>q.id===d.id);
+  State.content.quizzes = exists ? State.content.quizzes.map(q=>q.id===d.id?d:q) : [...State.content.quizzes, d];
+  persistContent();
+  App.cancelQuizForm();
+  toast("บันทึกแบบทดสอบแล้ว 🎉");
+};
+App.quizField = function(field, value){ State.teacherUI.quizDraft[field] = value; render(); };
+App.quizFieldSilent = function(field, value){ State.teacherUI.quizDraft[field] = value; };
+App.addQuizQuestion = function(type){
+  const d = State.teacherUI.quizDraft;
+  let q;
+  if (type==="mc") q = { id:genId("qq"), type, question:"", choices:["","","",""], correct:"", explanation:"" };
+  if (type==="fill") q = { id:genId("qq"), type, question:"", answers:[""], explanation:"" };
+  if (type==="match") q = { id:genId("qq"), type, question:"จับคู่คำศัพท์กับความหมาย", pairs:[{left:"",right:""},{left:"",right:""}], explanation:"" };
+  d.pool.push(q); render();
+};
+App.removeQuizQuestion = function(qi){ State.teacherUI.quizDraft.pool.splice(qi,1); render(); };
+App.quizQField = function(qi, field, value){ State.teacherUI.quizDraft.pool[qi][field] = value; };
+App.quizQChoiceField = function(qi, ci, value){ State.teacherUI.quizDraft.pool[qi].choices[ci] = value; };
+App.quizQSetCorrect = function(qi, ci){ const q = State.teacherUI.quizDraft.pool[qi]; q.correct = q.choices[ci]; render(); };
+App.quizQAnswerField = function(qi, value){ State.teacherUI.quizDraft.pool[qi].answers = [value]; };
+App.quizQPairField = function(qi, pi, side, value){ State.teacherUI.quizDraft.pool[qi].pairs[pi][side] = value; };
+App.quizQAddPair = function(qi){ State.teacherUI.quizDraft.pool[qi].pairs.push({left:"",right:""}); render(); };
+App.quizQRemovePair = function(qi, pi){ State.teacherUI.quizDraft.pool[qi].pairs.splice(pi,1); render(); };
+
+function renderQuizForm(){
+  const d = State.teacherUI.quizDraft;
+  const lessons = State.content.lessons;
+  return `<div class="form-card"><h3>${State.teacherUI.editingQuizId?"แก้ไขแบบทดสอบ":"เพิ่มแบบทดสอบใหม่"}</h3>
+    <label>ชื่อแบบทดสอบ</label><input value="${esc(d.title)}" oninput="App.quizFieldSilent('title',this.value)" placeholder="เช่น แบบทดสอบ Past Simple">
+    <div class="form-row">
+      <div><label>ระดับชั้น</label><select onchange="App.quizField('level',this.value)">${LEVELS.map(l=>`<option value="${l}" ${d.level===l?"selected":""}>${l}</option>`).join("")}</select></div>
+      <div><label>เชื่อมกับบทเรียน (ไม่บังคับ)</label><select onchange="App.quizField('lessonId',this.value)"><option value="">— ไม่เชื่อมบทเรียน —</option>${lessons.map(l=>`<option value="${l.id}" ${d.lessonId===l.id?"selected":""}>${esc(l.title)}</option>`).join("")}</select></div>
+    </div>
+    <label>จำนวนข้อที่จะสุ่มออกมาต่อครั้ง (จากคลังทั้งหมด ${d.pool.length} ข้อ)</label>
+    <input type="number" min="1" max="${Math.max(d.pool.length,1)}" value="${d.pickCount}" oninput="App.quizFieldSilent('pickCount', Math.max(1,parseInt(this.value)||1))">
+    <label>คลังคำถาม (${d.pool.length} ข้อ) — ยิ่งมีมาก ยิ่งสุ่มได้หลากหลายไม่ซ้ำ</label>
+    ${d.pool.map((q,qi)=>renderQuizQuestionEditor(q,qi)).join("")}
+    <div class="hero-actions" style="flex-wrap:wrap">
+      <button class="btn-mini" onclick="App.addQuizQuestion('mc')">➕ ข้อปรนัย</button>
+      <button class="btn-mini" onclick="App.addQuizQuestion('fill')">➕ ข้อเติมคำ</button>
+      <button class="btn-mini" onclick="App.addQuizQuestion('match')">➕ ข้อจับคู่</button>
+    </div>
+    <div class="hero-actions" style="margin-top:18px">
+      <button class="btn btn-primary" onclick="App.saveQuizForm()" ${(!d.title.trim()||d.pool.length===0)?"disabled":""}>💾 บันทึก</button>
+      <button class="btn btn-ghost" onclick="App.cancelQuizForm()">✖️ ยกเลิก</button>
+    </div>
+  </div>`;
+}
+function renderQuizQuestionEditor(q, qi){
+  const typeLabel = {mc:"ปรนัย",fill:"เติมคำ",match:"จับคู่"}[q.type];
+  let body = `<input value="${esc(q.question)}" oninput="App.quizQField(${qi},'question',this.value)" placeholder="โจทย์คำถาม">`;
+  if (q.type === "mc") {
+    body += q.choices.map((c,ci) => `<div class="mc-row"><input type="radio" name="correct_${qi}" ${q.correct===c && c!==""?"checked":""} onclick="App.quizQSetCorrect(${qi},${ci})"><input value="${esc(c)}" oninput="App.quizQChoiceField(${qi},${ci},this.value); App.quizQMaybeUpdateCorrect(${qi},${ci},this.value)" placeholder="ตัวเลือก ${ci+1}"></div>`).join("");
+    body += `<p class="mini-hint">เลือกวงกลมหน้าตัวเลือกที่ถูกต้อง (ปัจจุบัน: ${esc(q.correct||"ยังไม่ได้เลือก")})</p>`;
+  } else if (q.type === "fill") {
+    body += `<input value="${esc(q.answers[0]||"")}" oninput="App.quizQAnswerField(${qi},this.value)" placeholder="คำตอบที่ถูกต้อง">`;
+  } else if (q.type === "match") {
+    body += q.pairs.map((p,pi) => `<div class="mc-row">
+      <input value="${esc(p.left)}" oninput="App.quizQPairField(${qi},${pi},'left',this.value)" placeholder="คำ (ซ้าย)">
+      <input value="${esc(p.right)}" oninput="App.quizQPairField(${qi},${pi},'right',this.value)" placeholder="ความหมาย/คู่ (ขวา)">
+      <button class="btn-mini btn-mini-danger" onclick="App.quizQRemovePair(${qi},${pi})">🗑️</button></div>`).join("");
+    body += `<button class="btn-mini" onclick="App.quizQAddPair(${qi})">➕ เพิ่มคู่</button>`;
+  }
+  body += `<label style="margin-top:6px">คำอธิบายเฉลย (ไม่บังคับ)</label><textarea rows="2" oninput="App.quizQField(${qi},'explanation',this.value)" placeholder="อธิบายว่าทำไมคำตอบนี้ถูกต้อง">${esc(q.explanation||"")}</textarea>`;
+  return `<div class="sub-card"><div class="index-card-top"><span class="stamp stamp-mustard">${typeLabel}</span><button class="btn-mini btn-mini-danger" onclick="App.removeQuizQuestion(${qi})">🗑️ ลบข้อนี้</button></div>${body}</div>`;
+}
+App.quizQMaybeUpdateCorrect = function(qi, ci, value){
+  // if this choice text was the previously-correct one (or is the checked radio), keep correct in sync as user types
+  const q = State.teacherUI.quizDraft.pool[qi];
+  const radios = document.getElementsByName("correct_"+qi);
+  if (radios[ci] && radios[ci].checked) q.correct = value;
+};
+
+/* --- Vocab admin --- */
+function renderVocabAdmin(){
+  const t = State.teacherUI;
+  const filtered = State.vocab.filter(v => v.level===t.vocabGradeFilter && (t.vocabSearch.trim()===""||v.word.toLowerCase().includes(t.vocabSearch.toLowerCase())||v.meaning.includes(t.vocabSearch)));
+  const n = t.vocabNew;
+  return `
+  <div class="form-card"><h3>➕ เพิ่มคำศัพท์ทีละคำ</h3>
+    <div class="form-row">
+      <div><label>คำศัพท์ (อังกฤษ)</label><input value="${esc(n.word)}" oninput="App.vocabNewField('word',this.value)" placeholder="เช่น optimistic"></div>
+      <div><label>ความหมาย (ไทย)</label><input value="${esc(n.meaning)}" oninput="App.vocabNewField('meaning',this.value)" placeholder="เช่น มองโลกในแง่ดี"></div>
+    </div>
+    <div class="form-row">
+      <div><label>คำอ่าน (ไทย)</label><input value="${esc(n.read)}" oninput="App.vocabNewField('read',this.value)" placeholder="เช่น ออพ-ทิ-มิส-ทิค"></div>
+      <div><label>ชนิดคำ</label><select onchange="App.vocabNewField('pos',this.value)">${Object.entries(POS_LABEL).map(([k,v])=>`<option value="${k}" ${n.pos===k?"selected":""}>${v}</option>`).join("")}</select></div>
+    </div>
+    <label>ระดับชั้น</label><select onchange="App.vocabNewField('level',this.value)">${GRADES.map(g=>`<option value="${g}" ${n.level===g?"selected":""}>${g}</option>`).join("")}</select>
+    <button class="btn btn-primary" style="margin-top:12px" onclick="App.addVocabWord()" ${(!n.word.trim()||!n.meaning.trim())?"disabled":""}>➕ เพิ่มคำศัพท์</button>
+  </div>
+  <div class="form-card"><h3>📥 นำเข้าคำศัพท์จำนวนมาก</h3>
+    <p class="mini-hint">พิมพ์หรือวางทีละบรรทัด รูปแบบ: คำศัพท์ | ความหมาย | คำอ่าน | ชนิดคำ (n/v/adj/adv/phr ไม่บังคับ)</p>
+    <label>ระดับชั้นที่จะนำเข้า</label><select onchange="App.setField('teacherUI','bulkLevel',this.value)">${GRADES.map(g=>`<option value="${g}" ${t.bulkLevel===g?"selected":""}>${g}</option>`).join("")}</select>
+    <label>รายการคำศัพท์</label>
+    <textarea rows="6" oninput="App.setField('teacherUI','bulkText',this.value)" placeholder="optimistic | มองโลกในแง่ดี | ออพ-ทิ-มิส-ทิค | adj">${esc(t.bulkText)}</textarea>
+    <button class="btn btn-primary" style="margin-top:10px" onclick="App.runBulkImport()" ${!t.bulkText.trim()?"disabled":""}>📥 นำเข้าคำศัพท์</button>
+    ${t.bulkMsg ? `<p class="mini-hint" style="margin-top:8px">${esc(t.bulkMsg)}</p>` : ""}
+  </div>
+  <div class="form-card"><h3>📖 คำศัพท์ในคลัง</h3>
+    <div class="filter-tabs">${GRADES.map(g=>`<button class="filter-chip ${t.vocabGradeFilter===g?"active":""}" onclick="App.setVocabAdminGrade('${g}')">${g}</button>`).join("")}</div>
+    <div class="search-row">🔍 <input class="search-input" value="${esc(t.vocabSearch)}" oninput="App.setField('teacherUI','vocabSearch',this.value)" onkeyup="App.debouncedVocabAdminRender()" placeholder="ค้นหา..."></div>
+    <p class="mini-hint" style="margin:8px 0">${t.vocabGradeFilter}: ${filtered.length} คำ (จากทั้งหมด ${State.vocab.filter(v=>v.level===t.vocabGradeFilter).length} คำ)</p>
+    <div class="hero-actions" style="margin-bottom:6px">
+      <button class="btn btn-danger btn-sm" onclick="App.deleteVocabByGrade()">🗑️ ลบคำศัพท์ทั้งหมดในชั้นนี้</button>
+      <button class="btn btn-danger btn-sm" onclick="App.deleteAllVocab()">🗑️ ลบคำศัพท์ทั้งหมดทุกชั้น</button>
+    </div>
+    <div class="manage-list" style="max-height:360px;overflow-y:auto">
+      ${filtered.slice(0,200).map(v => `<div class="manage-row"><div><p class="manage-title">${esc(v.word)} <span class="mini-hint">(${POS_LABEL[v.pos]||v.pos}) · 🔊${esc(v.read||"")}</span></p><p class="manage-sub">${esc(v.meaning)}</p></div><button class="btn-mini btn-mini-danger" onclick="App.deleteVocabWord('${v.id}')">🗑️ ลบ</button></div>`).join("")}
+    </div>
+  </div>`;
+}
+App.vocabNewField = function(field, value){ State.teacherUI.vocabNew[field] = value; };
+App.setVocabAdminGrade = function(g){ State.teacherUI.vocabGradeFilter = g; render(); };
+App.debouncedVocabAdminRender = function(){ clearTimeout(window._vocabDebounce); window._vocabDebounce = setTimeout(render, 250); };
+App.addVocabWord = function(){
+  const n = State.teacherUI.vocabNew;
+  State.vocab.push({ id: genId("v"), word:n.word.trim(), meaning:n.meaning.trim(), pos:n.pos, read:n.read.trim(), level:n.level });
+  persistVocab();
+  State.teacherUI.vocabNew = { word:"", meaning:"", pos:n.pos, level:n.level, read:"" };
+  render(); toast("เพิ่มคำศัพท์แล้ว ✨");
+};
+App.deleteVocabWord = function(id){ State.vocab = State.vocab.filter(v=>v.id!==id); persistVocab(); render(); };
+App.deleteVocabByGrade = function(){
+  const g = State.teacherUI.vocabGradeFilter;
+  if (!confirm(`ลบคำศัพท์ทั้งหมดในชั้น ${g} ใช่หรือไม่? (ลบทีเดียวทั้งหมด กู้คืนไม่ได้)`)) return;
+  State.vocab = State.vocab.filter(v=>v.level!==g); persistVocab(); render(); toast(`ลบคำศัพท์ชั้น ${g} ทั้งหมดแล้ว`);
+};
+App.deleteAllVocab = function(){
+  if (!confirm("ลบคำศัพท์ทั้งหมดทุกชั้นใช่หรือไม่? (ลบทีเดียวทั้งหมด กู้คืนไม่ได้)")) return;
+  if (!confirm("ยืนยันอีกครั้ง: ต้องการลบคำศัพท์ทุกคำในคลังทั้งหมดจริง ๆ ใช่ไหม?")) return;
+  State.vocab = []; persistVocab(); render(); toast("ลบคำศัพท์ทั้งหมดแล้ว");
+};
+App.runBulkImport = function(){
+  const t = State.teacherUI;
+  const lines = t.bulkText.split("\n").map(l=>l.trim()).filter(Boolean);
+  const added = [];
+  lines.forEach(line => {
+    const parts = line.split(/[|\t]/).map(p=>p.trim());
+    if (parts.length >= 2 && parts[0] && parts[1]) {
+      added.push({ id: genId("v"), word: parts[0], meaning: parts[1], read: parts[2]||"", pos: (parts[3] && POS_LABEL[parts[3]]) ? parts[3] : "n", level: t.bulkLevel });
+    }
+  });
+  if (added.length > 0) {
+    State.vocab = State.vocab.concat(added);
+    persistVocab();
+    t.bulkMsg = `นำเข้าสำเร็จ ${added.length} คำ ในระดับ ${t.bulkLevel}`;
+    t.bulkText = "";
+    toast(`นำเข้า ${added.length} คำแล้ว 🎉`);
+  } else {
+    t.bulkMsg = "ไม่พบข้อมูลที่นำเข้าได้ ตรวจรูปแบบแต่ละบรรทัดอีกครั้ง (ใช้ | คั่น)";
+  }
+  render();
+};
+
+/* --- Results admin --- */
+function renderResultsAdmin(){
+  return `<div class="manage-list">${State.content.quizzes.map(q => {
+    const entries = State.results[q.id] || [];
+    return `<div class="sub-card"><p class="manage-title">${esc(q.title)}</p>
+      ${entries.length===0 ? '<p class="mini-hint">ยังไม่มีนักเรียนทำแบบทดสอบนี้</p>' : `
+      <table class="result-table"><thead><tr><th>ชื่อ</th><th>คะแนน</th><th>วันที่</th></tr></thead>
+      <tbody>${entries.slice().reverse().map(e => `<tr><td>${esc(e.name)}</td><td>${e.score}/${e.total}</td><td>${new Date(e.date).toLocaleString("th-TH")}</td></tr>`).join("")}</tbody></table>`}
+    </div>`;
+  }).join("")}</div>`;
+}
+
+/* --- Data (export/import/reset) admin --- */
+function renderDataAdmin(){
+  return `<div class="form-card"><h3>💾 สำรอง / ย้ายข้อมูล</h3>
+    <p class="mini-hint">ข้อมูลทั้งหมดเก็บอยู่ในเบราว์เซอร์เครื่องนี้เท่านั้น (localStorage) ไม่มีการซิงก์ข้ามเครื่องอัตโนมัติ
+    ใช้ปุ่มด้านล่างเพื่อส่งออกเป็นไฟล์ แล้วนำไปนำเข้าในเบราว์เซอร์/อุปกรณ์อื่น เพื่อให้เห็นข้อมูลชุดเดียวกัน</p>
+    <div class="hero-actions" style="margin-top:12px">
+      <button class="btn btn-mint" onclick="App.exportData()">⬇️ ส่งออกข้อมูล (.json)</button>
+      <label class="btn btn-lav" style="cursor:pointer">⬆️ นำเข้าข้อมูล<input type="file" accept="application/json" style="display:none" onchange="App.importData(this.files[0])"></label>
+      <button class="btn btn-danger" onclick="App.resetAllData()">♻️ รีเซ็ตเป็นค่าเริ่มต้น</button>
+    </div>
+  </div>`;
+}
+App.exportData = function(){
+  const payload = { content: State.content, vocab: State.vocab, results: State.results, exportedAt: new Date().toISOString() };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = "english-explorer-data.json";
+  document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+  toast("ส่งออกไฟล์ข้อมูลแล้ว 💾");
+};
+App.importData = function(file){
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e){
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!confirm("นำเข้าข้อมูลนี้จะแทนที่ข้อมูลปัจจุบันทั้งหมดในเบราว์เซอร์นี้ ต้องการดำเนินการต่อหรือไม่?")) return;
+      if (data.content) { State.content = data.content; persistContent(); }
+      if (data.vocab) { State.vocab = data.vocab; persistVocab(); }
+      if (data.results) { State.results = data.results; persistResults(); }
+      render();
+      toast("นำเข้าข้อมูลสำเร็จ 🎉");
+    } catch (err) { alert("ไฟล์ไม่ถูกต้อง หรือไม่ใช่ไฟล์ที่ส่งออกจากระบบนี้"); }
+  };
+  reader.readAsText(file);
+};
+App.resetAllData = function(){
+  if (!confirm("รีเซ็ตข้อมูลทั้งหมดกลับเป็นค่าเริ่มต้นใช่หรือไม่? ข้อมูลที่แก้ไขไว้ในเบราว์เซอร์นี้จะหายไป")) return;
+  State.content = { lessons: DEFAULT_LESSONS, quizzes: DEFAULT_QUIZZES };
+  State.vocab = DEFAULT_VOCAB;
+  State.results = {};
+  persistContent(); persistVocab(); persistResults();
+  render(); toast("รีเซ็ตข้อมูลเรียบร้อยแล้ว");
+};
+
+/* ---------------------------- Accounts / Login / Streaks / Progress pie chart ---------------------------- */
+
+function getLoggedInUser(){
+  const uname = getCurrentUsername();
+  if (!uname) return null;
+  const users = loadUsers();
+  return users.find(u => u.username === uname) || null;
+}
+function saveUser(updated){
+  const users = loadUsers();
+  const idx = users.findIndex(u => u.username === updated.username);
+  if (idx >= 0) users[idx] = updated; else users.push(updated);
+  saveUsers(users);
+}
+
+const AccountUI = { mode: "login", username:"", password:"", displayName:"", error:"" };
+
+function renderAccount(){
+  const user = getLoggedInUser();
+  if (!user) return renderAuthForm();
+  return renderAccountDashboard(user);
+}
+
+function renderAuthForm(){
+  const a = AccountUI;
+  return `<div class="page"><div class="auth-card">
+    <div style="text-align:center;font-size:30px">👤</div>
+    <h2>${a.mode==="login"?"เข้าสู่ระบบ":"สมัครสมาชิก"}</h2>
+    <p class="sub">เก็บสถิติการเรียนและสตรีคประจำวันของคุณเอง (บันทึกในเบราว์เซอร์นี้)</p>
+    <div class="auth-tabs">
+      <button class="auth-tab ${a.mode==="login"?"active":""}" onclick="App.setAuthMode('login')">เข้าสู่ระบบ</button>
+      <button class="auth-tab ${a.mode==="register"?"active":""}" onclick="App.setAuthMode('register')">สมัครใหม่</button>
+    </div>
+    ${a.mode==="register" ? `<label class="mini-hint">ชื่อที่แสดง</label><input value="${esc(a.displayName)}" oninput="App.authField('displayName',this.value)" placeholder="เช่น น้องพลอย">` : ""}
+    <label class="mini-hint">ชื่อผู้ใช้</label><input value="${esc(a.username)}" oninput="App.authField('username',this.value)" placeholder="username">
+    <label class="mini-hint">รหัสผ่าน</label><input type="password" value="${esc(a.password)}" oninput="App.authField('password',this.value)" placeholder="รหัสผ่าน" onkeydown="if(event.key==='Enter') App.submitAuth()">
+    <button class="btn btn-primary btn-block" style="margin-top:14px" onclick="App.submitAuth()">${a.mode==="login"?"🔓 เข้าสู่ระบบ":"✨ สมัครสมาชิก"}</button>
+    ${a.error ? `<p class="auth-error">${esc(a.error)}</p>` : ""}
+    <p class="gate-hint" style="text-align:center">บัญชีนี้เก็บไว้ในเบราว์เซอร์เครื่องนี้เท่านั้น ใช้เพื่อติดตามสถิติส่วนตัว ไม่ใช่ระบบความปลอดภัยขั้นสูง</p>
+  </div></div>`;
+}
+App.setAuthMode = function(m){ AccountUI.mode = m; AccountUI.error=""; render(); };
+App.authField = function(f,v){ AccountUI[f] = v; };
+App.submitAuth = function(){
+  const a = AccountUI;
+  if (!a.username.trim() || !a.password.trim()) { a.error = "กรุณากรอกชื่อผู้ใช้และรหัสผ่าน"; render(); return; }
+  const users = loadUsers();
+  if (a.mode === "register") {
+    if (users.some(u => u.username === a.username.trim())) { a.error = "มีชื่อผู้ใช้นี้แล้ว ลองชื่ออื่น"; render(); return; }
+    const user = { username: a.username.trim(), password: a.password, displayName: a.displayName.trim() || a.username.trim(), streak: { count: 0, last: null }, quizHistory: [], createdAt: new Date().toISOString() };
+    updateStreak(user);
+    users.push(user); saveUsers(users);
+    setCurrentUsername(user.username);
+    toast(`ยินดีต้อนรับ ${user.displayName}! 🎉`);
+  } else {
+    const user = users.find(u => u.username === a.username.trim());
+    if (!user || user.password !== a.password) { a.error = "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง"; render(); return; }
+    updateStreak(user); saveUser(user);
+    setCurrentUsername(user.username);
+    toast(`ยินดีต้อนรับกลับมา ${user.displayName}! 🔥`);
+  }
+  a.username=""; a.password=""; a.displayName=""; a.error="";
+  render();
+};
+App.logout = function(){ setCurrentUsername(null); render(); toast("ออกจากระบบแล้ว"); };
+
+function buildPieGradient(segments){
+  let acc = 0; const stops = [];
+  segments.forEach(seg => {
+    const start = acc, end = acc + seg.pct;
+    stops.push(`${seg.color} ${start}% ${end}%`);
+    acc = end;
+  });
+  if (acc < 100) stops.push(`#e5e0f0 ${acc}% 100%`);
+  return `conic-gradient(${stops.join(",")})`;
+}
+function accuracyColor(pct){
+  if (pct >= 75) return "#3fc79e";
+  if (pct >= 50) return "#D9A62E";
+  return "#FF7A7A";
+}
+
+function renderAccountDashboard(user){
+  const history = user.quizHistory || [];
+  const byCategory = {};
+  history.forEach(h => {
+    const key = h.category || "อื่นๆ";
+    if (!byCategory[key]) byCategory[key] = { correct: 0, total: 0 };
+    byCategory[key].correct += h.earned;
+    byCategory[key].total += h.total;
+  });
+  const catKeys = Object.keys(byCategory);
+  const totalQuestions = catKeys.reduce((s,k)=>s+byCategory[k].total, 0);
+  const palette = ["#FF8FC7","#63C4FF","#63D9B7","#FFC94A","#B7A6FF","#FF7A7A"];
+  const segments = catKeys.map((k,i) => ({ label:k, pct: totalQuestions? Math.round((byCategory[k].total/totalQuestions)*100):0, color: palette[i%palette.length], accuracy: byCategory[k].total? Math.round((byCategory[k].correct/byCategory[k].total)*100):0 }));
+
+  const recent = history.slice().reverse().slice(0,8);
+
+  return `<div class="page">
+    <div class="account-header">
+      <div class="account-avatar">🧑‍🎓</div>
+      <div style="flex:1"><p class="account-name">${esc(user.displayName)}</p><p class="account-sub">@${esc(user.username)} · สมาชิกตั้งแต่ ${new Date(user.createdAt).toLocaleDateString("th-TH")}</p></div>
+      <span class="streak-badge">🔥 ${user.streak?user.streak.count:0} วันติดต่อกัน</span>
+      <button class="btn btn-ghost btn-sm" onclick="App.logout()">ออกจากระบบ</button>
+    </div>
+
+    <div class="section-block">
+      <p class="section-kicker">🥧 ถนัดด้านไหน อ่อนด้านไหน</p>
+      ${totalQuestions===0 ? `<p class="empty-note">ยังไม่มีข้อมูล ลองทำแบบทดสอบสักชุดก่อนนะ แล้วกลับมาดูกราฟตรงนี้ได้เลย!</p>` : `
+      <div class="pie-wrap">
+        <div class="pie-chart" style="background:${buildPieGradient(segments)}"></div>
+        <div class="pie-legend">
+          ${segments.map(s => `<div class="pie-legend-row">
+            <span class="pie-dot" style="background:${s.color}"></span>
+            <span class="pie-legend-label">${esc(s.label)}</span>
+            <span class="pie-legend-pct">${s.pct}%</span>
+          </div>
+          <div class="strength-bar-track"><div class="strength-bar-fill" style="width:${s.accuracy}%;background:${accuracyColor(s.accuracy)}"></div></div>
+          <p class="mini-hint" style="margin-top:-2px">ความแม่นยำ ${s.accuracy}% ${s.accuracy>=75?"— ถนัดมาก! 💪":s.accuracy>=50?"— กำลังไปได้ดี":"— ควรฝึกเพิ่ม 📖"}</p>
+          `).join("")}
+        </div>
+      </div>`}
+    </div>
+
+    <div class="section-block">
+      <p class="section-kicker">🕒 ประวัติการทำแบบทดสอบล่าสุด</p>
+      ${recent.length===0 ? `<p class="empty-note">ยังไม่มีประวัติ</p>` : `<div class="manage-list">${recent.map(h => `
+        <div class="manage-row"><div><p class="manage-title">${esc(h.quizTitle)}</p><p class="manage-sub">${esc(h.category||"")} · ${new Date(h.date).toLocaleString("th-TH")}</p></div><p class="manage-title">${h.earned}/${h.total}</p></div>`).join("")}</div>`}
+    </div>
+  </div>`;
+}
+
+/* ---------------------------- Bootstrap ---------------------------- */
+currentTheme = initTheme();
+{ const u = getLoggedInUser(); if (u) { updateStreak(u); saveUser(u); } }
+render();
+</script>
+</body>
+</html>
