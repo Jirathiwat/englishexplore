@@ -51,11 +51,16 @@ body.theme-dark .key-btn{ background:#2A2340; color:var(--ink); }
 h1,h2,h3{font-family:var(--font-display);}
 ::selection{background:var(--pink);color:white;}
 
-/* topbar */
+/* topbar: full width, sticky, content centered inside via inner wrapper */
 #topbar{
-  display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
-  padding:14px 20px;background:rgba(255,255,255,0.75);backdrop-filter:blur(8px);
+  width:100%;background:rgba(255,255,255,0.75);backdrop-filter:blur(8px);
   position:sticky;top:0;z-index:20;border-bottom:3px dashed var(--pink);
+  box-sizing:border-box;
+}
+.topbar-inner{
+  max-width:900px;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
+  padding:14px 20px;position:relative;
 }
 .brand{display:flex;align-items:center;gap:10px;cursor:pointer;font-family:var(--font-display);font-weight:800;font-size:19px;color:var(--ink);}
 .brand-mark{
@@ -64,11 +69,11 @@ h1,h2,h3{font-family:var(--font-display);}
   animation:wiggle 4s ease-in-out infinite;
 }
 @keyframes wiggle{0%,100%{transform:rotate(-6deg);}50%{transform:rotate(6deg);}}
-.tabbar{display:flex;gap:6px;flex-wrap:wrap;}
+.tabbar{display:flex;gap:8px;flex-wrap:wrap;}
 .tab-btn{
-  display:flex;align-items:center;gap:6px;padding:9px 14px;border-radius:999px;
+  display:flex;align-items:center;gap:7px;padding:12px 20px;border-radius:999px;
   background:white;color:var(--ink-soft);border:2px solid transparent;
-  font-family:var(--font-body);font-weight:600;font-size:13px;cursor:pointer;
+  font-family:var(--font-body);font-weight:700;font-size:15px;cursor:pointer;
   box-shadow:0 3px 0 rgba(74,59,99,0.1);transition:transform .12s ease;
 }
 .tab-btn:hover{transform:translateY(-2px);}
@@ -313,11 +318,35 @@ h1,h2,h3{font-family:var(--font-display);}
 .pie-legend-pct{font-weight:800;font-family:var(--font-display);}
 .strength-bar-track{background:var(--pink-soft);border-radius:999px;height:10px;overflow:hidden;margin-top:4px;}
 .strength-bar-fill{height:100%;border-radius:999px;}
+
+/* single theme-cycle button: light -> dark -> auto-rotating season (every 2 min) -> light ... */
+.theme-cycle-btn{background:white;border:none;border-radius:999px;width:48px;height:48px;display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer;box-shadow:0 3px 0 rgba(74,59,99,0.15);transition:transform .15s ease;}
+.theme-cycle-btn:active{transform:scale(0.92);}
+.theme-mode-label{font-size:10px;font-weight:700;color:var(--ink-soft);text-align:center;margin-top:2px;white-space:nowrap;}
+.theme-cycle-wrap{display:flex;flex-direction:column;align-items:center;}
+
+/* Seasonal & pattern themes */
+body.theme-spring{ --pink:#FFAAD4; --pink-soft:#FFE6F4; --lav:#B8E3B0; --lav-soft:#E9F7E4; --mint:#8FE3C0; --mint-soft:#E3FBF0; --sky:#AEE2FF; --sky-soft:#EAF7FF; --sun:#FFE07D; --sun-soft:#FFF6DE; --coral:#FF8FA3; --coral-soft:#FFE3E8; --ink:#4A3B52; --ink-soft:#8A7A94; --paper:#FFF8FB; --card:#FFFFFF; }
+body.theme-spring{ background: linear-gradient(160deg,#FFE6F4,#EAF7FF,#E9F7E4); background-attachment:fixed; }
+body.theme-summer{ --pink:#FF6F91; --pink-soft:#FFE0E9; --lav:#4FC3F7; --lav-soft:#E0F7FF; --mint:#26C6DA; --mint-soft:#DFFAFB; --sky:#29B6F6; --sky-soft:#E1F5FE; --sun:#FFD54F; --sun-soft:#FFF7D9; --coral:#FF7043; --coral-soft:#FFE0D3; --ink:#123C4A; --ink-soft:#5C7A85; --paper:#F0FBFF; --card:#FFFFFF; }
+body.theme-summer{ background: linear-gradient(160deg,#E1F5FE,#FFF7D9,#DFFAFB); background-attachment:fixed; }
+body.theme-autumn{ --pink:#E07A5F; --pink-soft:#FBE7DE; --lav:#C08552; --lav-soft:#F3E3D3; --mint:#A98B4E; --mint-soft:#F1E7D2; --sky:#D9A441; --sky-soft:#FBEFD6; --sun:#F2B705; --sun-soft:#FCEFC7; --coral:#B33F2E; --coral-soft:#F5DAD4; --ink:#4A2E1F; --ink-soft:#8A6F5C; --paper:#FDF3E7; --card:#FFFCF6; }
+body.theme-autumn{ background: linear-gradient(160deg,#FBE7DE,#FCEFC7,#F3E3D3); background-attachment:fixed; }
+body.theme-winter{ --pink:#8FCBEA; --pink-soft:#E8F6FD; --lav:#B0C4DE; --lav-soft:#EAF0FA; --mint:#A0E7E5; --mint-soft:#E4FBFB; --sky:#5FA8D3; --sky-soft:#EAF6FC; --sun:#E0E0E0; --sun-soft:#F5F5F7; --coral:#6C90C4; --coral-soft:#E4EBF7; --ink:#2E3A4A; --ink-soft:#7C8CA0; --paper:#F4FAFD; --card:#FFFFFF; }
+body.theme-winter{ background: linear-gradient(160deg,#EAF6FC,#F5F5F7,#E8F6FD); background-attachment:fixed; }
+body.theme-cartoon{ --pink:#FF3E7F; --pink-soft:#FFD9E6; --lav:#7B5CFF; --lav-soft:#E5DEFF; --mint:#00D67F; --mint-soft:#D3FBE8; --sky:#00B8FF; --sky-soft:#D6F3FF; --sun:#FFD400; --sun-soft:#FFF3B0; --coral:#FF5C39; --coral-soft:#FFDCD1; --ink:#241A3D; --ink-soft:#6E6390; --paper:#FFFDF7; --card:#FFFFFF; }
+body.theme-cartoon{ background: linear-gradient(160deg,#D6F3FF,#FFD9E6,#FFF3B0); background-attachment:fixed; }
+body.theme-nature{ --pink:#8FAE6B; --pink-soft:#E7F0DC; --lav:#C7A76C; --lav-soft:#F3E9D4; --mint:#6FAE8E; --mint-soft:#DFF0E6; --sky:#A7C957; --sky-soft:#EEF6DA; --sun:#E0B94C; --sun-soft:#FAF0D6; --coral:#B5651D; --coral-soft:#F0DFC9; --ink:#3A3222; --ink-soft:#7C7358; --paper:#F7F5EC; --card:#FFFFFF; }
+body.theme-nature{ background: linear-gradient(160deg,#EEF6DA,#E7F0DC,#F3E9D4); background-attachment:fixed; }
+body.theme-ocean{ --pink:#4FA8C9; --pink-soft:#DFF3FA; --lav:#3D8FA6; --lav-soft:#D9EEF3; --mint:#2FBFA0; --mint-soft:#DAF7EF; --sky:#1F7A99; --sky-soft:#D6EDF5; --sun:#7ED6D0; --sun-soft:#E3FAF8; --coral:#F4A261; --coral-soft:#FCE7D2; --ink:#0E2E3B; --ink-soft:#5C7C87; --paper:#EEFAFC; --card:#FFFFFF; }
+body.theme-ocean{ background: linear-gradient(160deg,#D6EDF5,#DAF7EF,#DFF3FA); background-attachment:fixed; }
+body.theme-forest{ --pink:#6B8F71; --pink-soft:#E2ECDF; --lav:#8C6B4F; --lav-soft:#EDE3D6; --mint:#4F8F6B; --mint-soft:#DCEFE2; --sky:#3E6B4F; --sky-soft:#DEEAE0; --sun:#C9A15A; --sun-soft:#F3E7D0; --coral:#A0522D; --coral-soft:#EBDAC9; --ink:#2B2A1F; --ink-soft:#6B6A55; --paper:#F1F2E9; --card:#FDFDF7; }
+body.theme-forest{ background: linear-gradient(160deg,#DEEAE0,#E2ECDF,#EDE3D6); background-attachment:fixed; }
 </style>
 </head>
 <body>
+<header id="topbar"></header>
 <div id="app">
-  <header id="topbar"></header>
   <main id="main"></main>
 </div>
 <script>
@@ -361,14 +390,48 @@ function confettiBurst(count){
     setTimeout(()=>el.remove(), 2600);
   }
 }
-/* ---------------------------- Theme (light/dark) ---------------------------- */
-function initTheme(){
-  let theme = localStorage.getItem("ee_theme");
-  if (!theme) theme = (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : "light";
-  document.body.classList.toggle("theme-dark", theme === "dark");
-  return theme;
+/* ---------------------------- Theme (light / dark / auto-rotating season) ---------------------------- */
+const SEASON_THEMES = [
+  { id:"spring", label:"ฤดูใบไม้ผลิ", icon:"🌸" },
+  { id:"summer", label:"ฤดูร้อน", icon:"🌞" },
+  { id:"autumn", label:"ฤดูใบไม้ร่วง", icon:"🍂" },
+  { id:"winter", label:"ฤดูหนาว", icon:"❄️" },
+  { id:"cartoon", label:"ลายการ์ตูน", icon:"🎪" },
+  { id:"nature", label:"ลายธรรมชาติ", icon:"🌿" },
+  { id:"ocean", label:"ลายทะเล", icon:"🌊" },
+  { id:"forest", label:"ลายป่า", icon:"🌲" },
+];
+const SEASON_ROTATE_MS = 2 * 60 * 1000; // rotate every 2 minutes
+const ALL_THEME_CLASS_IDS = ["dark"].concat(SEASON_THEMES.map(t=>t.id));
+function applyThemeClass(id){
+  ALL_THEME_CLASS_IDS.forEach(t => document.body.classList.remove("theme-"+t));
+  if (id !== "light") document.body.classList.add("theme-"+id);
 }
-let currentTheme = "light";
+let themeMode = "light"; // "light" | "dark" | "season"
+let seasonIndex = 0;
+let seasonTimerId = null;
+
+function applyCurrentVisual(){
+  if (themeMode === "light") applyThemeClass("light");
+  else if (themeMode === "dark") applyThemeClass("dark");
+  else applyThemeClass(SEASON_THEMES[seasonIndex].id);
+}
+function stopSeasonRotation(){ if (seasonTimerId) { clearInterval(seasonTimerId); seasonTimerId = null; } }
+function startSeasonRotation(){
+  stopSeasonRotation();
+  seasonTimerId = setInterval(() => {
+    seasonIndex = (seasonIndex + 1) % SEASON_THEMES.length;
+    localStorage.setItem("ee_season_index", String(seasonIndex));
+    applyCurrentVisual();
+    renderTopbar();
+  }, SEASON_ROTATE_MS);
+}
+function initTheme(){
+  themeMode = localStorage.getItem("ee_theme_mode") || "light";
+  seasonIndex = parseInt(localStorage.getItem("ee_season_index") || "0", 10) || 0;
+  applyCurrentVisual();
+  if (themeMode === "season") startSeasonRotation();
+}
 
 /* ---------------------------- Motivational quotes (quote of the day) ---------------------------- */
 
@@ -902,18 +965,32 @@ function renderTopbar(){
     { id: "account", label: "บัญชี", icon: "👤", match: ["account"] },
     { id: "teacher", label: "สำหรับครู", icon: "🔒", match: ["teacher"] },
   ];
+  let icon = "☀️", label = "สว่าง";
+  if (themeMode === "dark") { icon = "🌙"; label = "มืด"; }
+  else if (themeMode === "season") { icon = SEASON_THEMES[seasonIndex].icon; label = SEASON_THEMES[seasonIndex].label; }
   $("#topbar").innerHTML = `
-    <div class="brand" onclick="App.go('home')"><div class="brand-mark">🌈</div><span>English Explorer</span></div>
-    <nav class="tabbar">
-      ${tabs.map(t => `<button class="tab-btn ${t.match.includes(State.view)?"active":""}" onclick="App.go('${t.id}')">${t.icon} ${t.label}</button>`).join("")}
-      <button class="theme-toggle" onclick="App.toggleTheme()" title="สลับธีมมืด/สว่าง">${currentTheme==="dark"?"☀️":"🌙"}</button>
-    </nav>`;
+    <div class="topbar-inner">
+      <div class="brand" onclick="App.go('home')"><div class="brand-mark">🌈</div><span>English Explorer</span></div>
+      <nav class="tabbar">
+        ${tabs.map(t => `<button class="tab-btn ${t.match.includes(State.view)?"active":""}" onclick="App.go('${t.id}')">${t.icon} ${t.label}</button>`).join("")}
+      </nav>
+      <div class="theme-cycle-wrap">
+        <button class="theme-cycle-btn" onclick="App.cycleTheme()" title="กดเพื่อสลับ สว่าง / มืด / ฤดูหมุนอัตโนมัติทุก 2 นาที">${icon}</button>
+        <span class="theme-mode-label">${label}</span>
+      </div>
+    </div>`;
 }
-App.toggleTheme = function(){
-  currentTheme = currentTheme === "dark" ? "light" : "dark";
-  document.body.classList.toggle("theme-dark", currentTheme === "dark");
-  localStorage.setItem("ee_theme", currentTheme);
+App.cycleTheme = function(){
+  if (themeMode === "light") themeMode = "dark";
+  else if (themeMode === "dark") themeMode = "season";
+  else themeMode = "light";
+  localStorage.setItem("ee_theme_mode", themeMode);
+  if (themeMode === "season") { seasonIndex = 0; localStorage.setItem("ee_season_index","0"); startSeasonRotation(); }
+  else stopSeasonRotation();
+  applyCurrentVisual();
   renderTopbar();
+  const msg = themeMode === "light" ? "โหมดสว่าง ☀️" : themeMode === "dark" ? "โหมดมืด 🌙" : "โหมดฤดูกาล จะเปลี่ยนทุก 2 นาทีอัตโนมัติ 🎨";
+  toast(msg);
 };
 
 function viewHTML(){
@@ -1992,7 +2069,7 @@ function renderAccountDashboard(user){
 }
 
 /* ---------------------------- Bootstrap ---------------------------- */
-currentTheme = initTheme();
+initTheme();
 { const u = getLoggedInUser(); if (u) { updateStreak(u); saveUser(u); } }
 render();
 </script>
