@@ -44,45 +44,49 @@ body.theme-dark .flip-front{ color: var(--ink); }
 body.theme-dark input, body.theme-dark select, body.theme-dark textarea{ background: #2A2340; }
 body.theme-dark .choice-btn, body.theme-dark .match-item{ background:#2A2340; }
 body.theme-dark #topbar{ background: rgba(24,20,37,0.8); }
-body.theme-dark .tab-btn{ background:#2A2340; }
+body.theme-dark .theme-cycle-btn{ background:#2A2340; color:var(--ink); }
 body.theme-dark .key-btn{ background:#2A2340; color:var(--ink); }
-#app{max-width:900px;margin:0 auto;min-height:100vh;position:relative;}
+#app{margin-left:64px;min-height:100vh;position:relative;}
 .blob{position:fixed;border-radius:50%;filter:blur(2px);opacity:0.35;z-index:0;pointer-events:none;}
 h1,h2,h3{font-family:var(--font-display);}
 ::selection{background:var(--pink);color:white;}
 
-/* topbar: full width, sticky, content centered inside via inner wrapper */
+/* topbar: full width, sticky, fixed height so the icon rail can align exactly under it */
 #topbar{
-  width:100%;background:rgba(255,255,255,0.75);backdrop-filter:blur(8px);
+  width:100%;height:74px;background:rgba(255,255,255,0.75);backdrop-filter:blur(8px);
   position:sticky;top:0;z-index:20;border-bottom:3px dashed var(--pink);
   box-sizing:border-box;
 }
 .topbar-inner{
-  width:100%;box-sizing:border-box;
+  width:100%;height:100%;box-sizing:border-box;
   display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:nowrap;
-  padding:14px 20px;position:relative;
+  padding:0 20px;position:relative;
 }
-.brand{flex-shrink:0;}
+
+/* persistent icon-only rail (always visible, YouTube-style mini sidebar) */
+#icon-rail{
+  position:fixed;top:74px;left:0;width:64px;height:calc(100vh - 74px);
+  background:var(--card);border-right:3px dashed var(--pink-soft);
+  overflow-y:auto;z-index:15;display:flex;flex-direction:column;align-items:stretch;
+  padding:8px 0;box-sizing:border-box;
+}
+.rail-item{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:11px 2px;background:none;border:none;cursor:pointer;color:var(--ink-soft);
+  font-family:var(--font-body);font-size:9.5px;font-weight:700;border-radius:14px;
+  margin:2px 6px;line-height:1.2;
+}
+.rail-item .rail-icon{font-size:21px;}
+.rail-item:hover{background:var(--pink-soft);}
+.rail-item.active{background:var(--lav-soft);color:var(--ink);}
 .theme-cycle-wrap{flex-shrink:0;}
-.tabbar{display:flex;gap:8px;flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;scrollbar-width:thin;-webkit-overflow-scrolling:touch;padding-bottom:2px;flex:1 1 auto;min-width:0;}
-.tabbar::-webkit-scrollbar{height:5px;}
-.tabbar::-webkit-scrollbar-thumb{background:var(--pink-soft);border-radius:999px;}
-.tab-btn{flex-shrink:0;}
-.brand{display:flex;align-items:center;gap:10px;cursor:pointer;font-family:var(--font-display);font-weight:800;font-size:19px;color:var(--ink);}
+.brand{display:flex;align-items:center;gap:10px;cursor:pointer;font-family:var(--font-display);font-weight:800;font-size:19px;color:var(--ink);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .brand-mark{
   width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--pink),var(--lav));
-  display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:var(--shadow);
+  display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:var(--shadow);flex-shrink:0;
   animation:wiggle 4s ease-in-out infinite;
 }
 @keyframes wiggle{0%,100%{transform:rotate(-6deg);}50%{transform:rotate(6deg);}}
-.tab-btn{
-  display:flex;align-items:center;gap:7px;padding:12px 20px;border-radius:999px;
-  background:white;color:var(--ink-soft);border:2px solid transparent;
-  font-family:var(--font-body);font-weight:700;font-size:15px;cursor:pointer;
-  box-shadow:0 3px 0 rgba(74,59,99,0.1);transition:transform .12s ease;
-}
-.tab-btn:hover{transform:translateY(-2px);}
-.tab-btn.active{background:linear-gradient(135deg,var(--pink),var(--coral));color:white;box-shadow:0 4px 0 rgba(255,122,122,0.4);}
 
 #main{padding:10px 6px 60px;position:relative;z-index:1;}
 .page{max-width:800px;margin:0 auto;padding:22px 16px;}
@@ -351,6 +355,7 @@ body.theme-forest{ background: linear-gradient(160deg,#DEEAE0,#E2ECDF,#EDE3D6); 
 </head>
 <body>
 <header id="topbar"></header>
+<nav id="icon-rail"></nav>
 <div id="app">
   <main id="main"></main>
 </div>
@@ -957,33 +962,44 @@ function persistResults(){ saveResults(State.results); }
 
 function render(){
   renderTopbar();
+  renderRail();
   const main = $("#main");
   main.innerHTML = viewHTML();
 }
+
+const NAV_ITEMS = [
+  { id: "lessons", label: "บทเรียน", icon: "📚", match: ["lessons","lessonDetail"] },
+  { id: "quizzes", label: "แบบทดสอบ", icon: "📝", match: ["quizzes","quizTake"] },
+  { id: "vocab", label: "คำศัพท์", icon: "🔤", match: ["vocab"] },
+  { id: "games", label: "เกม", icon: "🎮", match: ["games"] },
+  { id: "account", label: "บัญชี", icon: "👤", match: ["account"] },
+];
+const NAV_ITEMS_FOOTER = [
+  { id: "teacher", label: "สำหรับครู", icon: "🔒", match: ["teacher"] },
+];
+
 function renderTopbar(){
-  const tabs = [
-    { id: "lessons", label: "บทเรียน", icon: "📚", match: ["lessons","lessonDetail"] },
-    { id: "quizzes", label: "แบบทดสอบ", icon: "📝", match: ["quizzes","quizTake"] },
-    { id: "vocab", label: "คำศัพท์", icon: "🔤", match: ["vocab"] },
-    { id: "games", label: "เกม", icon: "🎮", match: ["games"] },
-    { id: "account", label: "บัญชี", icon: "👤", match: ["account"] },
-    { id: "teacher", label: "สำหรับครู", icon: "🔒", match: ["teacher"] },
-  ];
   let icon = "☀️", label = "สว่าง";
   if (themeMode === "dark") { icon = "🌙"; label = "มืด"; }
   else if (themeMode === "season") { icon = SEASON_THEMES[seasonIndex].icon; label = SEASON_THEMES[seasonIndex].label; }
   $("#topbar").innerHTML = `
     <div class="topbar-inner">
       <div class="brand" onclick="App.go('home')"><div class="brand-mark">🌈</div><span>English Explorer</span></div>
-      <nav class="tabbar">
-        ${tabs.map(t => `<button class="tab-btn ${t.match.includes(State.view)?"active":""}" onclick="App.go('${t.id}')">${t.icon} ${t.label}</button>`).join("")}
-      </nav>
       <div class="theme-cycle-wrap">
         <button class="theme-cycle-btn" onclick="App.cycleTheme()" title="กดเพื่อสลับ สว่าง / มืด / ฤดูหมุนอัตโนมัติทุก 2 นาที">${icon}</button>
         <span class="theme-mode-label">${label}</span>
       </div>
     </div>`;
 }
+
+function renderRail(){
+  const allItems = NAV_ITEMS.concat(NAV_ITEMS_FOOTER);
+  $("#icon-rail").innerHTML = allItems.map(t => `
+    <button class="rail-item ${t.match.includes(State.view)?"active":""}" onclick="App.go('${t.id}')" title="${t.label}">
+      <span class="rail-icon">${t.icon}</span><span>${t.label}</span>
+    </button>`).join("");
+}
+
 App.cycleTheme = function(){
   if (themeMode === "light") themeMode = "dark";
   else if (themeMode === "dark") themeMode = "season";
