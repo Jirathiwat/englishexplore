@@ -16,6 +16,10 @@
   --radius: 22px;
   --font-display:'Baloo 2', 'Mali', sans-serif;
   --font-body:'Prompt','Mali', sans-serif;
+  /* fixed, theme-independent colors for right/wrong feedback — always clearly green/red in every theme */
+  --correct-fill:#16a34a; --wrong-fill:#dc2626;
+  --correct:#15803d; --correct-tint:rgba(21,128,61,0.12); --correct-border:#16a34a;
+  --wrong:#b91c1c; --wrong-tint:rgba(185,28,28,0.10); --wrong-border:#dc2626;
 }
 body.theme-dark{
   --pink:#FF8FC7; --pink-soft:#3A2540; --lav:#B7A6FF; --lav-soft:#2C2650;
@@ -23,6 +27,8 @@ body.theme-dark{
   --sun:#FFC94A; --sun-soft:#3A3018; --coral:#FF7A7A; --coral-soft:#3A2222;
   --ink:#F1E9FA; --ink-soft:#B8ACC9; --paper:#181425; --card:#241D36;
   --shadow: 0 6px 0 rgba(0,0,0,0.35);
+  --correct:#4ade80; --correct-tint:rgba(74,222,128,0.16); --correct-border:#22c55e;
+  --wrong:#f87171; --wrong-tint:rgba(248,113,113,0.14); --wrong-border:#ef4444;
 }
 *{box-sizing:border-box;}
 html,body{margin:0;padding:0;}
@@ -34,18 +40,7 @@ body{
   transition: background .3s ease, color .3s ease;
 }
 body.theme-dark{ background: linear-gradient(160deg, #181425 0%, #201a30 50%, #1c1730 100%); }
-body.theme-dark .index-card, body.theme-dark .form-card, body.theme-dark .sub-card,
-body.theme-dark .question-block, body.theme-dark .manage-row, body.theme-dark .vocab-card,
-body.theme-dark .stat-card, body.theme-dark .route-card, body.theme-dark .gate-card,
-body.theme-dark .result-card, body.theme-dark .game-setup, body.theme-dark .fill-input,
-body.theme-dark .search-row, body.theme-dark input, body.theme-dark select, body.theme-dark textarea,
-body.theme-dark .choice-btn, body.theme-dark .match-item, body.theme-dark .memory-card.flipped,
-body.theme-dark .flip-front{ color: var(--ink); }
-body.theme-dark input, body.theme-dark select, body.theme-dark textarea{ background: #2A2340; }
-body.theme-dark .choice-btn, body.theme-dark .match-item{ background:#2A2340; }
 body.theme-dark #topbar{ background: rgba(24,20,37,0.8); }
-body.theme-dark .theme-cycle-btn{ background:#2A2340; color:var(--ink); }
-body.theme-dark .key-btn{ background:#2A2340; color:var(--ink); }
 #app{margin-left:64px;min-height:100vh;position:relative;}
 .blob{position:fixed;border-radius:50%;filter:blur(2px);opacity:0.35;z-index:0;pointer-events:none;}
 h1,h2,h3{font-family:var(--font-display);}
@@ -106,7 +101,7 @@ h1,h2,h3{font-family:var(--font-display);}
 .btn-primary:disabled{opacity:0.4;cursor:not-allowed;box-shadow:none;}
 .btn-mint{background:linear-gradient(135deg,var(--mint),#3fc79e);color:white;box-shadow:0 4px 0 #2ea885;}
 .btn-lav{background:linear-gradient(135deg,var(--lav),#9179ff);color:white;box-shadow:0 4px 0 #6f56e0;}
-.btn-ghost{background:white;color:var(--ink);box-shadow:0 3px 0 rgba(74,59,99,0.15);}
+.btn-ghost{background:var(--card);color:var(--ink);box-shadow:0 3px 0 rgba(74,59,99,0.15);}
 .btn-ghost:hover{background:var(--pink-soft);}
 .btn-danger{background:linear-gradient(135deg,var(--coral),#e14b4b);color:white;box-shadow:0 4px 0 #b83838;}
 .btn-sm{padding:7px 13px;font-size:12px;border-radius:999px;}
@@ -138,7 +133,7 @@ h1,h2,h3{font-family:var(--font-display);}
 
 .page-title{font-size:28px;margin:0 0 14px;font-weight:800;}
 .filter-tabs{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;}
-.filter-chip{padding:8px 15px;border-radius:999px;border:2px solid var(--pink-soft);background:white;color:var(--ink-soft);font-size:13px;font-weight:600;cursor:pointer;}
+.filter-chip{padding:8px 15px;border-radius:999px;border:2px solid var(--pink-soft);background:var(--card);color:var(--ink-soft);font-size:13px;font-weight:600;cursor:pointer;}
 .filter-chip.active{background:linear-gradient(135deg,var(--lav),#9179ff);color:white;border-color:transparent;}
 
 .card-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
@@ -160,7 +155,7 @@ h1,h2,h3{font-family:var(--font-display);}
 .stamp-navy{background:var(--lav);}
 .stamp-sage{background:var(--mint);}
 .stamp-red{background:var(--coral);}
-.stamp-mustard{background:var(--sun);color:var(--ink);}
+.stamp-mustard{background:var(--sun);color:#5a3a00;}
 
 .lesson-head{margin-bottom:10px;}
 .lesson-summary{color:var(--ink-soft);font-size:14px;}
@@ -181,23 +176,24 @@ h1,h2,h3{font-family:var(--font-display);}
 .question-num{font-size:11px;font-weight:700;color:var(--pink);margin:0 0 6px;text-transform:uppercase;}
 .question-text{font-size:15px;font-weight:700;margin:0 0 12px;}
 .choice-list{display:flex;flex-direction:column;gap:8px;}
-.choice-btn{text-align:left;padding:11px 15px;border-radius:14px;border:2px solid var(--pink-soft);background:white;cursor:pointer;font-family:var(--font-body);font-size:14px;font-weight:600;}
-.choice-btn.active{border-color:var(--pink);background:var(--pink-soft);}
-.choice-btn.wrong-choice{border-color:var(--coral);background:var(--coral-soft);}
-.fill-input,.name-field input,.search-input,.form-card input,.form-card select,.form-card textarea{
-  width:100%;padding:11px 15px;border-radius:14px;border:2px solid var(--lav-soft);font-family:var(--font-body);font-size:14px;background:white;
+.choice-btn{text-align:left;padding:11px 15px;border-radius:14px;border:2px solid var(--pink-soft);background:var(--card);color:var(--ink);cursor:pointer;font-family:var(--font-body);font-size:14px;font-weight:600;}
+.choice-btn.selected{border-color:var(--pink);background:var(--pink-soft);}
+.choice-btn.correct-answer{border-color:var(--correct-fill);background:var(--correct-fill);color:#fff;font-weight:800;}
+.choice-btn.wrong-answer{border-color:var(--wrong-fill);background:var(--wrong-fill);color:#fff;font-weight:800;}
+.fill-input,.name-field input,.search-input,.form-card input,.form-card select,.form-card textarea,.gate-card input,.auth-card input,.auth-card select{
+  width:100%;padding:11px 15px;border-radius:14px;border:2px solid var(--lav-soft);font-family:var(--font-body);font-size:14px;background:var(--card);color:var(--ink);
 }
-.fill-input:focus,.form-card input:focus,.form-card select:focus,.form-card textarea:focus{outline:none;border-color:var(--pink);}
+.fill-input:focus,.form-card input:focus,.form-card select:focus,.form-card textarea:focus,.gate-card input:focus,.auth-card input:focus{outline:none;border-color:var(--pink);}
 .name-field{margin-bottom:20px;}
 .name-field label{display:block;font-size:12px;color:var(--ink-soft);margin-bottom:6px;font-weight:600;}
 
 .match-wrap{display:flex;gap:14px;}
 .match-col{flex:1;display:flex;flex-direction:column;gap:8px;}
-.match-item{padding:10px 12px;border-radius:14px;border:2px solid var(--lav-soft);background:white;font-size:13.5px;font-weight:600;cursor:pointer;text-align:center;}
+.match-item{padding:10px 12px;border-radius:14px;border:2px solid var(--lav-soft);background:var(--card);color:var(--ink);font-size:13.5px;font-weight:600;cursor:pointer;text-align:center;}
 .match-item.sel{border-color:var(--sun);background:var(--sun-soft);}
-.match-item.done{border-color:var(--mint);background:var(--mint-soft);color:#1c8a68;cursor:default;}
-.match-item.corr{border-color:var(--mint);background:var(--mint-soft);}
-.match-item.wrong{border-color:var(--coral);background:var(--coral-soft);color:#c23a3a;}
+.match-item.done{border-color:var(--mint);background:var(--mint-soft);color:var(--ink);cursor:default;}
+.match-item.corr{border-color:var(--correct-fill);background:var(--correct-fill);color:#fff;}
+.match-item.wrong{border-color:var(--wrong-fill);background:var(--wrong-fill);color:#fff;}
 
 .result-card{text-align:center;background:var(--card);border-radius:24px;padding:40px 24px;border:4px dashed var(--pink);box-shadow:var(--shadow);}
 .result-card h2{margin:12px 0 6px;}
@@ -206,13 +202,13 @@ h1,h2,h3{font-family:var(--font-display);}
 
 .answerkey-block{margin-top:22px;}
 .answerkey-row{border-radius:16px;padding:14px 16px;margin-bottom:12px;border:3px solid;}
-.ak-correct{border-color:var(--mint);background:var(--mint-soft);}
-.ak-wrong{border-color:var(--coral);background:var(--coral-soft);}
+.ak-correct{border-color:var(--correct-border);background:var(--correct-tint);}
+.ak-wrong{border-color:var(--wrong-border);background:var(--wrong-tint);}
 .ak-head{display:flex;align-items:flex-start;gap:8px;font-weight:700;margin-bottom:8px;}
 .ak-head p{margin:0;}
 .ak-choices{margin:0 0 6px;padding-left:20px;font-size:13.5px;}
-.ak-choice-correct{color:#1c8a68;font-weight:800;}
-.ak-choice-wrong{color:#c23a3a;}
+.ak-choice-correct{color:var(--correct);font-weight:800;}
+.ak-choice-wrong{color:var(--wrong);font-weight:700;}
 .ak-fill-line{font-size:13.5px;margin:3px 0;}
 .ak-explain{font-size:13px;color:var(--ink-soft);margin:8px 0 0;padding-top:8px;border-top:2px dashed rgba(74,59,99,0.15);}
 
@@ -232,7 +228,7 @@ h1,h2,h3{font-family:var(--font-display);}
 .mini-hint{font-size:11.5px;color:var(--ink-soft);margin:2px 0 0;}
 
 .btn-mini{display:inline-flex;align-items:center;gap:5px;padding:7px 12px;border-radius:999px;border:none;background:var(--lav-soft);color:var(--ink);font-size:12px;font-weight:700;cursor:pointer;margin-right:8px;margin-top:6px;}
-.btn-mini-danger{background:var(--coral-soft);color:#c23a3a;}
+.btn-mini-danger{background:var(--wrong-tint);color:var(--wrong);border:1.5px solid var(--wrong-border);}
 
 .manage-list{margin-top:16px;display:flex;flex-direction:column;gap:10px;}
 .manage-row{display:flex;justify-content:space-between;align-items:center;background:var(--card);border-radius:14px;padding:12px 14px;gap:10px;flex-wrap:wrap;box-shadow:0 3px 0 rgba(74,59,99,0.08);}
@@ -244,7 +240,7 @@ h1,h2,h3{font-family:var(--font-display);}
 .result-table th{text-align:left;color:var(--ink-soft);font-weight:700;font-size:11.5px;text-transform:uppercase;padding:4px 6px;}
 .result-table td{padding:6px;border-top:1px solid rgba(74,59,99,0.1);}
 
-.search-row{display:flex;align-items:center;gap:8px;background:white;border-radius:14px;padding:4px 12px;border:2px solid var(--lav-soft);}
+.search-row{display:flex;align-items:center;gap:8px;background:var(--card);border-radius:14px;padding:4px 12px;border:2px solid var(--lav-soft);color:var(--ink);}
 .search-row .search-input{border:none;padding:9px 0;}
 .search-row .search-input:focus{outline:none;}
 
@@ -263,31 +259,50 @@ h1,h2,h3{font-family:var(--font-display);}
 .memory-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
 @media (max-width:480px){.memory-grid{grid-template-columns:repeat(3,1fr);}}
 .memory-card{aspect-ratio:1;border-radius:14px;border:none;background:linear-gradient(135deg,var(--lav),#9179ff);color:white;font-size:11px;font-weight:700;padding:6px;display:flex;align-items:center;justify-content:center;text-align:center;cursor:pointer;word-break:break-word;box-shadow:0 3px 0 #6f56e0;}
-.memory-card.matched{background:var(--mint);opacity:.65;cursor:default;box-shadow:none;}
-.memory-card.flipped{background:white;color:var(--ink);border:2px solid var(--sun);}
+.memory-card.matched{background:var(--correct-fill);color:#fff;opacity:.9;cursor:default;box-shadow:none;}
+.memory-card.flipped{background:var(--card);color:var(--ink);border:2px solid var(--sun);}
 
 .scramble-box{background:var(--card);border-radius:20px;padding:24px;text-align:center;box-shadow:var(--shadow);}
 .scramble-letters{font-family:var(--font-display);font-size:36px;letter-spacing:.15em;margin:0 0 10px;font-weight:800;color:var(--lav);}
 .feedback-box{margin-top:14px;padding:12px;border-radius:14px;font-weight:800;}
-.fb-correct{background:var(--mint-soft);color:#1c8a68;}
-.fb-wrong{background:var(--coral-soft);color:#c23a3a;}
+.fb-correct{background:var(--correct-tint);color:var(--correct);border:2px solid var(--correct-border);}
+.fb-wrong{background:var(--wrong-tint);color:var(--wrong);border:2px solid var(--wrong-border);}
 
 .timer-bar{height:10px;background:var(--pink-soft);border-radius:999px;overflow:hidden;}
 .timer-fill{height:100%;background:linear-gradient(90deg,var(--sun),var(--coral));transition:width 1s linear;}
 
 .hangman-word{font-family:var(--font-display);font-size:32px;text-align:center;letter-spacing:.2em;margin:16px 0;font-weight:800;}
+
+/* classroom tools */
+.tool-textarea{width:100%;min-height:120px;padding:12px 14px;border-radius:14px;border:2px solid var(--lav-soft);font-family:var(--font-body);font-size:14px;background:var(--card);color:var(--ink);resize:vertical;}
+.picker-stage{background:var(--card);border-radius:24px;padding:40px 20px;text-align:center;box-shadow:var(--shadow);border:3px dashed var(--pink);min-height:160px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.picker-name{font-family:var(--font-display);font-size:34px;font-weight:800;color:var(--pink);word-break:break-word;}
+.picker-sub{font-size:13px;color:var(--ink-soft);margin-top:6px;}
+.picker-mode-row{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0;}
+.group-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-top:16px;}
+.group-card{background:var(--card);border-radius:16px;padding:14px;box-shadow:var(--shadow);border:2px solid var(--lav-soft);}
+.group-card h4{margin:0 0 8px;font-size:14px;color:var(--lav);}
+.group-card ul{margin:0;padding-left:18px;font-size:13.5px;}
+.group-card li{margin-bottom:4px;}
+.timer-display{font-family:var(--font-display);font-size:72px;font-weight:800;text-align:center;margin:20px 0;color:var(--ink);}
+.timer-display.warning{color:var(--wrong);}
+.timer-presets{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:10px;}
+.bracket-round{margin-bottom:18px;}
+.bracket-match{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--card);border-radius:14px;padding:12px 16px;margin-bottom:8px;box-shadow:0 3px 0 rgba(74,59,99,0.08);border:2px solid var(--pink-soft);}
+.bracket-vs{font-size:11px;color:var(--ink-soft);font-weight:700;}
+.bracket-bye{color:var(--ink-soft);font-style:italic;font-size:12.5px;}
 .hangman-keyboard{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;}
 @media (max-width:480px){.hangman-keyboard{grid-template-columns:repeat(6,1fr);}}
-.key-btn{padding:9px 0;border-radius:10px;border:none;background:white;box-shadow:0 3px 0 rgba(74,59,99,0.15);text-transform:uppercase;cursor:pointer;font-weight:700;}
-.key-btn.correct{background:var(--mint-soft);box-shadow:0 3px 0 #2ea885;}
-.key-btn.wrong{background:var(--coral-soft);box-shadow:0 3px 0 #b83838;}
+.key-btn{padding:9px 0;border-radius:10px;border:none;background:var(--card);color:var(--ink);box-shadow:0 3px 0 rgba(74,59,99,0.15);text-transform:uppercase;cursor:pointer;font-weight:700;}
+.key-btn.correct{background:var(--correct-fill);color:#fff;box-shadow:0 3px 0 #0d6b31;}
+.key-btn.wrong{background:var(--wrong-fill);color:#fff;box-shadow:0 3px 0 #991b1b;}
 .key-btn:disabled{opacity:.5;cursor:default;}
 
 .flip-card{perspective:1000px;height:180px;cursor:pointer;}
 .flip-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d;}
 .flip-inner.flipped{transform:rotateY(180deg);}
 .flip-front,.flip-back{position:absolute;inset:0;backface-visibility:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:20px;font-family:var(--font-display);font-size:22px;font-weight:800;text-align:center;padding:12px;box-shadow:var(--shadow);}
-.flip-front{background:white;color:var(--ink);border:3px solid var(--pink);}
+.flip-front{background:var(--card);color:var(--ink);border:3px solid var(--pink);}
 .flip-back{background:linear-gradient(135deg,var(--lav),#9179ff);color:white;transform:rotateY(180deg);font-size:16px;}
 
 .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink);color:white;padding:12px 20px;border-radius:999px;font-size:13px;font-weight:600;z-index:100;box-shadow:0 6px 20px rgba(0,0,0,0.2);animation:toast-in .3s ease;}
@@ -298,7 +313,6 @@ h1,h2,h3{font-family:var(--font-display);}
 .spin{font-size:34px;animation:spin 1.2s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
 
-.theme-toggle{background:white;border:none;border-radius:999px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;box-shadow:0 3px 0 rgba(74,59,99,0.15);}
 .streak-badge{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,var(--sun),#ff9f4a);color:#5a3a00;font-weight:800;padding:8px 16px;border-radius:999px;font-size:14px;box-shadow:0 3px 0 rgba(255,159,74,.4);}
 .quote-card{background:var(--card);border-radius:20px;padding:20px 22px;box-shadow:var(--shadow);border:2px dashed var(--lav);margin:18px 0;text-align:center;}
 .quote-en{font-family:var(--font-display);font-size:17px;font-weight:700;margin:0 0 8px;color:var(--ink);}
@@ -329,28 +343,28 @@ h1,h2,h3{font-family:var(--font-display);}
 .strength-bar-fill{height:100%;border-radius:999px;}
 
 /* single theme-cycle button: light -> dark -> auto-rotating season (every 2 min) -> light ... */
-.theme-cycle-btn{background:white;border:none;border-radius:999px;width:48px;height:48px;display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer;box-shadow:0 3px 0 rgba(74,59,99,0.15);transition:transform .15s ease;}
+.theme-cycle-btn{background:var(--card);color:var(--ink);border:none;border-radius:999px;width:48px;height:48px;display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer;box-shadow:0 3px 0 rgba(74,59,99,0.15);transition:transform .15s ease;}
 .theme-cycle-btn:active{transform:scale(0.92);}
 .theme-mode-label{font-size:10px;font-weight:700;color:var(--ink-soft);text-align:center;margin-top:2px;white-space:nowrap;}
 .theme-cycle-wrap{display:flex;flex-direction:column;align-items:center;}
 
 /* Seasonal & pattern themes */
-body.theme-spring{ --pink:#FFAAD4; --pink-soft:#FFE6F4; --lav:#B8E3B0; --lav-soft:#E9F7E4; --mint:#8FE3C0; --mint-soft:#E3FBF0; --sky:#AEE2FF; --sky-soft:#EAF7FF; --sun:#FFE07D; --sun-soft:#FFF6DE; --coral:#FF8FA3; --coral-soft:#FFE3E8; --ink:#4A3B52; --ink-soft:#8A7A94; --paper:#FFF8FB; --card:#FFFFFF; }
-body.theme-spring{ background: linear-gradient(160deg,#FFE6F4,#EAF7FF,#E9F7E4); background-attachment:fixed; }
-body.theme-summer{ --pink:#FF6F91; --pink-soft:#FFE0E9; --lav:#4FC3F7; --lav-soft:#E0F7FF; --mint:#26C6DA; --mint-soft:#DFFAFB; --sky:#29B6F6; --sky-soft:#E1F5FE; --sun:#FFD54F; --sun-soft:#FFF7D9; --coral:#FF7043; --coral-soft:#FFE0D3; --ink:#123C4A; --ink-soft:#5C7A85; --paper:#F0FBFF; --card:#FFFFFF; }
-body.theme-summer{ background: linear-gradient(160deg,#E1F5FE,#FFF7D9,#DFFAFB); background-attachment:fixed; }
-body.theme-autumn{ --pink:#E07A5F; --pink-soft:#FBE7DE; --lav:#C08552; --lav-soft:#F3E3D3; --mint:#A98B4E; --mint-soft:#F1E7D2; --sky:#D9A441; --sky-soft:#FBEFD6; --sun:#F2B705; --sun-soft:#FCEFC7; --coral:#B33F2E; --coral-soft:#F5DAD4; --ink:#4A2E1F; --ink-soft:#8A6F5C; --paper:#FDF3E7; --card:#FFFCF6; }
-body.theme-autumn{ background: linear-gradient(160deg,#FBE7DE,#FCEFC7,#F3E3D3); background-attachment:fixed; }
-body.theme-winter{ --pink:#8FCBEA; --pink-soft:#E8F6FD; --lav:#B0C4DE; --lav-soft:#EAF0FA; --mint:#A0E7E5; --mint-soft:#E4FBFB; --sky:#5FA8D3; --sky-soft:#EAF6FC; --sun:#E0E0E0; --sun-soft:#F5F5F7; --coral:#6C90C4; --coral-soft:#E4EBF7; --ink:#2E3A4A; --ink-soft:#7C8CA0; --paper:#F4FAFD; --card:#FFFFFF; }
-body.theme-winter{ background: linear-gradient(160deg,#EAF6FC,#F5F5F7,#E8F6FD); background-attachment:fixed; }
+body.theme-spring{ --pink:#FF5FAE; --pink-soft:#FFD6EC; --lav:#4CAF50; --lav-soft:#D7F2D3; --mint:#2FBF8F; --mint-soft:#CDF3E4; --sky:#4FADFF; --sky-soft:#D6ECFF; --sun:#FFC72C; --sun-soft:#FFF0BF; --coral:#FF6B8A; --coral-soft:#FFD9E1; --ink:#3D2A3F; --ink-soft:#7A6580; --paper:#FFF6FA; --card:#FFFFFF; }
+body.theme-spring{ background: linear-gradient(160deg,#FFD6EC,#D6ECFF,#D7F2D3); background-attachment:fixed; }
+body.theme-summer{ --pink:#FF3D68; --pink-soft:#FFD3DD; --lav:#1EA6D6; --lav-soft:#C9EEFA; --mint:#0FB8B0; --mint-soft:#C4F3EF; --sky:#0E8FE0; --sky-soft:#C7E6FA; --sun:#FFC220; --sun-soft:#FFEEBA; --coral:#FF5722; --coral-soft:#FFD8C6; --ink:#0D3646; --ink-soft:#4E7180; --paper:#EAF8FF; --card:#FFFFFF; }
+body.theme-summer{ background: linear-gradient(160deg,#C7E6FA,#FFEEBA,#C4F3EF); background-attachment:fixed; }
+body.theme-autumn{ --pink:#E0521E; --pink-soft:#F8DCC5; --lav:#9C5B24; --lav-soft:#EBD7BC; --mint:#8A7A1E; --mint-soft:#ECE4B8; --sky:#C9860F; --sky-soft:#F5E2B7; --sun:#F0A80B; --sun-soft:#FBE8B0; --coral:#A8271A; --coral-soft:#EEC9C0; --ink:#3D2314; --ink-soft:#7A5C46; --paper:#FCF0E2; --card:#FFFCF6; }
+body.theme-autumn{ background: linear-gradient(160deg,#F8DCC5,#FBE8B0,#EBD7BC); background-attachment:fixed; }
+body.theme-winter{ --pink:#2E86D6; --pink-soft:#CFE8FA; --lav:#5B6FBE; --lav-soft:#D6DBF5; --mint:#1FADAD; --mint-soft:#C7EFEF; --sky:#1D6FB8; --sky-soft:#CBE4F7; --sun:#8B92A8; --sun-soft:#E4E6ED; --coral:#4A63B0; --coral-soft:#D3D9F2; --ink:#16233A; --ink-soft:#51637E; --paper:#EDF6FC; --card:#FFFFFF; }
+body.theme-winter{ background: linear-gradient(160deg,#CFE8FA,#E4E6ED,#D6DBF5); background-attachment:fixed; }
 body.theme-cartoon{ --pink:#FF3E7F; --pink-soft:#FFD9E6; --lav:#7B5CFF; --lav-soft:#E5DEFF; --mint:#00D67F; --mint-soft:#D3FBE8; --sky:#00B8FF; --sky-soft:#D6F3FF; --sun:#FFD400; --sun-soft:#FFF3B0; --coral:#FF5C39; --coral-soft:#FFDCD1; --ink:#241A3D; --ink-soft:#6E6390; --paper:#FFFDF7; --card:#FFFFFF; }
 body.theme-cartoon{ background: linear-gradient(160deg,#D6F3FF,#FFD9E6,#FFF3B0); background-attachment:fixed; }
-body.theme-nature{ --pink:#8FAE6B; --pink-soft:#E7F0DC; --lav:#C7A76C; --lav-soft:#F3E9D4; --mint:#6FAE8E; --mint-soft:#DFF0E6; --sky:#A7C957; --sky-soft:#EEF6DA; --sun:#E0B94C; --sun-soft:#FAF0D6; --coral:#B5651D; --coral-soft:#F0DFC9; --ink:#3A3222; --ink-soft:#7C7358; --paper:#F7F5EC; --card:#FFFFFF; }
-body.theme-nature{ background: linear-gradient(160deg,#EEF6DA,#E7F0DC,#F3E9D4); background-attachment:fixed; }
-body.theme-ocean{ --pink:#4FA8C9; --pink-soft:#DFF3FA; --lav:#3D8FA6; --lav-soft:#D9EEF3; --mint:#2FBFA0; --mint-soft:#DAF7EF; --sky:#1F7A99; --sky-soft:#D6EDF5; --sun:#7ED6D0; --sun-soft:#E3FAF8; --coral:#F4A261; --coral-soft:#FCE7D2; --ink:#0E2E3B; --ink-soft:#5C7C87; --paper:#EEFAFC; --card:#FFFFFF; }
-body.theme-ocean{ background: linear-gradient(160deg,#D6EDF5,#DAF7EF,#DFF3FA); background-attachment:fixed; }
-body.theme-forest{ --pink:#6B8F71; --pink-soft:#E2ECDF; --lav:#8C6B4F; --lav-soft:#EDE3D6; --mint:#4F8F6B; --mint-soft:#DCEFE2; --sky:#3E6B4F; --sky-soft:#DEEAE0; --sun:#C9A15A; --sun-soft:#F3E7D0; --coral:#A0522D; --coral-soft:#EBDAC9; --ink:#2B2A1F; --ink-soft:#6B6A55; --paper:#F1F2E9; --card:#FDFDF7; }
-body.theme-forest{ background: linear-gradient(160deg,#DEEAE0,#E2ECDF,#EDE3D6); background-attachment:fixed; }
+body.theme-nature{ --pink:#4F9D3D; --pink-soft:#D9EFCE; --lav:#B8860B; --lav-soft:#F0E3B8; --mint:#2E8B57; --mint-soft:#CFEBDB; --sky:#7FB238; --sky-soft:#E4F0C7; --sun:#D9A521; --sun-soft:#F6E7B6; --coral:#A0522D; --coral-soft:#EBD3C3; --ink:#26210C; --ink-soft:#6B6340; --paper:#F5F3E4; --card:#FFFFFF; }
+body.theme-nature{ background: linear-gradient(160deg,#D9EFCE,#F6E7B6,#E4F0C7); background-attachment:fixed; }
+body.theme-ocean{ --pink:#1179C4; --pink-soft:#C9E7F7; --lav:#0E9E99; --lav-soft:#C6F0EC; --mint:#12B89A; --mint-soft:#C4F2E8; --sky:#0E5FA8; --sky-soft:#C4DEF2; --sun:#3FC9BD; --sun-soft:#C9F2EC; --coral:#F0631E; --coral-soft:#FBDAC4; --ink:#062330; --ink-soft:#3E6675; --paper:#E7F5FA; --card:#FFFFFF; }
+body.theme-ocean{ background: linear-gradient(160deg,#C9E7F7,#C4F2E8,#C4DEF2); background-attachment:fixed; }
+body.theme-forest{ --pink:#2F6B3E; --pink-soft:#D2E5D5; --lav:#6B4423; --lav-soft:#E3D4C0; --mint:#22834B; --mint-soft:#CBE8D5; --sky:#3E5C2E; --sky-soft:#D9E4CB; --sun:#B8860B; --sun-soft:#EDDBA6; --coral:#7A3A1D; --coral-soft:#E0CABB; --ink:#1A1D0D; --ink-soft:#565135; --paper:#EDEFDF; --card:#FDFDF7; }
+body.theme-forest{ background: linear-gradient(160deg,#D2E5D5,#EDDBA6,#D9E4CB); background-attachment:fixed; }
 </style>
 </head>
 <body>
@@ -909,6 +923,8 @@ function loadResults(){ return loadJSON("ee_results", {}); }
 function saveContent(c){ return saveJSON("ee_content", c); }
 function saveVocab(v){ return saveJSON("ee_vocab", v); }
 function saveResults(r){ return saveJSON("ee_results", r); }
+function loadStudentList(){ return loadJSON("ee_student_list", "สมชาย\nสมหญิง\nวิชัย\nมานี\nปิติ\nชูใจ\nดวงใจ\nวีระ\nสมศรี\nประยุทธ"); }
+function saveStudentList(text){ saveJSON("ee_student_list", text); }
 
 /* ---------------------------- Global state ---------------------------- */
 
@@ -922,6 +938,15 @@ const State = {
   gamesUI: { selectedGame: null, grade: "ทั้งหมด", playing: false },
   gameSession: null,
   vocabUI: { grade: GRADES[0], search: "" },
+  toolsUI: {
+    tab: "picker",
+    studentsText: loadStudentList(),
+    pickerMode: "name", numberMin: 1, numberMax: 40, noRepeat: false,
+    pickedSet: [], pickerResult: null, pickerSpinning: false, pickerVocabGrade: GRADES[0],
+    groupCount: 4, groups: null,
+    timerMinutes: 5, timerSecondsInput: 0, timerRemaining: null, timerRunning: false, timerId: null, timerTotal: null,
+    bracketPairs: null,
+  },
   teacherUI: {
     unlocked: false, passInput: "", passError: "",
     tab: "lessons",
@@ -972,6 +997,7 @@ const NAV_ITEMS = [
   { id: "quizzes", label: "แบบทดสอบ", icon: "📝", match: ["quizzes","quizTake"] },
   { id: "vocab", label: "คำศัพท์", icon: "🔤", match: ["vocab"] },
   { id: "games", label: "เกม", icon: "🎮", match: ["games"] },
+  { id: "tools", label: "เครื่องมือ", icon: "🛠️", match: ["tools"] },
   { id: "account", label: "บัญชี", icon: "👤", match: ["account"] },
 ];
 const NAV_ITEMS_FOOTER = [
@@ -1022,6 +1048,7 @@ function viewHTML(){
     case "quizTake": return renderQuizTake();
     case "vocab": return renderVocabBank();
     case "games": return renderGamesHub();
+    case "tools": return renderTools();
     case "account": return renderAccount();
     case "teacher": return renderTeacher();
     default: return renderHome();
@@ -1282,7 +1309,7 @@ function renderQuizTake(){
 function renderQuestionBlock(q, idx, session){
   let body = "";
   if (q.type === "mc") {
-    body = `<div class="choice-list">${q.choices.map(c => `<button class="choice-btn ${session.answers[q.id]===c?"active":""}" onclick="App.pickChoice('${q.id}','${b64(c)}')">${esc(c)}</button>`).join("")}</div>`;
+    body = `<div class="choice-list">${q.choices.map(c => `<button class="choice-btn ${session.answers[q.id]===c?"selected":""}" onclick="App.pickChoice('${q.id}','${b64(c)}')">${esc(c)}</button>`).join("")}</div>`;
   } else if (q.type === "fill") {
     body = `<input class="fill-input" value="${esc(session.answers[q.id])}" oninput="App.setFillAnswer('${q.id}', this.value)" placeholder="พิมพ์คำตอบ">`;
   } else if (q.type === "match") {
@@ -1353,6 +1380,8 @@ const GAME_TYPES = [
   { id:"speed", name:"ทายคำเร็ว", desc:"เลือกความหมายที่ถูกต้องให้ทันเวลาก่อนหมดเวลา", icon:"⏱️", min:4 },
   { id:"hangman", name:"ทายตัวอักษร", desc:"ทายตัวอักษรทีละตัวก่อนโอกาสจะหมด", icon:"🎯", min:1 },
   { id:"flashcard", name:"แฟลชการ์ดทบทวน", desc:"พลิกการ์ดทบทวนคำศัพท์จนกว่าจะจำได้ครบ", icon:"🃏", min:2 },
+  { id:"typing", name:"พิมพ์คำให้ไว", desc:"ดูความหมายแล้วพิมพ์คำศัพท์ภาษาอังกฤษให้ถูกและทันเวลา", icon:"⌨️", min:1 },
+  { id:"wordsearch", name:"ค้นหาคำศัพท์", desc:"ค้นหาคำศัพท์ที่ซ่อนอยู่ในตารางตัวอักษร", icon:"🔍", min:8 },
 ];
 
 function renderGamesHub(){
@@ -1392,6 +1421,8 @@ App.playGame = function(){
   else if (id === "speed") State.gameSession = makeSpeedSession(pool);
   else if (id === "hangman") State.gameSession = makeHangmanSession(pool);
   else if (id === "flashcard") State.gameSession = makeFlashcardSession(pool);
+  else if (id === "typing") State.gameSession = makeTypingSession(pool);
+  else if (id === "wordsearch") State.gameSession = makeWordSearchSession(pool);
   State.gameSession.type = id;
   ui.playing = true;
   render();
@@ -1408,6 +1439,8 @@ function renderGamePlay(){
   if (g.type === "speed") return renderSpeed(g);
   if (g.type === "hangman") return renderHangman(g);
   if (g.type === "flashcard") return renderFlashcard(g);
+  if (g.type === "typing") return renderTyping(g);
+  if (g.type === "wordsearch") return renderWordSearch(g);
   return "";
 }
 
@@ -1527,7 +1560,7 @@ function renderSpeed(g){
   <div class="choice-list">${round.choices.map(c => {
     const isRight = c === round.word.meaning;
     let cls = "";
-    if (g.locked) { if (isRight) cls="active"; else if (c===g.chosen) cls="wrong-choice"; }
+    if (g.locked) { if (isRight) cls="correct-answer"; else if (c===g.chosen) cls="wrong-answer"; }
     return `<button class="choice-btn ${cls}" ${g.locked?"disabled":""} onclick="App.speedPick('${b64(c)}')">${esc(c)}</button>`;
   }).join("")}</div>`;
 }
@@ -1609,6 +1642,379 @@ App.flashcardMark = function(known){
   if (known) { g.known++; confettiBurst(6); } else g.queue.push(id);
   g.flipped = false;
   render();
+};
+
+/* --- Typing challenge: see the meaning, type the English word from memory (no letters given) --- */
+function makeTypingSession(words){
+  const rounds = sample(words, Math.min(10, words.length));
+  const session = { rounds, idx: 0, score: 0, input: "", feedback: null, timeLeft: 15, timerId: null };
+  startTypingTimer(session);
+  return session;
+}
+function startTypingTimer(g){
+  if (g.timerId) clearInterval(g.timerId);
+  g.timeLeft = 15;
+  g.timerId = setInterval(() => {
+    g.timeLeft -= 1;
+    const fill = document.getElementById("typing-timer-fill");
+    const txt = document.getElementById("typing-timer-text");
+    if (fill) fill.style.width = Math.max(0, (g.timeLeft/15)*100) + "%";
+    if (txt) txt.textContent = Math.max(0, g.timeLeft) + "s";
+    if (g.timeLeft <= 0) { clearInterval(g.timerId); if (!g.feedback) App.typingCheck(true); }
+  }, 1000);
+}
+function renderTyping(g){
+  if (g.idx >= g.rounds.length) { if (g.timerId) clearInterval(g.timerId); return `<div class="result-card"><div style="font-size:36px">🏆</div><h2>จบเกมพิมพ์คำให้ไว</h2><p class="result-score">${g.score}/${g.rounds.length}</p><button class="btn btn-primary" onclick="App.exitGame()">เล่นเกมอื่น</button></div>`; }
+  const cur = g.rounds[g.idx];
+  return `<div class="game-top"><p>ข้อ ${g.idx+1}/${g.rounds.length} · คะแนน ${g.score}</p><button class="btn-mini" onclick="App.exitGame()">← ออกจากเกม</button></div>
+  <div class="timer-bar"><div class="timer-fill" id="typing-timer-fill" style="width:${(g.timeLeft/15)*100}%"></div></div>
+  <p class="mini-hint" style="text-align:right;margin:4px 0 0" id="typing-timer-text">${g.timeLeft}s</p>
+  <div class="scramble-box">
+    <p class="question-text" style="font-size:22px;margin-bottom:4px">${esc(cur.meaning)}</p>
+    <p class="mini-hint" style="margin-bottom:14px">${POS_LABEL[cur.pos]||cur.pos} · 🔊 ${esc(cur.read||"")}</p>
+    <input class="fill-input" value="${esc(g.input)}" oninput="App.typingInput(this.value)" placeholder="พิมพ์คำศัพท์ภาษาอังกฤษ" ${g.feedback?"disabled":""} onkeydown="if(event.key==='Enter') App.typingCheck(false)">
+    ${!g.feedback ? '<button class="btn btn-primary" style="margin-top:12px" onclick="App.typingCheck(false)">✅ ตรวจคำตอบ</button>' : `
+    <div class="feedback-box ${g.feedback==="correct"?"fb-correct":"fb-wrong"}">${g.feedback==="correct"?"ถูกต้อง! 🎉":"ยังไม่ถูก คำตอบคือ: "+esc(cur.word)}
+    <br><button class="btn btn-primary" style="margin-top:10px" onclick="App.typingNext()">ข้อถัดไป →</button></div>`}
+  </div>`;
+}
+App.typingInput = function(v){ State.gameSession.input = v; };
+App.typingCheck = function(timedOut){
+  const g = State.gameSession; const cur = g.rounds[g.idx];
+  if (g.timerId) clearInterval(g.timerId);
+  const correct = !timedOut && g.input.trim().toLowerCase() === cur.word.toLowerCase();
+  if (correct) { g.score++; confettiBurst(10); }
+  g.feedback = correct ? "correct" : "wrong";
+  render();
+};
+App.typingNext = function(){
+  const g = State.gameSession;
+  g.idx++; g.input = ""; g.feedback = null;
+  if (g.idx < g.rounds.length) startTypingTimer(g);
+  render();
+};
+
+/* --- Word search: find hidden vocabulary words in a letter grid --- */
+function makeWordSearchSession(words){
+  const GRID = 10;
+  const candidates = sample(words.filter(w => /^[a-zA-Z]+$/.test(w.word) && w.word.length <= GRID), Math.min(6, words.length));
+  const grid = Array.from({ length: GRID }, () => Array(GRID).fill(null));
+  const placed = [];
+  candidates.forEach(w => {
+    const word = w.word.toUpperCase();
+    let ok = false;
+    for (let attempt = 0; attempt < 60 && !ok; attempt++) {
+      const horizontal = Math.random() < 0.5;
+      const row = Math.floor(Math.random() * GRID);
+      const col = Math.floor(Math.random() * GRID);
+      const endRow = horizontal ? row : row + word.length - 1;
+      const endCol = horizontal ? col + word.length - 1 : col;
+      if (endRow >= GRID || endCol >= GRID) continue;
+      let fits = true;
+      for (let i = 0; i < word.length; i++) {
+        const r = horizontal ? row : row + i, c = horizontal ? col + i : col;
+        if (grid[r][c] !== null && grid[r][c] !== word[i]) { fits = false; break; }
+      }
+      if (!fits) continue;
+      for (let i = 0; i < word.length; i++) {
+        const r = horizontal ? row : row + i, c = horizontal ? col + i : col;
+        grid[r][c] = word[i];
+      }
+      placed.push({ word, wordObj: w, cells: Array.from({ length: word.length }, (_, i) => (horizontal ? [row, col+i] : [row+i, col])) });
+      ok = true;
+    }
+  });
+  const ALPHA = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  for (let r = 0; r < GRID; r++) for (let c = 0; c < GRID; c++) if (grid[r][c] === null) grid[r][c] = ALPHA[Math.floor(Math.random()*ALPHA.length)];
+  return { grid, size: GRID, words: placed, found: [], selecting: null };
+}
+function renderWordSearch(g){
+  const allFound = g.words.length > 0 && g.found.length === g.words.length;
+  const foundCellKeys = new Set(g.found.flatMap(f => f.cells.map(([r,c]) => r+"_"+c)));
+  const selKeys = new Set((g.selecting ? computeSelectionCells(g) : []).map(([r,c]) => r+"_"+c));
+  let gridHTML = `<div style="display:grid;grid-template-columns:repeat(${g.size},1fr);gap:3px;max-width:400px;margin:0 auto 16px;">`;
+  for (let r = 0; r < g.size; r++) {
+    for (let c = 0; c < g.size; c++) {
+      const key = r+"_"+c;
+      const isFound = foundCellKeys.has(key);
+      const isSel = selKeys.has(key);
+      gridHTML += `<button class="key-btn ${isFound?"correct":""} ${isSel?"":""}" style="padding:6px 0;font-size:12px;${isSel?"outline:2px solid var(--sun);":""}" onclick="App.wordSearchClick(${r},${c})">${g.grid[r][c]}</button>`;
+    }
+  }
+  gridHTML += `</div>`;
+  return `<div class="game-top"><p>พบแล้ว ${g.found.length}/${g.words.length} คำ</p><button class="btn-mini" onclick="App.exitGame()">← ออกจากเกม</button></div>
+  ${allFound ? `<div class="result-card"><div style="font-size:36px">🏆</div><h2>เก่งมาก หาครบทุกคำแล้ว!</h2><button class="btn btn-primary" onclick="App.exitGame()">เล่นเกมอื่น</button></div>` : `
+  <p class="mini-hint" style="text-align:center;margin-bottom:10px">แตะตัวอักษรตัวแรกแล้วแตะตัวสุดท้ายของคำ (แนวนอนหรือแนวตั้ง)</p>
+  ${gridHTML}
+  <div class="hero-actions" style="flex-wrap:wrap;justify-content:center">
+    ${g.words.map(w => `<span class="stamp ${g.found.includes(w)?"stamp-sage":"stamp-navy"}" style="${g.found.includes(w)?"text-decoration:line-through;opacity:0.7;":""}">${esc(w.word)}</span>`).join("")}
+  </div>`}`;
+}
+function computeSelectionCells(g){
+  const { start, current } = g.selecting;
+  const [r1, c1] = start, [r2, c2] = current;
+  const cells = [];
+  if (r1 === r2) { const lo = Math.min(c1,c2), hi = Math.max(c1,c2); for (let c=lo;c<=hi;c++) cells.push([r1,c]); }
+  else if (c1 === c2) { const lo = Math.min(r1,r2), hi = Math.max(r1,r2); for (let r=lo;r<=hi;r++) cells.push([r,c1]); }
+  else cells.push(start);
+  return cells;
+}
+App.wordSearchClick = function(r, c){
+  const g = State.gameSession;
+  if (!g.selecting) { g.selecting = { start: [r,c], current: [r,c] }; render(); return; }
+  g.selecting.current = [r,c];
+  const cells = computeSelectionCells(g);
+  const letters = cells.map(([rr,cc]) => g.grid[rr][cc]).join("");
+  const reversed = letters.split("").reverse().join("");
+  const match = g.words.find(w => !g.found.includes(w) && (w.word === letters || w.word === reversed));
+  if (match) {
+    g.found.push(match);
+    confettiBurst(10);
+    if (g.found.length === g.words.length) confettiBurst(24);
+  }
+  g.selecting = null;
+  render();
+};
+
+/* ---------------------------- Classroom Tools (random picker, grouping, timer, bracket) ---------------------------- */
+
+function getStudentNames(){
+  return State.toolsUI.studentsText.split("\n").map(s => s.trim()).filter(Boolean);
+}
+function playBeep(){
+  try{
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    [0, 0.18, 0.36].forEach((delay, i) => {
+      const osc = ctx.createOscillator(); const gain = ctx.createGain();
+      osc.type = "sine"; osc.frequency.value = i === 2 ? 1046 : 880;
+      osc.connect(gain); gain.connect(ctx.destination);
+      gain.gain.setValueAtTime(0.2, ctx.currentTime + delay);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay + 0.15);
+      osc.start(ctx.currentTime + delay); osc.stop(ctx.currentTime + delay + 0.16);
+    });
+  }catch(e){ /* audio not available, ignore silently */ }
+}
+
+function renderTools(){
+  const t = State.toolsUI;
+  const tabs = [["picker","🎯 สุ่มจับสลาก"],["group","👥 สุ่มแบ่งกลุ่ม"],["timer","⏱️ จับเวลา"],["bracket","🏆 แบ่งสาย"]];
+  let body = "";
+  if (t.tab === "picker") body = renderPickerTool();
+  else if (t.tab === "group") body = renderGroupTool();
+  else if (t.tab === "timer") body = renderTimerTool();
+  else if (t.tab === "bracket") body = renderBracketTool();
+  return `<div class="page">
+    <button class="back-link" onclick="App.go('home')">← หน้าแรก</button>
+    <h2 class="page-title">🛠️ เครื่องมือคุณครู</h2>
+    <p class="mini-hint" style="margin-bottom:14px">เครื่องมือช่วยจัดกิจกรรมในห้องเรียน ใช้งานได้เลยไม่ต้องล็อกอิน</p>
+    <div class="filter-tabs">${tabs.map(([id,label]) => `<button class="filter-chip ${t.tab===id?"active":""}" onclick="App.toolsTab('${id}')">${label}</button>`).join("")}</div>
+    ${body}
+  </div>`;
+}
+App.toolsTab = function(id){ State.toolsUI.tab = id; render(); };
+App.setStudentsText = function(v){ State.toolsUI.studentsText = v; saveStudentList(v); };
+
+/* --- Tool 1: Random picker (name / number / vocab word) --- */
+function renderPickerTool(){
+  const t = State.toolsUI;
+  const names = getStudentNames();
+  return `
+  <div class="form-card">
+    <h3>รายชื่อนักเรียน (บรรทัดละ 1 ชื่อ)</h3>
+    <textarea class="tool-textarea" oninput="App.setStudentsText(this.value)" placeholder="พิมพ์ชื่อนักเรียน บรรทัดละ 1 คน">${esc(t.studentsText)}</textarea>
+    <p class="mini-hint" style="margin-top:6px">ทั้งหมด ${names.length} คน${t.pickedSet.length ? ` · สุ่มไปแล้ว ${t.pickedSet.length} คน` : ""}</p>
+  </div>
+  <div class="picker-mode-row">
+    <button class="filter-chip ${t.pickerMode==="name"?"active":""}" onclick="App.setPickerMode('name')">🙋 สุ่มชื่อ</button>
+    <button class="filter-chip ${t.pickerMode==="number"?"active":""}" onclick="App.setPickerMode('number')">🔢 สุ่มเลขที่</button>
+    <button class="filter-chip ${t.pickerMode==="vocabword"?"active":""}" onclick="App.setPickerMode('vocabword')">🔤 สุ่มชื่อ+คำศัพท์</button>
+  </div>
+  ${t.pickerMode==="number" ? `
+  <div class="form-row" style="max-width:320px">
+    <div><label>ตั้งแต่</label><input type="number" value="${t.numberMin}" oninput="App.setField('toolsUI','numberMin',parseInt(this.value)||1)"></div>
+    <div><label>ถึง</label><input type="number" value="${t.numberMax}" oninput="App.setField('toolsUI','numberMax',parseInt(this.value)||1)"></div>
+  </div>` : ""}
+  ${t.pickerMode==="vocabword" ? `
+  <label class="mini-hint">ระดับชั้นคำศัพท์ที่จะสุ่มถาม</label>
+  <div class="filter-tabs">${GRADES.map(g => `<button class="filter-chip ${t.pickerVocabGrade===g?"active":""}" onclick="App.setField('toolsUI','pickerVocabGrade','${g}')">${g}</button>`).join("")}</div>` : ""}
+  ${t.pickerMode!=="number" ? `<label style="display:flex;align-items:center;gap:8px;margin:10px 0;cursor:pointer" onclick="App.togglePickerNoRepeat()"><input type="checkbox" ${t.noRepeat?"checked":""} style="width:16px;height:16px"> <span class="mini-hint" style="margin:0">ไม่สุ่มซ้ำคนเดิมจนกว่าจะครบทุกคน</span></label>` : ""}
+  <div class="picker-stage">
+    ${t.pickerResult ? `
+      <p class="picker-name">${esc(t.pickerResult.main)}</p>
+      ${t.pickerResult.sub ? `<p class="picker-sub">${esc(t.pickerResult.sub)}</p>` : ""}
+    ` : `<p class="picker-sub">กดปุ่มด้านล่างเพื่อเริ่มสุ่ม</p>`}
+  </div>
+  <div class="hero-actions" style="margin-top:16px">
+    <button class="btn btn-primary" onclick="App.spinPicker()" ${t.pickerSpinning?"disabled":""}>🎲 สุ่มเลย!</button>
+    ${t.pickedSet.length > 0 ? `<button class="btn btn-ghost" onclick="App.resetPickerHistory()">♻️ รีเซ็ตรายชื่อที่สุ่มแล้ว</button>` : ""}
+  </div>`;
+}
+App.setPickerMode = function(m){ State.toolsUI.pickerMode = m; State.toolsUI.pickerResult = null; render(); };
+App.togglePickerNoRepeat = function(){ State.toolsUI.noRepeat = !State.toolsUI.noRepeat; render(); };
+App.resetPickerHistory = function(){ State.toolsUI.pickedSet = []; render(); };
+App.spinPicker = function(){
+  const t = State.toolsUI;
+  if (t.pickerSpinning) return;
+  const names = getStudentNames();
+  let candidatesForDisplay = names.length ? names : ["1","2","3"];
+  let finalMain, finalSub = null;
+
+  if (t.pickerMode === "number") {
+    const lo = Math.min(t.numberMin, t.numberMax), hi = Math.max(t.numberMin, t.numberMax);
+    finalMain = String(lo + Math.floor(Math.random() * (hi - lo + 1)));
+    candidatesForDisplay = Array.from({length: hi-lo+1}, (_,i) => String(lo+i));
+  } else {
+    let pool = names;
+    if (t.noRepeat) { const remaining = names.filter(n => !t.pickedSet.includes(n)); pool = remaining.length ? remaining : (t.pickedSet = [], names); }
+    if (pool.length === 0) { toast("กรุณาใส่รายชื่อนักเรียนก่อน"); return; }
+    finalMain = pool[Math.floor(Math.random() * pool.length)];
+    if (t.pickerMode === "vocabword") {
+      const wordPool = State.vocab.filter(v => v.level === t.pickerVocabGrade);
+      if (wordPool.length > 0) { const w = wordPool[Math.floor(Math.random()*wordPool.length)]; finalSub = `คำศัพท์: ${w.word} (${w.meaning})`; }
+    }
+  }
+
+  t.pickerSpinning = true;
+  render();
+  const stageEl = document.querySelector(".picker-stage");
+  let ticks = 0;
+  const totalTicks = 16;
+  const spinInterval = setInterval(() => {
+    ticks++;
+    const randomDisplay = candidatesForDisplay[Math.floor(Math.random() * candidatesForDisplay.length)];
+    if (stageEl) stageEl.innerHTML = `<p class="picker-name">${esc(randomDisplay)}</p><p class="picker-sub">กำลังสุ่ม...</p>`;
+    if (ticks >= totalTicks) {
+      clearInterval(spinInterval);
+      t.pickerSpinning = false;
+      t.pickerResult = { main: finalMain, sub: finalSub };
+      if (t.pickerMode !== "number" && t.noRepeat) t.pickedSet.push(finalMain);
+      render();
+      confettiBurst(16);
+    }
+  }, 80);
+};
+
+/* --- Tool 2: Random grouping --- */
+function renderGroupTool(){
+  const t = State.toolsUI;
+  const names = getStudentNames();
+  return `
+  <div class="form-card">
+    <h3>รายชื่อนักเรียน (บรรทัดละ 1 ชื่อ)</h3>
+    <textarea class="tool-textarea" oninput="App.setStudentsText(this.value)" placeholder="พิมพ์ชื่อนักเรียน บรรทัดละ 1 คน">${esc(t.studentsText)}</textarea>
+    <p class="mini-hint" style="margin-top:6px">ทั้งหมด ${names.length} คน</p>
+    <label>จำนวนกลุ่ม</label>
+    <input type="number" min="2" max="${Math.max(names.length,2)}" value="${t.groupCount}" oninput="App.setField('toolsUI','groupCount',Math.max(2,parseInt(this.value)||2))">
+    <button class="btn btn-primary" style="margin-top:12px" onclick="App.makeGroups()">🔀 สุ่มแบ่งกลุ่ม</button>
+  </div>
+  ${t.groups ? `<div class="group-grid">${t.groups.map((grp,i) => `
+    <div class="group-card"><h4>กลุ่มที่ ${i+1} (${grp.length} คน)</h4><ul>${grp.map(n => `<li>${esc(n)}</li>`).join("")}</ul></div>`).join("")}</div>` : ""}`;
+}
+App.makeGroups = function(){
+  const t = State.toolsUI;
+  const names = getStudentNames();
+  if (names.length < 2) { toast("กรุณาใส่รายชื่ออย่างน้อย 2 คน"); return; }
+  const n = Math.min(t.groupCount, names.length);
+  const shuffled = shuffle(names);
+  const groups = Array.from({length:n}, () => []);
+  shuffled.forEach((name, i) => groups[i % n].push(name));
+  t.groups = groups;
+  render();
+  confettiBurst(14);
+};
+
+/* --- Tool 3: Countdown timer with beep alert --- */
+function renderTimerTool(){
+  const t = State.toolsUI;
+  const running = t.timerRunning;
+  const remaining = t.timerRemaining !== null ? t.timerRemaining : (t.timerMinutes*60 + t.timerSecondsInput);
+  const mm = String(Math.floor(remaining/60)).padStart(2,"0");
+  const ss = String(remaining%60).padStart(2,"0");
+  const warning = remaining <= 10 && remaining > 0;
+  return `
+  <div class="form-card" style="text-align:center">
+    ${!t.timerRunning && t.timerRemaining === null ? `
+    <p class="mini-hint">ตั้งเวลา (นาที : วินาที)</p>
+    <div class="form-row" style="max-width:260px;margin:0 auto 10px">
+      <div><input type="number" min="0" value="${t.timerMinutes}" oninput="App.setField('toolsUI','timerMinutes',Math.max(0,parseInt(this.value)||0))"></div>
+      <div><input type="number" min="0" max="59" value="${t.timerSecondsInput}" oninput="App.setField('toolsUI','timerSecondsInput',Math.max(0,Math.min(59,parseInt(this.value)||0)))"></div>
+    </div>
+    <div class="timer-presets">
+      ${[1,3,5,10,15].map(m => `<button class="btn-mini" onclick="App.setTimerPreset(${m})">${m} นาที</button>`).join("")}
+    </div>` : ""}
+    <div class="timer-display ${warning?"warning":""}" id="tool-timer-display">${mm}:${ss}</div>
+    <div class="hero-actions" style="justify-content:center">
+      ${!running ? `<button class="btn btn-primary" onclick="App.startToolTimer()">▶️ เริ่ม</button>` : `<button class="btn btn-ghost" onclick="App.pauseToolTimer()">⏸️ หยุดชั่วคราว</button>`}
+      <button class="btn btn-ghost" onclick="App.resetToolTimer()">🔁 รีเซ็ต</button>
+    </div>
+  </div>`;
+}
+App.setTimerPreset = function(m){ State.toolsUI.timerMinutes = m; State.toolsUI.timerSecondsInput = 0; render(); };
+App.startToolTimer = function(){
+  const t = State.toolsUI;
+  if (t.timerRemaining === null) t.timerRemaining = t.timerMinutes*60 + t.timerSecondsInput;
+  if (t.timerRemaining <= 0) { toast("กรุณาตั้งเวลาก่อนเริ่ม"); return; }
+  t.timerRunning = true;
+  render();
+  if (t.timerId) clearInterval(t.timerId);
+  t.timerId = setInterval(() => {
+    t.timerRemaining -= 1;
+    const el = document.getElementById("tool-timer-display");
+    if (el) {
+      const mm = String(Math.floor(t.timerRemaining/60)).padStart(2,"0");
+      const ss = String(t.timerRemaining%60).padStart(2,"0");
+      el.textContent = mm+":"+ss;
+      el.classList.toggle("warning", t.timerRemaining <= 10 && t.timerRemaining > 0);
+    }
+    if (t.timerRemaining <= 0) {
+      clearInterval(t.timerId); t.timerId = null; t.timerRunning = false;
+      playBeep(); confettiBurst(20); toast("⏰ หมดเวลาแล้ว!");
+      render();
+    }
+  }, 1000);
+};
+App.pauseToolTimer = function(){
+  const t = State.toolsUI;
+  if (t.timerId) clearInterval(t.timerId);
+  t.timerId = null; t.timerRunning = false;
+  render();
+};
+App.resetToolTimer = function(){
+  const t = State.toolsUI;
+  if (t.timerId) clearInterval(t.timerId);
+  t.timerId = null; t.timerRunning = false; t.timerRemaining = null;
+  render();
+};
+
+/* --- Tool 4: Tournament bracket pairing --- */
+function renderBracketTool(){
+  const t = State.toolsUI;
+  const names = getStudentNames();
+  return `
+  <div class="form-card">
+    <h3>รายชื่อผู้เข้าแข่งขัน (บรรทัดละ 1 คน/ทีม)</h3>
+    <textarea class="tool-textarea" oninput="App.setStudentsText(this.value)" placeholder="พิมพ์ชื่อผู้เข้าแข่งขัน บรรทัดละ 1 คน">${esc(t.studentsText)}</textarea>
+    <p class="mini-hint" style="margin-top:6px">ทั้งหมด ${names.length} คน/ทีม</p>
+    <button class="btn btn-primary" style="margin-top:12px" onclick="App.makeBracket()">🎲 จัดสายการแข่งขัน</button>
+  </div>
+  ${t.bracketPairs ? `<div class="bracket-round"><h4 class="section-kicker">รอบที่ 1</h4>
+    ${t.bracketPairs.map((pair,i) => pair.length===2 ? `
+      <div class="bracket-match"><span>${esc(pair[0])}</span><span class="bracket-vs">คู่ที่ ${i+1}</span><span>${esc(pair[1])}</span></div>
+    ` : `<div class="bracket-match"><span>${esc(pair[0])}</span><span class="bracket-bye">ผ่านเข้ารอบอัตโนมัติ (bye)</span></div>`).join("")}
+  </div>` : ""}`;
+}
+App.makeBracket = function(){
+  const names = getStudentNames();
+  if (names.length < 2) { toast("กรุณาใส่รายชื่ออย่างน้อย 2 คน"); return; }
+  const shuffled = shuffle(names);
+  const pairs = [];
+  for (let i = 0; i < shuffled.length; i += 2) {
+    if (i+1 < shuffled.length) pairs.push([shuffled[i], shuffled[i+1]]);
+    else pairs.push([shuffled[i]]);
+  }
+  State.toolsUI.bracketPairs = pairs;
+  render();
+  confettiBurst(14);
 };
 
 /* ---------------------------- Teacher admin ---------------------------- */
@@ -2033,9 +2439,9 @@ function buildPieGradient(segments){
   return `conic-gradient(${stops.join(",")})`;
 }
 function accuracyColor(pct){
-  if (pct >= 75) return "#3fc79e";
+  if (pct >= 75) return "#16a34a";
   if (pct >= 50) return "#D9A62E";
-  return "#FF7A7A";
+  return "#dc2626";
 }
 
 function renderAccountDashboard(user){
